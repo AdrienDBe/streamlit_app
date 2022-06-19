@@ -225,7 +225,7 @@ with who_indic_container:
                 selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
                 df_country = df[df["Country"].isin(selected_options)]
                 fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
 
 st.write("---")
