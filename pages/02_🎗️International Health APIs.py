@@ -93,7 +93,7 @@ with intro_container:
         col3.markdown("<p style='text-align: justify;'>"
                     "In order to offer more visualization filtering we also imported the "
                     "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
-                    " from the World Bank API through the Python wbgapi library and mergeg it with the country list from the WHO and Global Fund datasets.</p>",
+                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets.</p>",
                     unsafe_allow_html=True)
         with st.expander("Wait, what's an API?"):
             st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
