@@ -83,7 +83,7 @@ with intro_container:
                     "The WHO API <a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'> (link to documentation)</a>"
                       " is providing access to 2,197 indicators at the time of writing.<br>"
                     "To simplify data exploration here we will only display indicators related to the three epidemics "
-                      "targeted by the Global Fund (i.e. *AIDS, tuberculosis and malaria*)."
+                      "targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria)."
                     "</p>", unsafe_allow_html=True)
         col2.markdown("<p style='text-align: justify;'>"
                     "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
