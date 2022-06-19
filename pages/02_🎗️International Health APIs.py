@@ -210,7 +210,6 @@ with who_indic_container:
             st.plotly_chart(fig, use_container_width=True)
         elif hue == 'Region':
             fig = px.line(df.groupby(['Year','Region'], as_index=False).sum(), x="Year", y="Value", color="Region", title = "{}".format(option_indicators_name))
-            fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
             st.plotly_chart(fig, use_container_width=True)
         elif hue == 'Country':
             # checkbox all countries
