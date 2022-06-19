@@ -218,7 +218,7 @@ with who_indic_container:
             if all:
                 selected_options = df.Country.unique()
                 fig = px.line(df.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value", color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 container = col1.container()
