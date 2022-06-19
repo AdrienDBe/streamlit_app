@@ -84,14 +84,12 @@ with intro_container:
                       " is providing access to 2,197 indicators at the time of writing.<br>"
                     "To simplify data exploration here we will only display indicators related to the three epidemics "
                       "targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria)."
-                    "</p>"
-                      "**AIDS, tuberculosis and malaria**"
-                      "<p style='text-align: justify;'>). </p>"
+                    "</p>", unsafe_allow_html=True)
         , unsafe_allow_html=True)
         col2.markdown("<p style='text-align: justify;'>"
                     "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
-                      " is providing access to different data including *Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
-                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records*.<br>"
+                      " is providing access to different data including: <br> Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
+                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records"
                     "</p>", unsafe_allow_html=True)
         col3.markdown("<p style='text-align: justify;'>"
                     "In order to offer more visualization filtering we also imported the "
