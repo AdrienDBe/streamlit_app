@@ -12,7 +12,7 @@ st.set_page_config(page_title="International Health", page_icon="🎗", layout="
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-local_css("style/style.css")
+local_css(r"C:\Users\adrie\PycharmProjects\Streamlit_test2\style/style.css")
 
 # resize expanders
 st.markdown("""
@@ -108,12 +108,24 @@ with intro_container:
 
 
 st.write("---")
+
 ## List of WHO countries
-service_url0 = "https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues"
-response0 = requests.get(service_url0)
-data0j = response0.json()
-country_list = pd.DataFrame(data0j["value"])
-country_list.rename(columns={"Code":"SpatialDim","Title":"Country"}, inplace = True)
+@st.cache
+def import_api_WHO_countries(url):
+    service_url0 = url
+    response0 = requests.get(service_url0)
+    # make sure we got a valid response
+    print(response0)
+    if (response0.ok):
+        # get the full data from the response
+        data0j = response0.json()
+    else:
+        st.caption("API data cannot be loaded")
+    country_list = pd.DataFrame(data0j["value"])
+    return country_list
+with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
+    country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
+    country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
 
 ## List of World Bank country with Region and Income Level
 
@@ -146,33 +158,42 @@ with who_indic_container:
             'Display the list of indicators for: ',
             options=['Tuberculosis', 'Malaria', 'HIV'])
         # Import API data
-        service_url0 = "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(disease)
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-            st.caption("WHO API content loaded")
-        else:
-            st.caption("WHO API cannot be loaded")
-        data0a = pd.DataFrame(data0j["value"])
+        @st.cache
+        def import_api_WHO_indicators(url):
+            service_url0 = url
+            response0 = requests.get(service_url0)
+            # make sure we got a valid response
+            print(response0)
+            if (response0.ok):
+                # get the full data from the response
+                data0j = response0.json()
+            else:
+                st.caption("API data cannot be loaded")
+            data0a = pd.DataFrame(data0j["value"])
+            return data0a
+        with st.spinner('Loading indicators data from WHO API (it will take a few seconds the first time)'):
+            data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(disease))
 
-        option_indicators_name = st.selectbox(
-            'Display records for: ',
-            data0a.IndicatorName.unique())
+        option_indicators_name = st.selectbox('Display records for: ',data0a.IndicatorName.unique())
         selection_indicator_code = data0a[data0a['IndicatorName']==option_indicators_name][['IndicatorCode']].iloc[0][0]
 
-        service_url0 = "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code)
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-        else:
-            st.caption("WHO API cannot be loaded")
-        data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
-        data0a = pd.DataFrame(data0j["value"])
+        @st.cache
+        def import_api_WHO_indicator_name(url):
+            service_url0 = url
+            response0 = requests.get(service_url0)
+            # make sure we got a valid response
+            if (response0.ok):
+                # get the full data from the response
+                data0j = response0.json()
+            else:
+                st.caption("API data cannot be loaded")
 
+            return data0j
+
+        with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
+            data0j = import_api_WHO_indicator_name("https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+            data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
+            data0a = pd.DataFrame(data0j["value"])
         #merge with country info
         df = pd.merge(data0a,
                       country_list,
@@ -218,7 +239,6 @@ with GF_container:
         service_url0 = url
         response0 = requests.get(service_url0)
         # make sure we got a valid response
-        print(response0)
         if (response0.ok):
             # get the full data from the response
             data0j = response0.json()
