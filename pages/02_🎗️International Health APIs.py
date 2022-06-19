@@ -83,17 +83,17 @@ with intro_container:
                     "The WHO API <a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'> (link to documentation)</a>"
                       " is providing access to 2,197 indicators at the time of writing.<br>"
                     "To simplify data exploration here we will only display indicators related to the three epidemics "
-                      "targeted by the Global Fund (i.e. *AIDS, tuberculosis and malaria*)."
+                      "targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria)."
                     "</p>", unsafe_allow_html=True)
         col2.markdown("<p style='text-align: justify;'>"
                     "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
-                      " is providing access to different data including *Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
-                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records*.<br>"
+                      " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
+                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records"
                     "</p>", unsafe_allow_html=True)
         col3.markdown("<p style='text-align: justify;'>"
                     "In order to offer more visualization filtering we also imported the "
                     "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
-                    " from the World Bank API through the Python wbgapi library and mergeg it with the country list from the WHO and Global Fund datasets.</p>",
+                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets.</p>",
                     unsafe_allow_html=True)
         with st.expander("Wait, what's an API?"):
             st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
@@ -218,14 +218,14 @@ with who_indic_container:
             if all:
                 selected_options = df.Country.unique()
                 fig = px.line(df.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value", color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 container = col1.container()
                 selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
                 df_country = df[df["Country"].isin(selected_options)]
                 fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
 
 st.write("---")

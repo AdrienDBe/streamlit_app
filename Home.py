@@ -12,6 +12,12 @@ def txt3(a, b):
   with col2:
     st.markdown(b)
 
+# Use local CSS
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+local_css("style/style.css")
+    
 # ---- HEADER SECTION ----
 with st.container():
     st.title("Adrien Debruge")
@@ -28,7 +34,7 @@ with st.container():
     with col2:
         # picture
         from PIL import Image
-        img = Image.open(".\Images\Image1.png")
+        img = Image.open("./Images/Image1.png")
         st.image(img,width = 250)
 
 # ---- Work experience ----
@@ -106,12 +112,6 @@ with skills_container:
 
 
 # ---- CONTACT FORM ----
-# Use local CSS
-@cache
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-local_css("style/style.css")
 
 contact_form_container = st.container()
 with contact_form_container:
