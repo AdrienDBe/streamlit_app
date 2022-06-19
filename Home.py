@@ -28,7 +28,7 @@ with st.container():
     with col2:
         # picture
         from PIL import Image
-        img = Image.open(r"C:\Users\adrie\PycharmProjects\Streamlit_test2\Image1.png")
+        img = Image.open(".\Images\Image1.png")
         st.image(img,width = 250)
 
 # ---- Work experience ----
