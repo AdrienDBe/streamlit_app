@@ -229,16 +229,20 @@ with who_indic_container:
                 st.plotly_chart(fig, use_container_width=True)
 
 st.write("---")
-
 ## List of GF Disbursements
 GF_container = st.container()
 with GF_container:
-    st.subheader("The Global Fund Disbursements")
+    st.subheader("The Global Fund")
+    st.markdown("<p style='text-align: justify; font-size: 160%'>"
+                "Disbursements records <br>"
+                "</p>",
+                unsafe_allow_html=True)
     @st.cache
     def import_api_GF(url):
         service_url0 = url
         response0 = requests.get(service_url0)
         # make sure we got a valid response
+        print(response0)
         if (response0.ok):
             # get the full data from the response
             data0j = response0.json()
@@ -256,14 +260,23 @@ with GF_container:
                                                                 'principalRecipientSubClassificationName',
                                                                 'disbursementDate',
                                                                 'disbursementAmount']]
+        df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
     st.caption("Data loaded! A total number of {} disbursements records have been loaded.".format(len(df1)))
+
     st.markdown("<p style='text-align: justify;'>"
                 "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
                 " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
                 " more about the organization Funding Model.<br>"
                 "In order to explore the Global Fund Disbursement information we loaded the de-normalized view of all Grant Agreement "
-                "Disbursements records."
+                "Disbursements records. <br>"
                 "</p>", unsafe_allow_html=True)
+
+
+    col1, col2, col3= st.columns(3)
+    col1.metric("Total disbursements", "${}B".format(round(df1.disbursementAmount.sum()/1000000000,2)))
+    col2.metric("First record dated", "{}".format(min(df1.disbursementDate)))
+    col3.metric("Last record dated", "{}".format(max(df1.disbursementDate)))
+
     #merge with country info
     df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
     df1 = pd.merge(df1,
@@ -271,23 +284,55 @@ with GF_container:
                   on='SpatialDim',
                   how='inner')
 
-    # Component and Disbursements
 
-    st.markdown("<p style='text-align: justify; font-size: 160%'>"
-                "<br>Disbursements overview <br>"
+    #------------------------------------
+
+    # Component overview
+    st.markdown("<p style='text-align: justify; font-size: 120%'>"
+                "Components overview <br>"
                 "</p>",
                 unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        df_bar = df1.groupby(['componentName','Region'], as_index=False)['disbursementAmount'].sum()
-        y = ['Multicomponent','RSSH','TB/HIV','Tuberculosis','Malaria','HIV']
-        fig = px.bar(df_bar, y='componentName', x= 'disbursementAmount', color = 'Region')
-        fig.update_layout(barmode='stack', yaxis={'categoryorder': 'array', 'categoryarray': y})
+    component_container = st.container()
+    with component_container:
+        col1, col2 = st.columns(2)
+        df_line = df1[["componentName", "disbursementAmount", "disbursementDate"]].sort_values(by="disbursementDate",
+                                                                                               ascending=True)
+        fig = px.line(df_line.join(df_line.groupby("componentName", as_index=False).cumsum(), rsuffix="_cumsum"),
+                      y="disbursementAmount_cumsum", x="disbursementDate", color="componentName")
+        fig.update_layout(
+            autosize=False,
+            margin=dict(
+                l=0,
+                r=0,
+                b=0,
+                t=50,
+                pad=4,
+                autoexpand=True),
+            width=800,
+            height=350,
+            title={
+                'text': 'Cumulated disbursements',
+                'x': 0.5,
+                'xanchor': 'center'},
+            paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+        )
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
                 fig.layout[axis].title.text = ''
             if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = 'Disbursement amount ($)'
+                fig.layout[axis].title.text = ''
+        col1.plotly_chart(fig, use_container_width=True)
+
+        df_bar = df1.groupby(['componentName'], as_index=False)['disbursementAmount'].sum()
+        y = ['Multicomponent', 'RSSH', 'TB/HIV', 'Tuberculosis', 'Malaria', 'HIV']
+        fig = px.bar(df_bar, y='componentName', x='disbursementAmount', text_auto=True)
+        fig.update_layout(barmode='stack', yaxis={'categoryorder': 'array', 'categoryarray': y},
+                          paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+        for axis in fig.layout:
+            if type(fig.layout[axis]) == go.layout.YAxis:
+                fig.layout[axis].title.text = ''
+            if type(fig.layout[axis]) == go.layout.XAxis:
+                fig.layout[axis].title.text = ''
         fig.update_layout(
             autosize=False,
             margin=dict(
@@ -301,20 +346,25 @@ with GF_container:
             width=800,
             height=350,
             title={
-            'text' : 'Disbursements per component and region',
-            'x':0.5,
-            'xanchor': 'center'}
+                'text': 'Disbursements per component and region',
+                'x': 0.5,
+                'xanchor': 'center'}
         )
-        st.plotly_chart(fig, use_container_width=True)
+        col2.plotly_chart(fig, use_container_width=True)
 
-    with col2:
-        df_bar2 = df1.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(by='disbursementAmount',ascending=True).tail(10)
-        fig = px.bar(df_bar2, y='Country', x='disbursementAmount')
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = 'Disbursement amount ($)'
+
+    # Region overview
+    st.markdown("<p style='text-align: justify; font-size: 120%'>"
+                "Regional overview <br>"
+                "</p>",
+                unsafe_allow_html=True)
+    region_container = st.container()
+    with region_container:
+        col1, col2 = st.columns(2)
+        df_line = df1[["Region", "disbursementAmount", "disbursementDate"]].sort_values(by="disbursementDate",
+                                                                                               ascending=True)
+        fig = px.line(df_line.join(df_line.groupby("Region", as_index=False).cumsum(), rsuffix="_cumsum"),
+                      y="disbursementAmount_cumsum", x="disbursementDate", color="Region")
         fig.update_layout(
             autosize=False,
             margin=dict(
@@ -327,11 +377,45 @@ with GF_container:
             width=800,
             height=350,
             title={
-            'text' : 'Top 10 disbursement receivers',
-            'x':0.5,
-            'xanchor': 'center'}
+                'text': 'Cumulated disbursements per region',
+                'x': 0.5,
+                'xanchor': 'center'},
+            paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        for axis in fig.layout:
+            if type(fig.layout[axis]) == go.layout.YAxis:
+                fig.layout[axis].title.text = ''
+            if type(fig.layout[axis]) == go.layout.XAxis:
+                fig.layout[axis].title.text = ''
+        col1.plotly_chart(fig, use_container_width=True)
+
+        df_bar2 = df1.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(
+            by='disbursementAmount', ascending=True).tail(10)
+        fig = px.bar(df_bar2, y='Country', x='disbursementAmount', text_auto=True)
+        for axis in fig.layout:
+            if type(fig.layout[axis]) == go.layout.YAxis:
+                fig.layout[axis].title.text = ''
+            if type(fig.layout[axis]) == go.layout.XAxis:
+                fig.layout[axis].title.text = ''
+        fig.update_layout(
+            autosize=False,
+            margin=dict(
+                l=0,
+                r=0,
+                b=0,
+                t=50,
+                pad=4,
+                autoexpand=True),
+            width=800,
+            height=350,
+            title={
+                'text': 'Top 10 disbursement receivers',
+                'x': 0.5,
+                'xanchor': 'center'},
+            paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+        )
+        col2.plotly_chart(fig, use_container_width=True)
+
 
     df_geo = df1.groupby(['componentName','geographicAreaName','SpatialDim'], as_index=False)['disbursementAmount'].sum().sort_values(by="disbursementAmount")
     fig = px.choropleth(df_geo, locations="SpatialDim",
@@ -450,3 +534,31 @@ with GF_container:
     fig = genSankey(df4, cat_cols=['a', 'b'], value_cols='Total disbursement', title='Sankey Diagram of The Global Fund Disbursements till date (G values should be read as Billion)')
 
     st.plotly_chart(fig, use_container_width=True)
+
+
+## List of GF Disbursements
+GF_container = st.container()
+with GF_container:
+    st.markdown("<p style='text-align: justify; font-size: 160%'>"
+                "Grant Agreement Implementation Periods <br>"
+                "</p>",
+                unsafe_allow_html=True)
+    @st.cache
+    def import_api_GF(url):
+        service_url0 = url
+        response0 = requests.get(service_url0)
+        # make sure we got a valid response
+        print(response0)
+        if (response0.ok):
+            # get the full data from the response
+            data0j = response0.json()
+        else:
+            st.caption("Global Fund API cannot be loaded")
+        df1 = pd.DataFrame(data0j["value"])
+        return df1
+
+    with st.spinner('Loading all disbursements data from API (it will take a few seconds the first time)'):
+        df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods")
+    st.caption("Data loaded! A total number of {} Grant Agreement Implementation Periods records have been loaded.".format(len(df1)))
+    st.write("I am still working on it but you can have a peak at the imported dataframe we will be using below:")
+    df1
