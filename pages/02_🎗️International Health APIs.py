@@ -337,7 +337,7 @@ with GF_container:
     fig = px.choropleth(df_geo, locations="SpatialDim",
                         color="disbursementAmount",  # lifeExp is a column of gapminder
                         hover_name="geographicAreaName",  # column to add to hover information
-                        color_continuous_scale="Viridis",
+                        color_continuous_scale="Blues",
                         height=580,
                         labels={'disbursementAmount': 'Disbursement amount ($)'},
                         title='Map of total disbursements'
