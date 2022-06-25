@@ -56,10 +56,10 @@ with intro_container:
         with st.expander("Read more about international health"):
             # The Global Fund details
             st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
-            "International health is defined as the branch of public health focusing on developing nations and"
+            "<em>International health is defined as the branch of public health focusing on developing nations and"
             " foreign aid efforts. <br> The predominant agency associated with global and international health is the"
             " World Health Organization (WHO). Other important agencies are also involved with different missions:"
-            " funders, implementing partners etc.</p>",unsafe_allow_html=True)
+            " funders, implementing partners etc.</em></p>",unsafe_allow_html=True)
 
 
     exploring_api_container =  st.container()
