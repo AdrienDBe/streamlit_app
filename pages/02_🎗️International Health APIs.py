@@ -356,7 +356,19 @@ with GF_container:
         title={
         'text' : 'Map of total disbursements',
         'x':0.5,
-        'xanchor': 'center'})
+        'xanchor': 'center'},
+        geo=dict(
+            visible=False,
+            landcolor='gray',
+            showland=True,
+            showcountries=True,
+            countrycolor='dark gray',
+            countrywidth=0.5,
+            projection=dict(
+                type='natural earth'
+                            )
+                )
+    )
 
     st.plotly_chart(fig, use_container_width=True)
 
