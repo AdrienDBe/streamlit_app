@@ -308,7 +308,7 @@ with GF_container:
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        df_bar2 = df1.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(by='disbursementAmount',ascending=True).tail(20)
+        df_bar2 = df1.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(by='disbursementAmount',ascending=True).tail(10)
         fig = px.bar(df_bar2, y='Country', x='disbursementAmount')
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
@@ -327,7 +327,7 @@ with GF_container:
             width=800,
             height=350,
             title={
-            'text' : 'Top 20 disbursement receivers',
+            'text' : 'Top 10 disbursement receivers',
             'x':0.5,
             'xanchor': 'center'}
         )
