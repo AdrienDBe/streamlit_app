@@ -227,8 +227,7 @@ col1.metric("Disbursements ($)", "{:,}".format(round(df1_filtered_dates.disburse
 col2.metric("First disbursements", "{}".format(min(df1_filtered_dates.disbursementDate)))
 col3.metric("Last disbursements", "{}".format(max(df1_filtered_dates.disbursementDate)))
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️", "Download Data 🔢"])
+tab1, tab2, tab3, tab4 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️", "Download Data 🔢"])
 
 df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetime64[ns]').dt.year
 df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
