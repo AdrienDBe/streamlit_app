@@ -187,9 +187,17 @@ color_discrete_map={
                 "RSSH": "#094074",
                 "Multicomponent": "#ffdd4a"}
 
+color_discrete_map2={
+                "Sub-Saharan Africa": "#fe9000",
+                "East Asia and Pacific": "#5b8e7d",
+                "Europe and Central Asia": "#5adbff",
+                "Latin America & the Caribbean": "#3c6997",
+                "Middle East and North Africa": "#094074",
+                "South Asia": "#ffdd4a"}
+
  #------------------------------------
 
-col1, col01, col2, col02, col3 = st.columns([10,1,10,1,10])
+col1, col, col2, col02, col3 = st.columns([10,1,10,1,10])
 
 # Filter component
 option_map1 = col2.multiselect(
@@ -224,16 +232,16 @@ df1_filtered_dates = df1_filtered[(df1_filtered.disbursementDate.astype('datetim
 
 col1, col2, col3= st.columns([30, 30, 30])
 col1.metric("Disbursements ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
-col2.metric("First disbursements", "{}".format(min(df1_filtered_dates.disbursementDate)))
-col3.metric("Last disbursements", "{}".format(max(df1_filtered_dates.disbursementDate)))
+col2.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
+col3.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
 
-tab1, tab2, tab3, tab4 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️", "Download Data 🔢"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
 
 df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetime64[ns]').dt.year
 df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
 
 with tab1:
-    col1, col2 = st.columns([15, 15])
+    col1, col2 = st.columns([25, 20])
     df_line = df1_filtered_dates[["componentName", "disbursementAmount", "Year"]].groupby(["Year","componentName"]).sum().reset_index()
     fig = px.bar(df_line, x="Year", y="disbursementAmount", color="componentName",color_discrete_map=color_discrete_map)
     fig.update_layout(
@@ -246,12 +254,13 @@ with tab1:
             pad=4,
             autoexpand=True),
         width=800,
-        height=250,
+        height=300,
         title={
             'text': 'Yearly disbursements',
             'x': 0.5,
             'xanchor': 'center'},
         # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+        showlegend=False
     )
     for axis in fig.layout:
         if type(fig.layout[axis]) == go.layout.YAxis:
@@ -274,12 +283,13 @@ with tab1:
             pad=4,
             autoexpand=True),
         width=800,
-        height=250,
+        height=300,
         title={
             'text': 'Cumulated disbursements',
             'x': 0.5,
             'xanchor': 'center'},
         #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+        showlegend=False
     )
     for axis in fig.layout:
         if type(fig.layout[axis]) == go.layout.YAxis:
@@ -310,9 +320,9 @@ with tab1:
             autoexpand=True
         ),
         width=800,
-        height=500,
+        height=600,
         title={
-            'text': 'Disbursements per component',
+            'text': 'Total per component',
             'x': 0.5,
             'xanchor': 'center'}
     )
@@ -323,7 +333,7 @@ with tab1:
 with tab2:
     col1, col2 = st.columns([15, 15])
     df_line = df1_filtered_dates[["Region", "disbursementAmount", "Year"]].groupby(["Year","Region"]).sum().reset_index()
-    fig = px.bar(df_line, x="Year", y="disbursementAmount", color="Region", color_discrete_map=color_discrete_map)
+    fig = px.bar(df_line, x="Year", y="disbursementAmount", color="Region", color_discrete_map=color_discrete_map2)
     fig.update_layout(
         autosize=False,
         margin=dict(
@@ -334,12 +344,15 @@ with tab2:
             pad=4,
             autoexpand=True),
         width=800,
-        height=250,
+        height=300,
         title={
             'text': 'Yearly disbursements',
             'x': 0.5,
             'xanchor': 'center'},
         # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+        legend=dict(
+            yanchor="top",
+            orientation="h")
     )
     for axis in fig.layout:
         if type(fig.layout[axis]) == go.layout.YAxis:
@@ -352,7 +365,7 @@ with tab2:
     df_line = df1_filtered_dates[["Region", "disbursementAmount", "disbursementDate"]].sort_values(by="disbursementDate",
                                                                                            ascending=True)
     fig = px.line(df_line.join(df_line.groupby("Region", as_index=False).cumsum(), rsuffix="_cumsum"),
-                  y="disbursementAmount_cumsum", x="disbursementDate", color="Region", color_discrete_map=color_discrete_map)
+                  y="disbursementAmount_cumsum", x="disbursementDate", color="Region", color_discrete_map=color_discrete_map2)
     fig.update_layout(
         autosize=False,
         margin=dict(
@@ -363,11 +376,12 @@ with tab2:
             pad=4,
             autoexpand=True),
         width=800,
-        height=250,
+        height=300,
         title={
             'text': 'Cumulated regional disbursements',
             'x': 0.5,
-            'xanchor': 'center'}
+            'xanchor': 'center'},
+        showlegend=False
     )
     for axis in fig.layout:
         if type(fig.layout[axis]) == go.layout.YAxis:
@@ -395,7 +409,7 @@ with tab2:
             pad=4,
             autoexpand=True),
         width=800,
-        height=500,
+        height=600,
         title={
             'text': 'Top 10 disbursement receivers',
             'x': 0.5,
@@ -446,7 +460,91 @@ with tab2:
         st.plotly_chart(fig, use_container_width=True)
 
 
+    # Sankey diagriam
     with tab4:
+        # Data preparation for Sankey diagrame
+
+        df2 = df1.groupby(['componentName', 'Region'], as_index=False)['disbursementAmount'].sum()
+        df3 = df1.groupby(['Region', 'geographicAreaName'], as_index=False)['disbursementAmount'].sum()
+
+        df2.columns = ['a', 'b', 'Quantity']
+        df3.columns = ['a', 'b', 'Quantity']
+
+        df4 = df2.append(df3)
+
+        df4["Total disbursement"] = df4['Quantity']
+
+
+        def genSankey(df, cat_cols=[], value_cols='', title='Sankey Diagram'):
+            # maximum of 6 value cols -> 6 colors
+            colorPalette = ['#FFD43B', '#646464']
+            labelList = []
+            colorNumList = []
+            for catCol in cat_cols:
+                labelListTemp = list(set(df[catCol].values))
+                colorNumList.append(len(labelListTemp))
+                labelList = labelList + labelListTemp
+
+            # remove duplicates from labelList
+            labelList = list(dict.fromkeys(labelList))
+
+            # define colors based on number of levels
+            colorList = []
+            for idx, colorNum in enumerate(colorNumList):
+                colorList = colorList + [colorPalette[idx]] * colorNum
+
+            # transform df into a source-target pair
+            for i in range(len(cat_cols) - 1):
+                if i == 0:
+                    sourceTargetDf = df[[cat_cols[i], cat_cols[i + 1], value_cols]]
+                    sourceTargetDf.columns = ['source', 'target', 'count']
+                else:
+                    tempDf = df[[cat_cols[i], cat_cols[i + 1], value_cols]]
+                    tempDf.columns = ['source', 'target', 'count']
+                    sourceTargetDf = pd.concat([sourceTargetDf, tempDf])
+                sourceTargetDf = sourceTargetDf.groupby(['source', 'target']).agg({'count': 'sum'}).reset_index()
+
+            # add index for source-target pair
+            sourceTargetDf['sourceID'] = sourceTargetDf['source'].apply(lambda x: labelList.index(x))
+            sourceTargetDf['targetID'] = sourceTargetDf['target'].apply(lambda x: labelList.index(x))
+
+            # creating the sankey diagram
+            data = dict(
+                type='sankey',
+                node=dict(
+                    pad=15,
+                    thickness=20,
+                    line=dict(
+                        color="black",
+                        width=0.5
+                    ),
+                    label=labelList,
+                    color=colorList
+                ),
+                link=dict(
+                    source=sourceTargetDf['sourceID'],
+                    target=sourceTargetDf['targetID'],
+                    value=sourceTargetDf['count']
+                ),
+                textfont=dict(size=15)
+            )
+            layout = dict(
+                title=title,
+                font=dict(size=12),
+                height=825
+
+            )
+
+            fig = dict(data=[data], layout=layout)
+            return fig
+
+
+        fig = genSankey(df4, cat_cols=['a', 'b'], value_cols='Total disbursement',
+                        title='Sankey Diagram of The Global Fund Disbursements till date (G values should be read as Billion)')
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with tab5:
 
         col1, col2 = st.columns([5, 20])
 
@@ -585,98 +683,21 @@ with tab2:
 
 
 
-    st.markdown("<p style='text-align: justify; font-size: 110%'>"
-                "Recipients overview <br>"
-                "</p>",
-                unsafe_allow_html=True)
+st.markdown("<p style='text-align: justify; font-size: 110%'>"
+            "Recipients overview  (WIP)<br>"
+            "</p>",
+            unsafe_allow_html=True)
 
 
-    col1, col2, col3= st.columns([30, 30, 30])
-    col1.metric("Total countries", "${}B".format(round(df1.disbursementAmount.sum()/1000000000,2)))
-    col1.metric("Total Principal Recipients:", "{}".format(min(df1.disbursementDate)))
-    col1.metric("Recipients this year", "{}".format(max(df1.disbursementDate)))
+# col1, col2, col3= st.columns([30, 30, 30])
+# col1.metric("Total countries", "${}B".format(round(df1.disbursementAmount.sum()/1000000000,2)))
+# col1.metric("Total Principal Recipients:", "{}".format(min(df1.disbursementDate)))
+# col1.metric("Recipients this year", "{}".format(max(df1.disbursementDate)))
 
 
 
 
-    # Data preparation for Sankey diagrame
 
-    df2 = df1.groupby(['componentName', 'Region'], as_index=False)['disbursementAmount'].sum()
-    df3 = df1.groupby(['Region', 'geographicAreaName'], as_index=False)['disbursementAmount'].sum()
-
-    df2.columns = ['a', 'b', 'Quantity']
-    df3.columns = ['a', 'b', 'Quantity']
-
-    df4 = df2.append(df3)
-
-    df4["Total disbursement"] = df4['Quantity']
-
-    def genSankey(df, cat_cols=[], value_cols='', title='Sankey Diagram'):
-        # maximum of 6 value cols -> 6 colors
-        colorPalette = ['#FFD43B', '#646464']
-        labelList = []
-        colorNumList = []
-        for catCol in cat_cols:
-            labelListTemp = list(set(df[catCol].values))
-            colorNumList.append(len(labelListTemp))
-            labelList = labelList + labelListTemp
-
-        # remove duplicates from labelList
-        labelList = list(dict.fromkeys(labelList))
-
-        # define colors based on number of levels
-        colorList = []
-        for idx, colorNum in enumerate(colorNumList):
-            colorList = colorList + [colorPalette[idx]] * colorNum
-
-        # transform df into a source-target pair
-        for i in range(len(cat_cols) - 1):
-            if i == 0:
-                sourceTargetDf = df[[cat_cols[i], cat_cols[i + 1], value_cols]]
-                sourceTargetDf.columns = ['source', 'target', 'count']
-            else:
-                tempDf = df[[cat_cols[i], cat_cols[i + 1], value_cols]]
-                tempDf.columns = ['source', 'target', 'count']
-                sourceTargetDf = pd.concat([sourceTargetDf, tempDf])
-            sourceTargetDf = sourceTargetDf.groupby(['source', 'target']).agg({'count': 'sum'}).reset_index()
-
-        # add index for source-target pair
-        sourceTargetDf['sourceID'] = sourceTargetDf['source'].apply(lambda x: labelList.index(x))
-        sourceTargetDf['targetID'] = sourceTargetDf['target'].apply(lambda x: labelList.index(x))
-
-        # creating the sankey diagram
-        data = dict(
-            type='sankey',
-            node=dict(
-                pad=15,
-                thickness=20,
-                line=dict(
-                    color="black",
-                    width=0.5
-                ),
-                label=labelList,
-                color = colorList
-            ),
-            link=dict(
-                source=sourceTargetDf['sourceID'],
-                target=sourceTargetDf['targetID'],
-                value=sourceTargetDf['count']
-            ),
-            textfont = dict(size=15)
-        )
-        layout = dict(
-            title=title,
-            font=dict(size=12),
-            height=825
-
-        )
-
-        fig = dict(data=[data], layout=layout)
-        return fig
-
-    fig = genSankey(df4, cat_cols=['a', 'b'], value_cols='Total disbursement', title='Sankey Diagram of The Global Fund Disbursements till date (G values should be read as Billion)')
-
-    st.plotly_chart(fig, use_container_width=True)
 
 
 ## List of GF Disbursements
