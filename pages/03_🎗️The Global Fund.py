@@ -464,8 +464,8 @@ with tab2:
     with tab4:
         # Data preparation for Sankey diagrame
 
-        df2 = df1.groupby(['componentName', 'Region'], as_index=False)['disbursementAmount'].sum()
-        df3 = df1.groupby(['Region', 'geographicAreaName'], as_index=False)['disbursementAmount'].sum()
+        df2 = df1_filtered_dates.groupby(['componentName', 'Region'], as_index=False)['disbursementAmount'].sum()
+        df3 = df1_filtered_dates.groupby(['Region', 'geographicAreaName'], as_index=False)['disbursementAmount'].sum()
 
         df2.columns = ['a', 'b', 'Quantity']
         df3.columns = ['a', 'b', 'Quantity']
