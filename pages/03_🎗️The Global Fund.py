@@ -8,12 +8,6 @@ import plotly.graph_objects as go
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="International Health", page_icon="🎗", layout="wide")
 
-# Use local CSS
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-local_css("style/style.css")
-
 # Remove whitespace from the top of the page and sidebar
 st.markdown("""
         <style>
@@ -31,6 +25,12 @@ st.markdown("""
                 }
         </style>
         """, unsafe_allow_html=True)
+
+# Use local CSS
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+local_css("style/style.css")
 
 # resize expanders
 st.markdown("""
@@ -83,7 +83,7 @@ st.title("Global Fund API explorer")
 
 
 ## List of WHO countries
-@st.cache(allow_output_mutation=True)
+@st.cache
 def import_api_WHO_countries(url):
     service_url0 = url
     response0 = requests.get(service_url0)
@@ -122,51 +122,50 @@ WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income leve
 country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
 ## List of GF Disbursements
-GF_container = st.container()
-with GF_container:
-    st.markdown("<p style='text-align: justify; font-size: 160%'>"
-                "Disbursements records <br>"
-                "</p>",
-                unsafe_allow_html=True)
-    @st.cache
-    def import_api_GF(url):
-        service_url0 = url
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        print(response0)
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-        else:
-            st.caption("Global Fund API cannot be loaded")
-        df1 = pd.DataFrame(data0j["value"])
-        return df1
+st.markdown("<p style='text-align: justify; font-size: 160%'>"
+            "Disbursements records <br>"
+            "</p>",
+            unsafe_allow_html=True)
 
-    with st.spinner('Loading all disbursements data from API (it will take a few seconds the first time)'):
-        df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
-        df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
-                                                                'geographicAreaName',
-                                                                'componentName',
-                                                                'grantAgreementStatusTypeName',
-                                                                'principalRecipientSubClassificationName',
-                                                                'disbursementDate',
-                                                                'disbursementAmount']]
-        df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
+@st.cache(allow_output_mutation=True)
+def import_api_GF(url):
+    service_url0 = url
+    response0 = requests.get(service_url0)
+    # make sure we got a valid response
+    print(response0)
+    if (response0.ok):
+        # get the full data from the response
+        data0j = response0.json()
+    else:
+        st.caption("Global Fund API cannot be loaded")
+    df1 = pd.DataFrame(data0j["value"])
+    return df1
 
-    st.markdown("<p style='text-align: justify;'>"
-                "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
-                " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
-                " more about the organization Funding Model.<br>"
-                "In order to explore the Global Fund Disbursement information we loaded the de-normalized view of all Grant Agreement "
-                "Disbursements records. <br>"
-                "</p>", unsafe_allow_html=True)
+with st.spinner('Loading all disbursements data from API (it will take a few seconds the first time)'):
+    df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
+    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
+                                                            'geographicAreaName',
+                                                            'componentName',
+                                                            'grantAgreementStatusTypeName',
+                                                            'principalRecipientSubClassificationName',
+                                                            'disbursementDate',
+                                                            'disbursementAmount']]
+    df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
 
-    #merge with country info
-    df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
-    df1 = pd.merge(df1,
-                  country_list,
-                  on='SpatialDim',
-                  how='inner')
+st.markdown("<p style='text-align: justify;'>"
+            "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
+            " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
+            " more about the organization Funding Model.<br>"
+            "In order to explore the Global Fund Disbursement information we loaded the de-normalized view of all Grant Agreement "
+            "Disbursements records. <br>"
+            "</p>", unsafe_allow_html=True)
+
+#merge with country info
+df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
+df1 = pd.merge(df1,
+              country_list,
+              on='SpatialDim',
+              how='inner')
 
 
 color_discrete_map={
