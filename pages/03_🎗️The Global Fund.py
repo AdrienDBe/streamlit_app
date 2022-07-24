@@ -19,7 +19,7 @@ st.markdown("""
 <style>
 .streamlit-expanderHeader {
     font-size: medium;
-    color:#527a7a;   
+    color:#ad8585;   
     }
 .st-bd {border-style: none;}
 </style>
@@ -27,6 +27,32 @@ st.markdown("""
 
 # ---- SIDEBAR ----
 with st.sidebar:
+    with st.expander("Read more about The Global Fund"):
+        # The Global Fund details
+        st.markdown("<p style='text-align: justify;'>"
+                "<a href='https://www.theglobalfund.org/en/'>The Global Fund </a> is a partnership designed to accelerate the end of AIDS, tuberculosis and "
+                "malaria as epidemics. <br> It prioritizes: results-based work, accountability, preparing countries"
+                " for graduation from aid, investing in people as assets for development and inclusive governance."
+                " To do so, the Global Fund mobilizes and invests more than US$4 billion a year to support programs "
+                "run by local experts in more than 100 countries in partnership with governments, civil society, "
+                "technical agencies, the private sector and people affected by the diseases. <br><br>"
+                "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
+                      " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
+                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records.</p>",
+                unsafe_allow_html=True)
+    with st.expander("What's an API?"):
+        st.markdown("<p style='text-align: justify;'>"
+                    "The term API stands for Application Programming Interface. "
+                    "API enable applications, here our web app, to communicate with an external data source using simple commands. "
+                    "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
+                    "between computers or between computer programs offering a service to other pieces of software."
+                    "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
+                    " with the purpose of ensuring transparency and a better access to information generated, "
+                    "for the benefit of the stakeholders in their activities.<br>"
+                    "In order to offer more filter options in this app I also imported the "
+                    "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
+                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets."
+                    "</p>", unsafe_allow_html=True)
     st.caption("<p style='text-align: justify;'>"
                 "Disclaimer: <br /> The information presented in this page is solely made by me in my private capacity. "
                 " <br /> All the data used and displayed is publicly available via the "
@@ -35,62 +61,8 @@ with st.sidebar:
 
 # ---- HEADER SECTION ----
 
-st.title("Using API to explore International Health data: The Global Fund")
+st.title("Global Fund API explorer")
 
-intro_container =  st.container()
-with intro_container:
-
-    api_container = st.container()
-    with api_container:
-        st.markdown("<p style='text-align: justify; font-size: 160%'>"
-                    "<br>The Global Fund"
-                    "</p>"
-                    "<p style='text-align: justify;'>"
-                    "<a href='https://www.theglobalfund.org/en/'>The Global Fund </a> is a partnership designed to accelerate the end of AIDS, tuberculosis and "
-                            "malaria as epidemics. <br> It prioritizes: results-based work, accountability, preparing countries"
-                            " for graduation from aid, investing in people as assets for development and inclusive governance."
-                            " To do so, the Global Fund mobilizes and invests more than US$4 billion a year to support programs "
-                            "run by local experts in more than 100 countries in partnership with governments, civil society, "
-                            "technical agencies, the private sector and people affected by the diseases.</p>",
-                    unsafe_allow_html=True)
-        with st.expander("Read more about international health"):
-            # The Global Fund details
-            st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
-            "International health is defined as the branch of public health focusing on developing nations and"
-            " foreign aid efforts. <br> The predominant agency associated with global and international health is the"
-            " World Health Organization (WHO). Other important agencies are also involved with different missions such as:"
-            " funders or implementing partners.</p>",unsafe_allow_html=True)
-
-
-    exploring_api_container =  st.container()
-    with exploring_api_container:
-        st.markdown("<p style='text-align: justify; font-size: 160%''>"
-                    "Accessing API to load data"
-                    "</p>", unsafe_allow_html=True)
-        col1, colblank, col2 = st.columns([30, 1, 30])
-        col1.markdown("<p style='text-align: justify;'>"
-                    "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
-                      " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
-                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records."
-                    "</p>", unsafe_allow_html=True)
-        col2.markdown("<p style='text-align: justify;'>"
-                    "In order to offer more visualization filtering we also imported the "
-                    "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
-                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets.</p>",
-                    unsafe_allow_html=True)
-        with st.expander("Wait, what's an API?"):
-            st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
-                        "<em>The term API stands for Application Programming Interface. "
-                        "API enable applications, here our web app, to communicate with an external data source using simple commands. "
-                        "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
-                        "between computers or between computer programs offering a service to other pieces of software."
-                        "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
-                        " with the purpose of ensuring transparency and a better access to information generated, "
-                        "for the benefit of the stakeholders in their activities."
-                        "</em></p>", unsafe_allow_html=True)
-
-
-st.write("---")
 
 ## List of WHO countries
 @st.cache
@@ -197,7 +169,7 @@ color_discrete_map2={
 
  #------------------------------------
 
-col1, col, col2, col02, col3 = st.columns([10,1,10,1,10])
+col1, col2, col3 = st.columns([10,10,10],gap='large')
 
 # Filter component
 option_map1 = col2.multiselect(
@@ -546,117 +518,22 @@ with tab2:
 
     with tab5:
 
-        col1, col2 = st.columns([5, 20])
+        col1, col2 = st.columns([8, 20])
 
         #Dataframe wrangler
         groupby = col1.radio(
             "Which dataset do you want?",
-            ('Keep the same filters','All disbursements records', 'Filtered by country', 'Filtered by component', 'Filtered by year'))
+            ('Keep the same filters','All disbursements records', 'Filtered by country'))
 
         if groupby == 'Keep the same filters':
-            fig = go.Figure(data=[go.Table(
-                header=dict(values=list(
-                    ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]),
-                            fill_color='Grey',
-                            align='left'),
-                cells=dict(values=[df1_filtered_dates.Country, df1_filtered_dates.componentName, df1_filtered_dates.principalRecipientSubClassificationName,
-                                   df1_filtered_dates.disbursementDate, df1_filtered_dates.disbursementAmount],
-                           # fill_color='lavender',
-                           font=dict(color='black', family="arial"),
-                           align='left'))
-            ])
-            fig.update_layout(height=500, margin=dict(r=5, l=5, t=5, b=5))
-            col2.plotly_chart(fig, use_container_width=False)
+            df_ex = df1_filtered_dates[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
+            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
+            col2.dataframe(df_ex.reset_index(drop=True))
 
         if groupby == 'All disbursements records':
-            fig = go.Figure(data=[go.Table(
-                header=dict(values=list(
-                    ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]),
-                            fill_color='Grey',
-                            align='left'),
-                cells=dict(values=[df1_filtered_dates.Country, df1.componentName, df1.principalRecipientSubClassificationName,
-                                   df1.disbursementDate, df1.disbursementAmount],
-                           # fill_color='lavender',
-                           font=dict(color='black', family="arial"),
-                           align='left'))
-            ])
-            fig.update_layout(height=500, margin=dict(r=5, l=5, t=5, b=5))
-            col2.plotly_chart(fig, use_container_width=False)
-
-        if groupby == 'Filtered by country':
-            option = col1.selectbox(
-                'Select country',
-                (list(df1.Country.sort_values(ascending=True).unique()))
-            )
-            df_group = df1[df1["Country"]==option]
-            df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
-            fig = go.Figure(data=[go.Table(
-                header=dict(values=list(
-                    ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]),
-                    fill_color='Grey',
-                    align='left',
-                    font=dict(color='white',size = 14, family="arial")),
-                cells=dict(values=[df_group.Country,
-                                   df_group.componentName,
-                                   df_group.principalRecipientSubClassificationName,
-                                   df_group.disbursementDate,
-                                   df_group.disbursementAmount],
-                           # fill_color='lavender',
-                           font=dict(color='black', family="arial"),
-                           align='left'))
-            ])
-            fig.update_layout(height=500, margin=dict(r=5, l=5, t=5, b=5))
-            col2.plotly_chart(fig, use_container_width=False)
-
-        if groupby == 'Filtered by component':
-            option = col1.selectbox(
-                'Select component',
-                (list(df1.componentName.sort_values(ascending=True).unique()))
-            )
-            df_group = df1[df1["componentName"]==option]
-            df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
-            fig = go.Figure(data=[go.Table(
-                header=dict(values=list(
-                    ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]),
-                    fill_color='Grey',
-                    align='left',
-                    font=dict(color='white',size = 14, family="arial")),
-                cells=dict(values=[df_group.Country,
-                                   df_group.componentName,
-                                   df_group.principalRecipientSubClassificationName,
-                                   df_group.disbursementDate,
-                                   df_group.disbursementAmount],
-                           # fill_color='lavender',
-                           font=dict(color='black', family="arial"),
-                           align='left'))
-            ])
-            fig.update_layout(height=500, margin=dict(r=5, l=5, t=5, b=5))
-            col2.plotly_chart(fig, use_container_width=False)
-
-        if groupby == 'Filtered by year':
-            option = col1.selectbox(
-                'Select country',
-                (list(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()))
-            )
-            df_group = df1[df1["disbursementDate"].astype('datetime64[ns]').dt.year == option]
-            df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
-            fig = go.Figure(data=[go.Table(
-                header=dict(values=list(
-                    ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]),
-                    fill_color='Grey',
-                    align='left',
-                    font=dict(color='white',size = 14, family="arial")),
-                cells=dict(values=[df_group.Country,
-                                   df_group.componentName,
-                                   df_group.principalRecipientSubClassificationName,
-                                   df_group.disbursementDate,
-                                   df_group.disbursementAmount],
-                           # fill_color='lavender',
-                           font=dict(color='black', family="arial"),
-                           align='left'))
-            ])
-            fig.update_layout(height=500, margin=dict(r=5, l=5, t=5, b=5))
-            col2.plotly_chart(fig, use_container_width=False)
+            df_ex = df1[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
+            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
+            col2.dataframe(df_ex.reset_index(drop=True))
 
         if groupby == 'Keep the same filters':
             dl_file = df1_filtered_dates
@@ -669,6 +546,18 @@ with tab2:
             else:
                 dl_file = df_group
 
+        if groupby == 'Filtered by country':
+            option = col1.selectbox(
+                'Select country',
+                (list(df1.Country.sort_values(ascending=True).unique()))
+            )
+            df_group = df1[df1["Country"]==option]
+            df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
+            df_ex = df_group[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
+                         "disbursementAmount"]]
+            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
+            col2.dataframe(df_ex.reset_index(drop=True))
+
         @st.cache
         def convert_df(dl_file):
             # IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -680,21 +569,6 @@ with tab2:
             file_name='GF_Disbursements_API.csv',
             key='download-csv',
         )
-
-
-
-st.markdown("<p style='text-align: justify; font-size: 110%'>"
-            "Recipients overview  (WIP)<br>"
-            "</p>",
-            unsafe_allow_html=True)
-
-
-# col1, col2, col3= st.columns([30, 30, 30])
-# col1.metric("Total countries", "${}B".format(round(df1.disbursementAmount.sum()/1000000000,2)))
-# col1.metric("Total Principal Recipients:", "{}".format(min(df1.disbursementDate)))
-# col1.metric("Recipients this year", "{}".format(max(df1.disbursementDate)))
-
-
 
 
 
