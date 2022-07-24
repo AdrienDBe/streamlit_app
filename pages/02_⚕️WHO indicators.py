@@ -19,77 +19,52 @@ st.markdown("""
 <style>
 .streamlit-expanderHeader {
     font-size: medium;
-    color:#527a7a;   
+    color:#ad8585;   
     }
 .st-bd {border-style: none;}
 </style>
 """, unsafe_allow_html=True)
 
+
+st.title("WHO indicators API explorer")
+
 # ---- SIDEBAR ----
 with st.sidebar:
+    with st.expander("Read more about the World Health Organization (WHO)"):
+        # WHO details
+        st.markdown("<p style='text-align: justify'>"
+        "The <a href='https://www.who.int/'>World Health Organization (WHO) </a> leads global efforts to expand universal health coverage by directing and"
+            " coordinating the world’s response to health emergencies. It promotes healthier lives – from pregnancy care"
+            " through old age. Its Triple Billion targets outline an ambitious plan for the world to achieve good health"
+            " for all using science-based policies and programmes.<br><br>International health is defined as the branch of public health focusing on developing nations and"
+        " foreign aid efforts. <br> The predominant agency associated with global and international health is the"
+        " World Health Organization (WHO). Other important agencies are also involved with different missions:"
+        " funders, implementing partners etc.</p>",unsafe_allow_html=True)
+    with st.expander("Accessing WHO API to load data"):
+        # WHO details
+        st.markdown("<p style='text-align: justify>"
+            "The WHO API <a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'> (see documentation) </a> is providing access to 2,197"
+                "  indicators at the time of writing.<br>"
+                "To simplify data exploration here we will only display indicators related to the three epidemics "
+                "targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria).<br>"
+                "In order to offer more visualization filtering we also imported the "
+                "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
+                " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO</p>",unsafe_allow_html=True)
+    with st.expander("What's an API?"):
+        st.markdown("<p style='text-align: justify;'>"
+                    "The term API stands for Application Programming Interface. "
+                    "API enable applications, here our web app, to communicate with an external data source using simple commands. "
+                    "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
+                    "between computers or between computer programs offering a service to other pieces of software."
+                    "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
+                    " with the purpose of ensuring transparency and a better access to information generated, "
+                    "for the benefit of the stakeholders in their activities.</p>", unsafe_allow_html=True)
+
     st.caption("<p style='text-align: justify;'>"
-                "Disclaimer: <br /> The information presented in this page is solely made by me in my private capacity. "
-                " <br /> All the data used and displayed is publicly available via the "
-                "<a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'>WHO API </a></p>",
-                unsafe_allow_html=True)
-
-# ---- HEADER SECTION ----
-
-st.title("Using API to explore International Health data: WHO indicators")
-
-intro_container =  st.container()
-with intro_container:
-    api_container = st.container()
-    with api_container:
-        st.markdown("<p style='text-align: justify; font-size: 160%'>"
-                    "<br>The World Health Organization (WHO)"
-                    "</p>"
-                    "<p style='text-align: justify;'>"
-                    "The <a href='https://www.who.int/'>World Health Organization (WHO) </a> leads global efforts to expand universal health coverage by directing and"
-                " coordinating the world’s response to health emergencies. It promotes healthier lives – from pregnancy care"
-                " through old age. Its Triple Billion targets outline an ambitious plan for the world to achieve good health"
-                " for all using science-based policies and programmes.</p>",
-                    unsafe_allow_html=True)
-        with st.expander("Read more about international health"):
-            # WHO details
-            st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
-            "<em>International health is defined as the branch of public health focusing on developing nations and"
-            " foreign aid efforts. <br> The predominant agency associated with global and international health is the"
-            " World Health Organization (WHO). Other important agencies are also involved with different missions:"
-            " funders, implementing partners etc.</em></p>",unsafe_allow_html=True)
-
-    st.write("---")
-
-    exploring_api_container =  st.container()
-    with exploring_api_container:
-        st.markdown("<p style='text-align: justify; font-size: 160%''>"
-                    "Accessing API to load data"
-                    "</p>", unsafe_allow_html=True)
-        col1, colblank, col2 = st.columns([30, 1, 30])
-        col1.markdown("<p style='text-align: justify;'>"
-                    "The WHO API <a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'> (link to documentation)</a>"
-                      " is providing access to 2,197 indicators at the time of writing.<br>"
-                    "To simplify data exploration here we will only display indicators related to the three epidemics "
-                      "targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria)."
-                    "</p>", unsafe_allow_html=True)
-        col2.markdown("<p style='text-align: justify;'>"
-                    "In order to offer more visualization filtering we also imported the "
-                    "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
-                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets.</p>",
-                    unsafe_allow_html=True)
-        with st.expander("Wait, what's an API?"):
-            st.markdown("<p style='text-align: justify;color:#3d5c5c'>"
-                        "<em>The term API stands for Application Programming Interface. "
-                        "API enable applications, here our web app, to communicate with an external data source using simple commands. "
-                        "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
-                        "between computers or between computer programs offering a service to other pieces of software."
-                        "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
-                        " with the purpose of ensuring transparency and a better access to information generated, "
-                        "for the benefit of the stakeholders in their activities."
-                        "</em></p>", unsafe_allow_html=True)
-
-
-st.write("---")
+               "Disclaimer: <br /> The information presented in this page is solely made by me in my private capacity. "
+               " <br /> All the data used and displayed is publicly available via the "
+               "<a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'>WHO API </a></p>",
+               unsafe_allow_html=True)
 
 ## List of WHO countries
 @st.cache
@@ -188,11 +163,9 @@ with who_indic_container:
     with col2:
         if hue == 'Income level':
             fig = px.line(df.groupby(['Year','Income level'], as_index=False).sum(), x="Year", y="Value", color="Income level", title = "{}".format(option_indicators_name))
-            fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
             st.plotly_chart(fig, use_container_width=True)
         elif hue == 'Region':
             fig = px.line(df.groupby(['Year','Region'], as_index=False).sum(), x="Year", y="Value", color="Region", title = "{}".format(option_indicators_name))
-            fig.update_layout(paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
             st.plotly_chart(fig, use_container_width=True)
         elif hue == 'Country':
             # checkbox all countries
@@ -200,14 +173,12 @@ with who_indic_container:
             if all:
                 selected_options = df.Country.unique()
                 fig = px.line(df.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value", color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 container = col1.container()
                 selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
                 df_country = df[df["Country"].isin(selected_options)]
                 fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country", title = "{}".format(option_indicators_name))
-                fig.update_layout(plot_bgcolor="rgb(255,255,255)")
                 st.plotly_chart(fig, use_container_width=True)
 
 
