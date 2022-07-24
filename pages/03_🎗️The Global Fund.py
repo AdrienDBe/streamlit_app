@@ -127,7 +127,7 @@ st.markdown("<p style='text-align: justify; font-size: 160%'>"
             "</p>",
             unsafe_allow_html=True)
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True,suppress_st_warning=True)
 def import_api_GF(url):
     service_url0 = url
     response0 = requests.get(service_url0)
