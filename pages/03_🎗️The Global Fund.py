@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="International Health", page_icon="🎗", layout="wide")
+st.set_page_config(page_title="The Global Fund", page_icon="🎗", layout="wide")
 
 # Remove whitespace from the top of the page and sidebar
 st.markdown("""
