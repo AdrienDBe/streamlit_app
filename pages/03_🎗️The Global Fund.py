@@ -122,18 +122,18 @@ WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income leve
 country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
 ## List of GF Disbursements
-
 st.markdown("<p style='text-align: justify; font-size: 160%'>"
             "Disbursements records <br>"
             "</p>",
             unsafe_allow_html=True)
+
 st.markdown("<p style='text-align: justify;'>"
             "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
             " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
             " more about the organization Funding Model.<br>"
-            "In order to explore the Global Fund Disbursement information we load the de-normalized view of all grant agreement "
-            "disbursements records (it will take a few seconds the first time). <br>"
-            "</p>", unsafe_allow_html=True)
+            "In order to visualize disbursement information data we will load and explore the API de-normalized view of all Grant Agreement "
+            "Disbursements records. </p>", unsafe_allow_html=True)
+
 
 @st.cache(show_spinner=True)
 def import_api_GF(url):
@@ -151,12 +151,12 @@ def import_api_GF(url):
 
 df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
 df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
-                                                    'geographicAreaName',
-                                                    'componentName',
-                                                    'grantAgreementStatusTypeName',
-                                                    'principalRecipientSubClassificationName',
-                                                    'disbursementDate',
-                                                    'disbursementAmount']]
+                                                        'geographicAreaName',
+                                                        'componentName',
+                                                        'grantAgreementStatusTypeName',
+                                                        'principalRecipientSubClassificationName',
+                                                        'disbursementDate',
+                                                        'disbursementAmount']]
 df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
 
 
@@ -448,20 +448,24 @@ with tab2:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-
-    # Sankey diagriam
+# Sankey diagriam
     with tab4:
         # Data preparation for Sankey diagrame
 
+        df1_sankey = df1_filtered_dates
+        df1_sankey["GF"] = "Global Fund"
+        df1_sankey = df1_sankey.groupby(['GF', 'componentName'], as_index=False)['disbursementAmount'].sum()
         df2 = df1_filtered_dates.groupby(['componentName', 'Region'], as_index=False)['disbursementAmount'].sum()
         df3 = df1_filtered_dates.groupby(['Region', 'geographicAreaName'], as_index=False)['disbursementAmount'].sum()
 
+        df1_sankey.columns = ['a', 'b', 'Quantity']
         df2.columns = ['a', 'b', 'Quantity']
         df3.columns = ['a', 'b', 'Quantity']
 
-        df4 = df2.append(df3)
+        df4 = df1_sankey.append(df2)
+        df5 = df4.append(df3)
 
-        df4["Total disbursement"] = df4['Quantity']
+        df5["Total disbursement"] = df5['Quantity']
 
 
         def genSankey(df, cat_cols=[], value_cols='', title='Sankey Diagram'):
@@ -528,8 +532,8 @@ with tab2:
             return fig
 
 
-        fig = genSankey(df4, cat_cols=['a', 'b'], value_cols='Total disbursement',
-                        title='Sankey Diagram of The Global Fund Disbursements till date (G values should be read as Billion)')
+        fig = genSankey(df5, cat_cols=['a', 'b'], value_cols='Total disbursement',
+                        title='Sankey Diagram of The Global Fund Disbursements till date')
 
         st.plotly_chart(fig, use_container_width=True)
 
