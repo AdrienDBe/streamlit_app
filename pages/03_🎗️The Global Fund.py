@@ -430,7 +430,7 @@ with tab2:
                                ),
                                geo=dict(bgcolor='rgba(0,0,0,0)',
                                         lakecolor='#4E5D6C',
-                                        visible=False,
+                                        visible=True,
                                         landcolor='#3d3d3d',
                                         showland=True,
                                         showcountries=True,
