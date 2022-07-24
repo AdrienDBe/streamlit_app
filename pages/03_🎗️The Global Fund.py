@@ -131,8 +131,8 @@ st.markdown("<p style='text-align: justify;'>"
             "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
             " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
             " more about the organization Funding Model.<br>"
-            "In order to explore the Global Fund Disbursement information we loaded the de-normalized view of all Grant Agreement "
-            "Disbursements records (it will take a few seconds the first time). <br>"
+            "In order to explore the Global Fund Disbursement information we load the de-normalized view of all grant agreement "
+            "disbursements records (it will take a few seconds the first time). <br>"
             "</p>", unsafe_allow_html=True)
 
 @st.cache(show_spinner=True)
