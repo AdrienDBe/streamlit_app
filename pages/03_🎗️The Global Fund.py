@@ -417,7 +417,8 @@ with tab2:
             data=go.Choropleth(
                 locations=df_geo["SpatialDim"],
                 z = df_geo['disbursementAmount'],
-                colorscale  = "Blues"
+                colorscale  = "Blues",
+                showscale = True 
             ),
             layout = go.Layout(height=500,
                                margin=dict(
