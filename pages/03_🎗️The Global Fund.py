@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="The Global Fund", page_icon="🎗", layout="wide")
+st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
 
 # Remove whitespace from the top of the page and sidebar
 st.markdown("""
@@ -131,8 +131,8 @@ st.markdown("<p style='text-align: justify;'>"
             "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
             " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
             " more about the organization Funding Model.<br>"
-            "In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
-            "Disbursements records (it will take a few seconds the first time). </p>", unsafe_allow_html=True)
+            "In order to visualize disbursement information data we will load and explore the API de-normalized view of all Grant Agreement "
+            "Disbursements records. </p>", unsafe_allow_html=True)
 
 
 @st.cache(show_spinner=True)
@@ -412,40 +412,37 @@ with tab2:
 
         df_geo = df1_filtered_dates.groupby(['geographicAreaName', 'SpatialDim'], as_index=False)[
             'disbursementAmount'].sum().sort_values(by="disbursementAmount")
-        fig = px.choropleth(df_geo, locations="SpatialDim",
-                            color="disbursementAmount",  # lifeExp is a column of gapminder
-                            hover_name="geographicAreaName",  # column to add to hover information
-                            color_continuous_scale="Blues",
-                            height=600,
-                            labels={'disbursementAmount': 'Disbursement amount ($)'},
-                            title='Map of total disbursements'
-                            )
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=0,
-                pad=4,
-                autoexpand=True
+
+        fig = go.Figure(
+            data=go.Choropleth(
+                locations=df_geo["SpatialDim"],
+                z = df_geo['disbursementAmount'],
+                colorscale  = "Blues"
             ),
-            title={
-                'text': 'Map of total disbursements',
-                'x': 0.5,
-                'xanchor': 'center'},
-            geo=dict(
-                visible=False,
-                landcolor='gray',
-                showland=True,
-                showcountries=True,
-                countrycolor='dark gray',
-                countrywidth=0.5,
-                projection=dict(
-                    type='natural earth'
-                )
-            )
+            layout = go.Layout(height=500,
+                               margin=dict(
+                                   l=0,
+                                   r=0,
+                                   b=0,
+                                   t=0,
+                                   pad=4,
+                                   autoexpand=True
+                               ),
+                               geo=dict(bgcolor='rgba(0,0,0,0)',
+                                        lakecolor='#4E5D6C',
+                                        visible=False,
+                                        landcolor='#3d3d3d',
+                                        showland=True,
+                                        showcountries=True,
+                                        countrycolor='#5c5c5c',
+                                        countrywidth=0.5,
+                                        projection=dict(
+                                            type='natural earth'
+                                        )
+                                        ))
         )
+
+
         st.plotly_chart(fig, use_container_width=True)
 
 # Sankey diagriam
