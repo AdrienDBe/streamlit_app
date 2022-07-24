@@ -542,40 +542,27 @@ with tab2:
         #Dataframe wrangler
         groupby = col1.radio(
             "Which dataset do you want?",
-            ('Keep the same filters','All disbursements records', 'Filtered by country'))
-
-        if groupby == 'Keep the same filters':
-            df_ex = df1_filtered_dates[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
-            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
-            col2.dataframe(df_ex.reset_index(drop=True))
+            ('Keep the same filters','Focus on a specific country','All disbursements records'))
 
         if groupby == 'All disbursements records':
-            df_ex = df1[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
-            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
-            col2.dataframe(df_ex.reset_index(drop=True))
+            dl_file = df1[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
+            dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount ($)"]
 
         if groupby == 'Keep the same filters':
-            dl_file = df1_filtered_dates
-        else:
-            if groupby == 'All disbursements records' :
-                dl_file = df1[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
-                               "disbursementAmount"]]
-                dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date",
-                                   "Disbursement amount"]
-            else:
-                dl_file = df_group
+            dl_file = df1_filtered_dates[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
+            dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount ($)"]
 
-        if groupby == 'Filtered by country':
+        if groupby == 'Focus on a specific country':
             option = col1.selectbox(
                 'Select country',
-                (list(df1.Country.sort_values(ascending=True).unique()))
-            )
-            df_group = df1[df1["Country"]==option]
+                (list(df1_filtered_dates.Country.sort_values(ascending=True).unique())))
+            df_group = df1_filtered_dates[df1_filtered_dates["Country"]==option]
             df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
-            df_ex = df_group[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
+            dl_file = df_group[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
                          "disbursementAmount"]]
-            df_ex.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
-            col2.dataframe(df_ex.reset_index(drop=True))
+            dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
+        
+        col2.dataframe(dl_file.reset_index(drop=True))
 
         @st.cache
         def convert_df(dl_file):
