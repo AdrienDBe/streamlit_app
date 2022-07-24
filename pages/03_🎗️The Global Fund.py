@@ -127,15 +127,7 @@ st.markdown("<p style='text-align: justify; font-size: 160%'>"
             "</p>",
             unsafe_allow_html=True)
 
-st.markdown("<p style='text-align: justify;'>"
-            "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
-            " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
-            " more about the organization Funding Model.<br>"
-            "In order to visualize disbursement information data we will load and explore the API de-normalized view of all Grant Agreement "
-            "Disbursements records. </p>", unsafe_allow_html=True)
-
-
-@st.cache(show_spinner=True)
+@st.cache(allow_output_mutation=True,suppress_st_warning=True)
 def import_api_GF(url):
     service_url0 = url
     response0 = requests.get(service_url0)
@@ -149,16 +141,24 @@ def import_api_GF(url):
     df1 = pd.DataFrame(data0j["value"])
     return df1
 
-df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
-df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
-                                                        'geographicAreaName',
-                                                        'componentName',
-                                                        'grantAgreementStatusTypeName',
-                                                        'principalRecipientSubClassificationName',
-                                                        'disbursementDate',
-                                                        'disbursementAmount']]
-df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
+with st.spinner('Loading all disbursements data from API (it will take a few seconds the first time)'):
+    df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
+    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
+                                                            'geographicAreaName',
+                                                            'componentName',
+                                                            'grantAgreementStatusTypeName',
+                                                            'principalRecipientSubClassificationName',
+                                                            'disbursementDate',
+                                                            'disbursementAmount']]
+    df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
 
+st.markdown("<p style='text-align: justify;'>"
+            "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
+            " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
+            " more about the organization Funding Model.<br>"
+            "In order to explore the Global Fund Disbursement information we loaded the de-normalized view of all Grant Agreement "
+            "Disbursements records. <br>"
+            "</p>", unsafe_allow_html=True)
 
 #merge with country info
 df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
