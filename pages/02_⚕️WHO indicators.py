@@ -85,7 +85,7 @@ with st.sidebar:
                unsafe_allow_html=True)
 
 ## List of WHO countries
-@st.cache
+@st.cache(allow_output_mutation=True)
 def import_api_WHO_countries(url):
     service_url0 = url
     response0 = requests.get(service_url0)
