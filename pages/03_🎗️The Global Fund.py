@@ -129,9 +129,9 @@ st.markdown("<p style='text-align: justify; font-size: 160%'>"
 
 st.markdown("<p style='text-align: justify;'>"
             "A disbursement corresponds to the transfer of a specific tranche of the Grant Funds for the implementation"
-            " of Programs. You can go to <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
-            " more about the organization Funding Model.<br>"
-            "In order to visualize disbursement information data we load the API de-normalized view of all Grant Agreement "
+            " of Programs. You can visit <a href='https://www.theglobalfund.org/en/funding-model/'>this link</a> to know"
+            " learn about the organization Funding Model."
+            " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
             "Disbursements records (it will take a few seconds the first time). </p>", unsafe_allow_html=True)
 
 
@@ -157,8 +157,9 @@ df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3
                                                         'principalRecipientSubClassificationName',
                                                         'disbursementDate',
                                                         'disbursementAmount']]
-df1['disbursementDate'] =  pd.to_datetime(df1.disbursementDate).dt.date
 
+df1['disbursementDate'] =  df1['disbursementDate'].astype('datetime64[ns]')
+df1['disbursementDate'] = df1['disbursementDate'].dt.date
 
 #merge with country info
 df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
@@ -186,7 +187,7 @@ color_discrete_map2={
 
  #------------------------------------
 
-col1, col2, col3 = st.columns([10,10,10],gap='large')
+col1, col2, col3 = st.columns([10,10,10],gap='medium')
 
 # Filter component
 option_map1 = col2.multiselect(
@@ -230,7 +231,7 @@ df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetim
 df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
 
 with tab1:
-    col1, col2 = st.columns([25, 20])
+    col1, col2, col3 = st.columns([15, 15, 15])
     df_line = df1_filtered_dates[["componentName", "disbursementAmount", "Year"]].groupby(["Year","componentName"]).sum().reset_index()
     fig = px.bar(df_line, x="Year", y="disbursementAmount", color="componentName",color_discrete_map=color_discrete_map)
     fig.update_layout(
@@ -242,10 +243,10 @@ with tab1:
             t=50,
             pad=4,
             autoexpand=True),
-        width=800,
-        height=300,
+        #width=800,
+        height=600,
         title={
-            'text': 'Yearly disbursements',
+            'text': 'Yearly disbursements ($)',
             'x': 0.5,
             'xanchor': 'center'},
         # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
@@ -258,10 +259,12 @@ with tab1:
             fig.layout[axis].title.text = ''
     col1.plotly_chart(fig, use_container_width=True)
 
-    df_line = df1_filtered_dates[["componentName", "disbursementAmount", "disbursementDate"]].sort_values(by="disbursementDate",
-                                                                                           ascending=True)
-    fig = px.line(df_line.join(df_line.groupby("componentName", as_index=False).cumsum(), rsuffix="_cumsum"),
-                  y="disbursementAmount_cumsum", x="disbursementDate", color="componentName",color_discrete_map=color_discrete_map)
+    fig = px.area(df_line,
+                  y = "disbursementAmount",
+                  x = "Year",
+                  color = "componentName",
+                  color_discrete_map=color_discrete_map,
+                  groupnorm='percent')
     fig.update_layout(
         autosize=False,
         margin=dict(
@@ -271,10 +274,10 @@ with tab1:
             t=50,
             pad=4,
             autoexpand=True),
-        width=800,
-        height=300,
+        #width=800,
+        height=600,
         title={
-            'text': 'Cumulated disbursements',
+            'text': 'Yearly disbursements normalized (%)',
             'x': 0.5,
             'xanchor': 'center'},
         #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
@@ -285,7 +288,8 @@ with tab1:
             fig.layout[axis].title.text = ''
         if type(fig.layout[axis]) == go.layout.XAxis:
             fig.layout[axis].title.text = ''
-    col1.plotly_chart(fig, use_container_width=True)
+    col2.plotly_chart(fig, use_container_width=True)
+
 
     df_bar = df1_filtered_dates.groupby(['componentName'], as_index=False)['disbursementAmount'].sum()
     y = ['Multicomponent', 'RSSH', 'TB/HIV', 'Tuberculosis', 'Malaria', 'HIV']
@@ -308,19 +312,18 @@ with tab1:
             pad=4,
             autoexpand=True
         ),
-        width=800,
+        #width=800,
         height=600,
         title={
-            'text': 'Total per component',
+            'text': 'Total per component ($)',
             'x': 0.5,
             'xanchor': 'center'}
     )
-    col2.plotly_chart(fig, use_container_width=True)
-
+    col3.plotly_chart(fig, use_container_width=True)
 
 # Regional overview
 with tab2:
-    col1, col2 = st.columns([15, 15])
+    col1, col2, col3 = st.columns([15, 15, 15])
     df_line = df1_filtered_dates[["Region", "disbursementAmount", "Year"]].groupby(["Year","Region"]).sum().reset_index()
     fig = px.bar(df_line, x="Year", y="disbursementAmount", color="Region", color_discrete_map=color_discrete_map2)
     fig.update_layout(
@@ -332,10 +335,10 @@ with tab2:
             t=50,
             pad=4,
             autoexpand=True),
-        width=800,
-        height=300,
+        #width=800,
+        height=600,
         title={
-            'text': 'Yearly disbursements',
+            'text': 'Yearly disbursements ($)',
             'x': 0.5,
             'xanchor': 'center'},
         # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
@@ -350,11 +353,12 @@ with tab2:
             fig.layout[axis].title.text = ''
     col1.plotly_chart(fig, use_container_width=True)
 
-
-    df_line = df1_filtered_dates[["Region", "disbursementAmount", "disbursementDate"]].sort_values(by="disbursementDate",
-                                                                                           ascending=True)
-    fig = px.line(df_line.join(df_line.groupby("Region", as_index=False).cumsum(), rsuffix="_cumsum"),
-                  y="disbursementAmount_cumsum", x="disbursementDate", color="Region", color_discrete_map=color_discrete_map2)
+    fig = px.area(df_line,
+                  y = "disbursementAmount",
+                  x = "Year",
+                  color = "Region",
+                  color_discrete_map=color_discrete_map2,
+                  groupnorm='percent')
     fig.update_layout(
         autosize=False,
         margin=dict(
@@ -364,12 +368,13 @@ with tab2:
             t=50,
             pad=4,
             autoexpand=True),
-        width=800,
-        height=300,
+        #width=800,
+        height=600,
         title={
-            'text': 'Cumulated regional disbursements',
+            'text': 'Yearly disbursements normalized (%)',
             'x': 0.5,
             'xanchor': 'center'},
+        #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
         showlegend=False
     )
     for axis in fig.layout:
@@ -377,7 +382,7 @@ with tab2:
             fig.layout[axis].title.text = ''
         if type(fig.layout[axis]) == go.layout.XAxis:
             fig.layout[axis].title.text = ''
-    col1.plotly_chart(fig, use_container_width=True)
+    col2.plotly_chart(fig, use_container_width=True)
 
 
     df_bar2 = df1_filtered_dates.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(
@@ -405,7 +410,7 @@ with tab2:
             'xanchor': 'center'}
         #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
     )
-    col2.plotly_chart(fig, use_container_width=True)
+    col3.plotly_chart(fig, use_container_width=True)
 
     #Disbursement map
     with tab3:
@@ -418,12 +423,12 @@ with tab2:
                 locations=df_geo["SpatialDim"],
                 z = df_geo['disbursementAmount'],
                 colorscale  = "Blues",
-                showscale = True 
+                showscale=True
             ),
             layout = go.Layout(height=500,
                                margin=dict(
                                    l=0,
-                                   r=0,
+                                   r=10,
                                    b=0,
                                    t=0,
                                    pad=4,
@@ -561,7 +566,6 @@ with tab2:
             dl_file = df_group[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
                          "disbursementAmount"]]
             dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
-        
         col2.dataframe(dl_file.reset_index(drop=True))
 
         @st.cache
