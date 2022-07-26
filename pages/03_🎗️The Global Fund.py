@@ -250,7 +250,10 @@ with tab1:
             'x': 0.5,
             'xanchor': 'center'},
         # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
-        showlegend=False
+        legend=dict(
+            yanchor="top",
+            orientation="h",
+            title="Component")
     )
     for axis in fig.layout:
         if type(fig.layout[axis]) == go.layout.YAxis:
@@ -317,7 +320,8 @@ with tab1:
         title={
             'text': 'Total per component ($)',
             'x': 0.5,
-            'xanchor': 'center'}
+            'xanchor': 'center'},
+        showlegend=False
     )
     col3.plotly_chart(fig, use_container_width=True)
 
