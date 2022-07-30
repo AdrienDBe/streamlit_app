@@ -658,7 +658,156 @@ if dataset == "Disbursement records":
 
 
 if dataset == "Grant Agreements":
-    st.markdown("![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
+
+    ## List of WHO countries
+    @st.cache(show_spinner=False)
+    def import_api_WHO_countries(url):
+        service_url0 = url
+        response0 = requests.get(service_url0)
+        # make sure we got a valid response
+        if (response0.ok):
+            # get the full data from the response
+            data0j = response0.json()
+        else:
+            st.caption("API data cannot be loaded")
+        country_list = pd.DataFrame(data0j["value"])
+        return country_list
+    with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
+        country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
+        country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
+
+    ## List of World Bank country with Region and Income Level
+
+    WorldBank_countries = wb.economy.DataFrame().reset_index()[['id','name','aggregate','region','incomeLevel']]
+    WorldBank_countries =  WorldBank_countries[WorldBank_countries['aggregate']==False].drop('aggregate', axis=1)
+    WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
+                                'LIC':'Low income country',
+                                'HIC':'High income country',
+                                'LMC':'Lower middle income country',
+                                'INX': 'Upper middle income country',
+                                'UMC':'Upper middle income country'})
+    WorldBank_countries['region'] = WorldBank_countries['region'].map({
+                                'LCN':'Latin America & the Caribbean',
+                                'SAS':'South Asia',
+                                'SSF':'Sub-Saharan Africa',
+                                'ECS':'Europe and Central Asia',
+                                'MEA':'Middle East and North Africa',
+                                'EAS':'East Asia and Pacific',
+                                'NAC':'North America'})
+    WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income level","region":"Region"}, inplace = True)
+    country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
+
+    # Loading GF API
+    count = 0
+    gif_runner = st.empty()
+    @st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
+    def Loading_API(url):
+        # check if first load, if so it will take a few sec to load so we want to display a nice gif
+        global count
+        count += 1
+        if count == 1:
+            global gif_runner
+            gif_runner = st.markdown("![Alt Text](https://media.giphy.com/media/l0MYvEEv2Zndet9hC/giphy.gif)", unsafe_allow_html=True)
+
+        # reading api
+        service_url0 = url
+        response0 = requests.get(service_url0)
+        # make sure we got a valid response
+        if (response0.ok):
+            # get the full data from the response
+            data0j = response0.json()
+        else:
+            st.caption("Global Fund API cannot be loaded")
+        df1 = pd.DataFrame(data0j["value"])
+        return df1
+
+    df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreements")
+    df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
+    gif_runner.empty()
+
+    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['SpatialDim',
+                                                           'geographicAreaName',
+                                                           'componentName',
+                                                           'principalRecipientName',
+                                                           'principalRecipientSubClassificationName',
+                                                           'programStartDate',
+                                                           'programEndDate',
+                                                           'grantAgreementTitle',
+                                                           'grantAgreementNumber',
+                                                           'grantAgreementStatusTypeName',
+                                                           'totalSignedAmount',
+                                                           'totalCommittedAmount',
+                                                           'totalDisbursedAmount',
+                                                           'isActive']]
+    df1['programStartDate'] = df1['programStartDate'].astype('datetime64[ns]')
+    df1['programStartDate'] = df1['programStartDate'].dt.date
+    df1['programEndDate'] = df1['programEndDate'].astype('datetime64[ns]')
+    df1['programEndDate'] = df1['programEndDate'].dt.date
+
+    df1["grantAgreementStatusTypeName"] = pd.Categorical(df1["grantAgreementStatusTypeName"],
+                                                         categories=["Terminated", "Administratively Closed", "In Closure", "Active"],
+                                                         ordered=True)
+    df1.sort_values('grantAgreementStatusTypeName', inplace=True)
+
+    # merge with country info
+    df1.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
+    df1 = pd.merge(df1,
+                   country_list,
+                   on='SpatialDim',
+                   how='inner')
+
+    color_discrete_map = {
+        "HIV": "#fe9000",
+        "Malaria": "#5b8e7d",
+        "Tuberculosis": "#5adbff",
+        "TB/HIV": "#3c6997",
+        "RSSH": "#094074",
+        "Multicomponent": "#ffdd4a"}
+
+    color_discrete_map2 = {
+        "Sub-Saharan Africa": "#0081a7",
+        "East Asia and Pacific": "#b392ac",
+        "Europe and Central Asia": "#02c39a",
+        "Latin America & the Caribbean": "#fdfcdc",
+        "Middle East and North Africa": "#736ced",
+        "South Asia": "#f07167"}
+
+    color_discrete_map3 = {
+        "Administratively Closed": "#fcd5ce",
+        "Terminated": "#ffffff",
+        "In Closure": "#e63946",
+        "Active": "#48cae4"}
+
+    # ------------------------------------
+
+fig = px.scatter(df1, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                 log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
+                 marginal_y="box")
+fig.update_layout(
+    autosize=False,
+    margin=dict(
+        l=0,
+        r=0,
+        b=0,
+        t=50,
+        pad=4,
+        autoexpand=True),
+    height=800,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    legend=dict(
+        orientation="h",
+        yanchor="top",
+        y=0.99,
+        xanchor="left",
+        x=0.01),
+    legend_title = 'Grant Agreement Status' )
+fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+fig.update_xaxes(showgrid=False, zeroline=True)
+fig.update_yaxes(showgrid=False, zeroline=True)
+st.plotly_chart(fig, use_container_width=True)
+
+
 
 if dataset == "Implementation periods":
     st.markdown("![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
