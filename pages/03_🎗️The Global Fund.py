@@ -657,45 +657,8 @@ if dataset == "Disbursement records":
 #     df1
 
 
+
 if dataset == "Grant Agreements":
-
-    ## List of WHO countries
-    @st.cache(show_spinner=False)
-    def import_api_WHO_countries(url):
-        service_url0 = url
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-        else:
-            st.caption("API data cannot be loaded")
-        country_list = pd.DataFrame(data0j["value"])
-        return country_list
-    with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
-        country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
-        country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
-
-    ## List of World Bank country with Region and Income Level
-
-    WorldBank_countries = wb.economy.DataFrame().reset_index()[['id','name','aggregate','region','incomeLevel']]
-    WorldBank_countries =  WorldBank_countries[WorldBank_countries['aggregate']==False].drop('aggregate', axis=1)
-    WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
-                                'LIC':'Low income country',
-                                'HIC':'High income country',
-                                'LMC':'Lower middle income country',
-                                'INX': 'Upper middle income country',
-                                'UMC':'Upper middle income country'})
-    WorldBank_countries['region'] = WorldBank_countries['region'].map({
-                                'LCN':'Latin America & the Caribbean',
-                                'SAS':'South Asia',
-                                'SSF':'Sub-Saharan Africa',
-                                'ECS':'Europe and Central Asia',
-                                'MEA':'Middle East and North Africa',
-                                'EAS':'East Asia and Pacific',
-                                'NAC':'North America'})
-    WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income level","region":"Region"}, inplace = True)
-    country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
     # Loading GF API
     count = 0
@@ -718,14 +681,15 @@ if dataset == "Grant Agreements":
             data0j = response0.json()
         else:
             st.caption("Global Fund API cannot be loaded")
-        df1 = pd.DataFrame(data0j["value"])
-        return df1
+        df2 = pd.DataFrame(data0j["value"])
+        return df2
 
-    df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreements")
-    df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
+    df2 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreements")
+    df2.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
+
     gif_runner.empty()
 
-    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['SpatialDim',
+    df2 = df2[df2["geographicAreaLevelName"] == 'Country'][['SpatialDim',
                                                            'geographicAreaName',
                                                            'componentName',
                                                            'principalRecipientName',
@@ -739,18 +703,19 @@ if dataset == "Grant Agreements":
                                                            'totalCommittedAmount',
                                                            'totalDisbursedAmount',
                                                            'isActive']]
-    df1['programStartDate'] = df1['programStartDate'].astype('datetime64[ns]')
-    df1['programStartDate'] = df1['programStartDate'].dt.date
-    df1['programEndDate'] = df1['programEndDate'].astype('datetime64[ns]')
-    df1['programEndDate'] = df1['programEndDate'].dt.date
+    df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
+    df2['programStartDate'] = df2['programStartDate'].dt.date
+    df2['programEndDate'] = df2['programEndDate'].astype('datetime64[ns]')
+    df2['programEndDate'] = df2['programEndDate'].dt.date
 
-    df1["grantAgreementStatusTypeName"] = pd.Categorical(df1["grantAgreementStatusTypeName"],
+    df2["grantAgreementStatusTypeName"] = pd.Categorical(df2["grantAgreementStatusTypeName"],
                                                          categories=["Terminated", "Administratively Closed", "In Closure", "Active"],
                                                          ordered=True)
-    df1.sort_values('grantAgreementStatusTypeName', inplace=True)
+    df2.sort_values('grantAgreementStatusTypeName', inplace=True)
 
     # merge with country info
-    df1 = pd.merge(df1,
+    df2.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
+    df2 = pd.merge(df2,
                    country_list,
                    on='SpatialDim',
                    how='inner')
@@ -779,7 +744,7 @@ if dataset == "Grant Agreements":
 
     # ------------------------------------
 
-fig = px.scatter(df1, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+fig = px.scatter(df2, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
                  log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
                  marginal_y="box")
 fig.update_layout(
@@ -805,6 +770,7 @@ fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
 fig.update_xaxes(showgrid=False, zeroline=True)
 fig.update_yaxes(showgrid=False, zeroline=True)
 st.plotly_chart(fig, use_container_width=True)
+
 
 
 
