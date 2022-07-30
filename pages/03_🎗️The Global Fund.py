@@ -659,7 +659,6 @@ if dataset == "Disbursement records":
 
 
 if dataset == "Grant Agreements":
-    col1, col2 = st.columns([20,50],gap='medium')
     col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)     
 
     # Loading GF API
