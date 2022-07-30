@@ -35,7 +35,7 @@ with st.container():
         # picture
         from PIL import Image
         img = Image.open("./Images/Image1_black.png")
-        st.image(img,width = 250)
+        st.image(img,width = 300)
 
 # ---- Work experience ----
 work_container = st.container()
