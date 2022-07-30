@@ -189,12 +189,12 @@ if dataset == "Disbursement records":
                     "Multicomponent": "#ffdd4a"}
 
     color_discrete_map2={
-                    "Sub-Saharan Africa": "#fe9000",
-                    "East Asia and Pacific": "#5b8e7d",
-                    "Europe and Central Asia": "#5adbff",
-                    "Latin America & the Caribbean": "#3c6997",
-                    "Middle East and North Africa": "#094074",
-                    "South Asia": "#ffdd4a"}
+                    "Sub-Saharan Africa": "#0081a7",
+                    "East Asia and Pacific": "#b392ac",
+                    "Europe and Central Asia": "#02c39a",
+                    "Latin America & the Caribbean": "#fdfcdc",
+                    "Middle East and North Africa": "#736ced",
+                    "South Asia": "#f07167"}
 
      #------------------------------------
 
@@ -253,7 +253,7 @@ if dataset == "Disbursement records":
     col4.button("Clear filters", on_click= clear_multi)
 
     with tab1:
-        col1, col2, col3 = st.columns([15, 15, 15],gap='small')
+        col1, col2, col3 = st.columns([15, 15, 15])
         df_line = df1_filtered_dates[["componentName", "disbursementAmount", "Year"]].groupby(["Year","componentName"]).sum().reset_index()
         fig = px.bar(df_line, x="Year", y="disbursementAmount", color="componentName",color_discrete_map=color_discrete_map)
         fig.update_layout(
@@ -271,12 +271,15 @@ if dataset == "Disbursement records":
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
                 'xanchor': 'center'},
-            # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             legend=dict(
                 yanchor="top",
                 orientation="h",
                 title="Component")
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=True, zeroline=True)
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
                 fig.layout[axis].title.text = ''
@@ -305,9 +308,12 @@ if dataset == "Disbursement records":
                 'text': 'Yearly disbursements normalized (%)',
                 'x': 0.5,
                 'xanchor': 'center'},
-            #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             showlegend=False
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=False, zeroline=True)
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
                 fig.layout[axis].title.text = ''
@@ -343,8 +349,12 @@ if dataset == "Disbursement records":
                 'text': 'Total per component ($)',
                 'x': 0.5,
                 'xanchor': 'center'},
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             showlegend=False
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=False, zeroline=False)
         col3.plotly_chart(fig, use_container_width=True)
 
     # Regional overview
@@ -367,11 +377,14 @@ if dataset == "Disbursement records":
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
                 'xanchor': 'center'},
-            # paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             legend=dict(
                 yanchor="top",
                 orientation="h")
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=True, zeroline=True)
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
                 fig.layout[axis].title.text = ''
@@ -400,9 +413,12 @@ if dataset == "Disbursement records":
                 'text': 'Yearly disbursements normalized (%)',
                 'x': 0.5,
                 'xanchor': 'center'},
-            #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             showlegend=False
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=False, zeroline=True)
         for axis in fig.layout:
             if type(fig.layout[axis]) == go.layout.YAxis:
                 fig.layout[axis].title.text = ''
@@ -433,9 +449,13 @@ if dataset == "Disbursement records":
             title={
                 'text': 'Top 10 disbursement receivers',
                 'x': 0.5,
-                'xanchor': 'center'}
-            #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)"
+                'xanchor': 'center'},
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
         )
+        fig.update_xaxes(showgrid=False, zeroline=True)
+        fig.update_yaxes(showgrid=False, zeroline=False)
+        fig.update_traces(marker_color='#003566',opacity=1)
         col3.plotly_chart(fig, use_container_width=True)
 
         #Disbursement map
