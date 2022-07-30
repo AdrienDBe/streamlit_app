@@ -136,7 +136,7 @@ st.markdown("<p style='text-align: justify;'>"
 
 
 @st.cache(show_spinner=True)
-def import_api_GF(url):
+def Fetching_API(url):
     service_url0 = url
     response0 = requests.get(service_url0)
     # make sure we got a valid response
@@ -149,7 +149,7 @@ def import_api_GF(url):
     df1 = pd.DataFrame(data0j["value"])
     return df1
 
-df1 = import_api_GF("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
+df1 = Fetching_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
 df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
                                                         'geographicAreaName',
                                                         'componentName',
