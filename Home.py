@@ -37,98 +37,90 @@ with st.container():
         img = Image.open("./Images/Image1.png")
         st.image(img,width = 250)
 
-# ---- Work experience ----
-work_container = st.container()
-with work_container:
-    st.write("---")
-    st.header('Work Experience')
+    # ---- Work experience & IT skills ----
 
     st.markdown("""
     <style>
     .streamlit-expanderHeader {
-        font-size: large;
+        font-size: x-large;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
-        st.markdown('''
-        **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
-        \n- Created program control and reports to MoHs & global funders
-        \n- Coordinate cross-functional teams in EMEA and APAC on program activities
-        \n- Manage program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
+    with st.expander("Work Experience"):
+        st.markdown(
+        "<span style='color:green'>2020 – 2022 | Cepheid : Lead AccessCare Program Manager</span>   <br>"
+        "<u>PROGRAM MANAGEMENT</u> `10 High-Burden Diseases Countries` <br>"
+         "▹ Created program control and reports to MoHs & global funders <br>"
+         "▹ Coordinate cross-functional teams in EMEA and APAC on program activities <br>"
+         "▹ Manage program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map <br>"
+
+        "<u>ANALYTICS</u><br>"
+         "▹ Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status<br>"
+         "▹ Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries<br>"
         
-        \n**ANALYTICS: Reporting automation, dashboard development**
-        \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
-        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
-        ''')
-    with st.expander("2020 | United Nations : Information Management Specialist"):
-        st.markdown('''
-        **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
-        \nWith the Resident Coordinator Office (RCO):
-        \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
-        \nIn the frame of the Common Country Analysis:
-            \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
-            \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
-        ''')
-    with st.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
-        st.markdown('''
-        **PROJECT MANAGEMENT**  `Projects of €8M+`
-        \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
-        \n- Managed customer relationship (Govt. and private)
-        \n- Created project capability in the local team
-        
-        \n**BUSINESS INTELLIGENCE**
-        \nTracked and mapped company footprint in India; carried out business simulations  \n
-        
-        \n**NGO VOLUNTEERING**
-        \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
-        \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
-        ''')
-    with st.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
-        st.markdown('''
-        **PROJECT MANAGEMENT** `Project of €3M`
-        \nCoordinated several departments to oversee the implementation of a project in India:
-        \n- Defined support scheme to respect the contractual system availability commitment
-        \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
-        ''')
-    with st.expander("2016 | Airbus : Analyst trainee"):
-        st.markdown('''
-        **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
-        \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
-        ''')
+        "<br><span style='color:green'>2020 | United Nations : Information Management Specialist</span>   <br>"      
+        "<u>INFORMATION MANAGEMENT</u> `Morocco Common Country Analysis (CCA)`<br>"
+         "With the Resident Coordinator Office (RCO): <br>"
+         "▹ Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System. <br>"
+         "▹ In the frame of the Common Country Analysis: <br>"
+         "     - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance<br>"
+         "     - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers<br>"
 
-st.write("---")
+        "<br><span style='color:green'>2018 – 2020 | Thales India : In-Country Project Manager</span>"
+        "<br><u>PROJECT MANAGEMENT</u> `Projects of €8M+`<br>"
+        "With the Resident Coordinator Office (RCO): <br>"
+        "Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal<br>"
+        "Managed customer relationship (Govt. and private)<br>"
+        "Created project capability in the local team<br>"
 
-# ---- IT Skills ----
-skills_container = st.container()
-with skills_container:
-    st.header('IT Skills')
-    txt3('Programming', '`Python`, `DAX`, `VBA`')
-    txt3('Data processing/wrangling', '`pandas`, `numpy`, `PowerQuery`')
-    txt3('Data visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
-    txt3('Machine Learning', '`scikit-learn`')
-    txt3('Model deployment', '`streamlit`')
+        "<u>BUSINESS INTELLIGENCE</u> <br>"
+        "Tracked and mapped company footprint in India; carried out business simulations<br>"
+
+        "<br><span style='color:green'>2016 – 2017 | Thales AVS : Service Delivery Manager</span>"
+        "<br><u>PROJECT MANAGEMENT</u> `Projects of €3M`<br>"
+        "Coordinated several departments to oversee the implementation of a project in India: <br>"
+        "▹ Defined support scheme to respect the contractual system availability commitment<br>"
+        "▹ Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer<br>"
+
+        "<br><span style='color:green'>2016 | Airbus : Analyst trainee</span>"
+        "<br><u>BUSINESS ANALYSIS</u> `Simulation and Predictive Analytics`<br>"
+        "Carried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)<br>"
+        ,unsafe_allow_html = True)
+
+    with st.expander("IT Skills"):
+        txt3('Programming', '`Python`, `DAX`, `VBA`')
+        txt3('Data processing/wrangling', '`pandas`, `numpy`, `PowerQuery`')
+        txt3('Data visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
+        txt3('Machine Learning', '`scikit-learn`')
+        txt3('Model deployment', '`streamlit`')
 
 
-# ---- CONTACT FORM ----
+    # ---- CONTACT FORM ----
+    # Use local CSS
+    def local_css(file_name):
+        with open(file_name) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-contact_form_container = st.container()
-with contact_form_container:
+
+    local_css("style/style.css")
+
+    contact_form_container = st.container()
+    with contact_form_container:
         st.write("---")
         st.header("Get in touch with me!")
         st.write("##")
 
         # Documention: https://formsubmit.co/
         contact_form = """
-        <form action="https://formsubmit.co/b5839c863db066636bf7d8e36d51e283" method="POST">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="text" name="name" placeholder="Your name" required>
-            <input type="email" name="email" placeholder="Your email" required>
-            <textarea name="message" placeholder="Your message here" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-        """
+            <form action="https://formsubmit.co/b5839c863db066636bf7d8e36d51e283" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="text" name="name" placeholder="Your name" required>
+                <input type="email" name="email" placeholder="Your email" required>
+                <textarea name="message" placeholder="Your message here" required></textarea>
+                <button type="submit">Send</button>
+            </form>
+            """
         left_column, right_column = st.columns(2)
         with left_column:
             st.markdown(contact_form, unsafe_allow_html=True)
