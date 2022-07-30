@@ -730,7 +730,7 @@ if dataset == "Grant Agreements":
     # ------------------------------------
 
 
-    fig = px.scatter(df1, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+    fig = px.scatter(df2, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
                      log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
                      marginal_y="box")
     fig.update_layout(
