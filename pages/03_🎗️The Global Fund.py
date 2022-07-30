@@ -689,20 +689,8 @@ if dataset == "Grant Agreements":
 
     gif_runner.empty()
 
-    df2 = df2[df2["geographicAreaLevelName"] == 'Country'][['SpatialDim',
-                                                           'geographicAreaName',
-                                                           'componentName',
-                                                           'principalRecipientName',
-                                                           'principalRecipientSubClassificationName',
-                                                           'programStartDate',
-                                                           'programEndDate',
-                                                           'grantAgreementTitle',
-                                                           'grantAgreementNumber',
-                                                           'grantAgreementStatusTypeName',
-                                                           'totalSignedAmount',
-                                                           'totalCommittedAmount',
-                                                           'totalDisbursedAmount',
-                                                           'isActive']]
+    df2 = df2[df2["geographicAreaLevelName"] == 'Country']
+
     df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
     df2['programStartDate'] = df2['programStartDate'].dt.date
     df2['programEndDate'] = df2['programEndDate'].astype('datetime64[ns]')
