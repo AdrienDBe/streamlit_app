@@ -729,32 +729,33 @@ if dataset == "Grant Agreements":
 
     # ------------------------------------
 
-fig = px.scatter(df2, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
-                 log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
-                 marginal_y="box")
-fig.update_layout(
-    autosize=False,
-    margin=dict(
-        l=0,
-        r=0,
-        b=0,
-        t=50,
-        pad=4,
-        autoexpand=True),
-    height=800,
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend=dict(
-        orientation="h",
-        yanchor="top",
-        y=0.99,
-        xanchor="left",
-        x=0.01),
-    legend_title = 'Grant Agreement Status' )
-fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
-fig.update_xaxes(showgrid=False, zeroline=True)
-fig.update_yaxes(showgrid=False, zeroline=True)
-st.plotly_chart(fig, use_container_width=True)
+
+    fig = px.scatter(df1, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                     log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
+                     marginal_y="box")
+    fig.update_layout(
+        autosize=False,
+        margin=dict(
+            l=0,
+            r=0,
+            b=0,
+            t=50,
+            pad=4,
+            autoexpand=True),
+        height=800,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01),
+        legend_title = 'Grant Agreement Status' )
+    fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+    fig.update_xaxes(showgrid=False, zeroline=True)
+    fig.update_yaxes(showgrid=False, zeroline=True)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 
