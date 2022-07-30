@@ -662,7 +662,7 @@ if dataset == "Grant Agreements":
 
     st.title("Global Fund API explorer")
     col1, col2 = st.columns([20,50],gap='medium')
-    dataset = col1.radio("",('Disbursement records', 'Grant Agreements', 'Implementation periods'))
+    col1.radio("",('Disbursement records', 'Grant Agreements', 'Implementation periods'))
     col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)     
 
     # Loading GF API
