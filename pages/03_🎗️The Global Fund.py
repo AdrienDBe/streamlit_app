@@ -81,7 +81,10 @@ with st.sidebar:
 st.title("Global Fund API explorer")
 col1, col2 = st.columns([20,50],gap='medium')
 dataset = col1.radio("",('Disbursement records', 'Grant Agreements', 'Implementation periods'))
-col2.markdown("<p style='text-align: justify; font-size: 160%'>"
+
+
+if dataset == "Disbursement records":
+    col2.markdown("<p style='text-align: justify; font-size: 160%'>"
             "Disbursements records"
             "</p>"
             "<p style='text-align: justify;font-size: 90%''>"
@@ -91,10 +94,7 @@ col2.markdown("<p style='text-align: justify; font-size: 160%'>"
             " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
             "Disbursements records. <br> "
             "<span style='color:grey'>Loading data takes a few seconds the first time</span> </p>", unsafe_allow_html=True)
-st.write("---")
-
-if dataset == "Disbursement records":
-
+    st.write("---")
     ## List of WHO countries
     @st.cache(show_spinner=False)
     def import_api_WHO_countries(url):
@@ -659,8 +659,6 @@ if dataset == "Disbursement records":
 
 
 if dataset == "Grant Agreements":
-
-    st.title("Global Fund API explorer")
     col1, col2 = st.columns([20,50],gap='medium')
     col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)     
 
