@@ -701,13 +701,6 @@ if dataset == "Grant Agreements":
                                                          ordered=True)
     df2.sort_values('grantAgreementStatusTypeName', inplace=True)
 
-    # merge with country info
-    df2.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
-    df2 = pd.merge(df2,
-                   country_list,
-                   on='SpatialDim',
-                   how='inner')
-
     color_discrete_map = {
         "HIV": "#fe9000",
         "Malaria": "#5b8e7d",
