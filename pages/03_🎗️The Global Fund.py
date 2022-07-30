@@ -750,7 +750,6 @@ if dataset == "Grant Agreements":
     df1.sort_values('grantAgreementStatusTypeName', inplace=True)
 
     # merge with country info
-    df1.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
     df1 = pd.merge(df1,
                    country_list,
                    on='SpatialDim',
