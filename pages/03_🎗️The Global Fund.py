@@ -758,4 +758,4 @@ if dataset == "Grant Agreements":
 
 
 if dataset == "Implementation periods":
-    st.markdown("![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
+    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)   
