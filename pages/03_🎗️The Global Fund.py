@@ -7,6 +7,17 @@ import plotly.graph_objects as go
 from streamlit_lottie import st_lottie
 import json
 
+#-------- TEST Lottie
+
+
+def load_lottiefile(filepath: str):
+        with open(filepath, "r") as f:
+                return json.load(f)
+
+lottie_streamlit = load_lottiefile("./Images/lottie_loading.json")
+
+st_lottie(lottie_streamlit, speed=speed, reverse=reverse, height=400, key="initial")    
+
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
 
@@ -159,16 +170,7 @@ if dataset == "Disbursement records":
         df1 = pd.DataFrame(data0j["value"])
         return df1
 
-    #-------- TEST Lottie
 
-
-    def load_lottiefile(filepath: str):
-    with open(filepath, "r") as f:
-        return json.load(f)
-
-    lottie_streamlit = load_lottiefile("./Images/lottie_loading.json")
-
-    st_lottie(lottie_streamlit, speed=speed, reverse=reverse, height=400, key="initial")    
 #--------
 
     df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
