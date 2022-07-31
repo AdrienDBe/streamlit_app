@@ -7,17 +7,6 @@ import plotly.graph_objects as go
 from streamlit_lottie import st_lottie
 import json
 
-#-------- TEST Lottie
-
-
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-load_lottieurl("https://github.com/AdrienDBe/streamlit_app/blob/8db148cc922d9d67a23c0fdcff3109fffc592292/Images/lottie_loading.json")
-
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
 
