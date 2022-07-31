@@ -768,12 +768,12 @@ if dataset == "Grant agreements":
     fig.update_yaxes(showgrid=False, zeroline=True)
     st.plotly_chart(fig, use_container_width=True)
 
-    lottie_url = "https://assets8.lottiefiles.com/packages/lf20_sur6ehui.json"
+    lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 if dataset == "Implementation periods":
-    lottie_url = "https://assets8.lottiefiles.com/packages/lf20_sur6ehui.json"
+    lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200, key="loading_gif")
