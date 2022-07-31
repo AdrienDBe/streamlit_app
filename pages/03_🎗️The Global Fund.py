@@ -160,21 +160,10 @@ if dataset == "Disbursement records":
 
     #-------- TEST Lottie
 
-    def load_lottiefile(filepath: str):
-        with open(filepath) as f:
-            return json.load(f)
+    with open(".Images/lottie_loading.json", "r") as f:
+        data = json.load(f)
+    st_lottie(data)
 
-    lottie_hello = load_lottiefile(".Images/lottie_loading.json")
-
-    st_lottie(
-        lottie_hello,
-        speed=1,
-        reverse=False,
-        loop=True,
-        quality="low",  # medium ; high
-        height=None,
-        width=None,
-        key=None)
 #--------
 
     df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
