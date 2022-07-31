@@ -8,21 +8,15 @@ from streamlit_lottie import st_lottie
 import json
 
 #-------- TEST Lottie
-   
 
-lottie_url = st.text_input(
-    "URL", value="https://github.com/AdrienDBe/streamlit_app/blob/8db148cc922d9d67a23c0fdcff3109fffc592292/Images/lottie_loading.json"
-)
-downloaded_url = load_lottieurl(lottie_url)
 
-if downloaded_url is None:
-    col1, col2 = st.columns((2, 1))
-    col1.warning(f"URL {lottie_url} does not seem like a valid lottie JSON file")
-    with col2:
-        st_lottie(lottie_error, height=100, key="error")
-else:
-    with st.echo("above"):
-        st_lottie(downloaded_url, key="user") 
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+load_lottieurl("https://github.com/AdrienDBe/streamlit_app/blob/8db148cc922d9d67a23c0fdcff3109fffc592292/Images/lottie_loading.json")
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
