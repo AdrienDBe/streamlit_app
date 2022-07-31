@@ -39,7 +39,7 @@ st.markdown("""
 <style>
 .streamlit-expanderHeader {
     font-size: medium;
-    color:#ad8585;   
+    color:#bdcebe;   
     }
 .st-bd {border-style: none;}
 </style>
