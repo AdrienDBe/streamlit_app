@@ -79,11 +79,15 @@ with st.sidebar:
                "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a></p>",
                 unsafe_allow_html=True)
 
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
 st.title("Global Fund API explorer")
 col1, col2 = st.columns([20,50],gap='medium')
-dataset = col1.radio("",('Disbursement records', 'Grant Agreements', 'Implementation periods'))
-
+dataset = col1.radio("",('Disbursement records', 'Grant agreements', 'Implementation periods'))
 
 if dataset == "Disbursement records":
     col2.markdown("<p style='text-align: justify; font-size: 160%'>"
@@ -137,28 +141,17 @@ if dataset == "Disbursement records":
 
     # Loading GF API
     count = 0
-    gif_runner = st.empty()
     @st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
     def Loading_API(url):
-        # check if first load, if so it will take a few sec to load so we want to display a nice gif
+        # check if first load, if so it will take a few sec to load so we want to display a nice svg
         global count
         count += 1
         if count == 1:
-                def load_lottieurl(url: str):
-                    r = requests.get(url)
-                    if r.status_code != 200:
-                        return None
-                    return r.json()
-                downloaded_url = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_gnjn6mes.json")
-
-                if downloaded_url is None:
-                        col1, col2 = st.columns((2, 1))
-                        col1.warning(f"URL {lottie_url} does not seem like a valid lottie JSON file")
-                        with col2:
-                                st_lottie(lottie_error, height=100, key="error")
-                else:
-                                st_lottie(downloaded_url, key="user")
-
+                lottie_url = "https://assets1.lottiefiles.com/packages/lf20_18ple6ro.json"
+                lottie_json = load_lottieurl(lottie_url)
+                lottie_container = st.empty()
+                with lottie_container:
+                    st_lottie(lottie_json, height=350, key="loading_gif")
         # reading api
         service_url0 = url
         response0 = requests.get(service_url0)
@@ -169,15 +162,16 @@ if dataset == "Disbursement records":
         else:
             st.caption("Global Fund API cannot be loaded")
         df1 = pd.DataFrame(data0j["value"])
-        return df1
 
+        if count == 1:
+            lottie_container.empty()
+
+        return df1
 
 #--------
 
     df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
     df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
-
-    gif_runner.empty()
 
     df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
                                                             'geographicAreaName',
@@ -373,6 +367,7 @@ if dataset == "Disbursement records":
         fig.update_xaxes(showgrid=False, zeroline=True)
         fig.update_yaxes(showgrid=False, zeroline=False)
         col3.plotly_chart(fig, use_container_width=True)
+
 
     # Regional overview
     with tab2:
@@ -675,21 +670,23 @@ if dataset == "Disbursement records":
 
 
 
-if dataset == "Grant Agreements":
-    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)     
+if dataset == "Grant agreements":
+    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
 
     # Loading GF API
     count = 0
     gif_runner = st.empty()
     @st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
     def Loading_API(url):
-        # check if first load, if so it will take a few sec to load so we want to display a nice gif
+        # check if first load, if so it will take a few sec to load so we want to display a nice svg
         global count
         count += 1
         if count == 1:
-            global gif_runner
-            gif_runner = st.markdown("![Alt Text](https://media.giphy.com/media/l0MYvEEv2Zndet9hC/giphy.gif)", unsafe_allow_html=True)
-
+            lottie_url = "https://assets1.lottiefiles.com/packages/lf20_18ple6ro.json"
+            lottie_json = load_lottieurl(lottie_url)
+            lottie_container = st.empty()
+            with lottie_container:
+                st_lottie(lottie_json, height=350, key="loading_gif")
         # reading api
         service_url0 = url
         response0 = requests.get(service_url0)
@@ -700,6 +697,8 @@ if dataset == "Grant Agreements":
         else:
             st.caption("Global Fund API cannot be loaded")
         df2 = pd.DataFrame(data0j["value"])
+        if count == 1:
+            lottie_container.empty()
         return df2
 
     df2 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreements")
@@ -736,8 +735,8 @@ if dataset == "Grant Agreements":
         "South Asia": "#f07167"}
 
     color_discrete_map3 = {
-        "Administratively Closed": "#fcd5ce",
-        "Terminated": "#ffffff",
+        "Administratively Closed": "grey",
+        "Terminated": "#fcd5ce",
         "In Closure": "#e63946",
         "Active": "#48cae4"}
 
@@ -775,4 +774,4 @@ if dataset == "Grant Agreements":
 
 
 if dataset == "Implementation periods":
-    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)   
+    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
