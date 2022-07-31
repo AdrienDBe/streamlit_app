@@ -5,6 +5,7 @@ import wbgapi as wb
 import plotly.express as px
 import plotly.graph_objects as go
 from streamlit_lottie import st_lottie
+import json
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
