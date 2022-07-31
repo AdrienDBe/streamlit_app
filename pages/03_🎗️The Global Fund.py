@@ -161,7 +161,7 @@ if dataset == "Disbursement records":
 
     #-------- TEST Lottie
 
-    with open(".Images/lottie_loading.json", "r") as f:
+    with open("./Images/lottie_loading.json", "r") as f:
         data = json.load(f)
     st_lottie(data)
 
