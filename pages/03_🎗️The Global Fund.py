@@ -4,6 +4,7 @@ import pandas as pd
 import wbgapi as wb
 import plotly.express as px
 import plotly.graph_objects as go
+from streamlit_lottie import st_lottie
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
@@ -156,6 +157,25 @@ if dataset == "Disbursement records":
             st.caption("Global Fund API cannot be loaded")
         df1 = pd.DataFrame(data0j["value"])
         return df1
+
+    #-------- TEST Lottie
+
+    def load_lottiefile(filepath: str):
+        with open(filepath, "r") as f:
+            return json.load(f)
+
+    lottie_hello = load_lottiefile(".Images/lottie_loading.json")
+
+    st_lottie(
+        lottie_hello,
+        speed=1,
+        reverse=False,
+        loop=True,
+        quality="low",  # medium ; high
+        height=None,
+        width=None,
+        key=None)
+#--------
 
     df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
     df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
