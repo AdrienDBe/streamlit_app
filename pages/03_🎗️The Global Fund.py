@@ -144,8 +144,20 @@ if dataset == "Disbursement records":
         global count
         count += 1
         if count == 1:
-            global gif_runner
-            gif_runner = st.markdown("![Alt Text](https://media.giphy.com/media/l0MYvEEv2Zndet9hC/giphy.gif)", unsafe_allow_html=True)
+                def load_lottieurl(url: str):
+                    r = requests.get(url)
+                    if r.status_code != 200:
+                        return None
+                    return r.json()
+                downloaded_url = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_gnjn6mes.json")
+
+                if downloaded_url is None:
+                        col1, col2 = st.columns((2, 1))
+                        col1.warning(f"URL {lottie_url} does not seem like a valid lottie JSON file")
+                        with col2:
+                                st_lottie(lottie_error, height=100, key="error")
+                else:
+                                st_lottie(downloaded_url, key="user")
 
         # reading api
         service_url0 = url
