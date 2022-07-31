@@ -161,7 +161,7 @@ if dataset == "Disbursement records":
     #-------- TEST Lottie
 
     def load_lottiefile(filepath: str):
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             return json.load(f)
 
     lottie_hello = load_lottiefile(".Images/lottie_loading.json")
