@@ -39,7 +39,7 @@ st.markdown("""
 <style>
 .streamlit-expanderHeader {
     font-size: medium;
-    color:#bdcebe;   
+    color:#ad8585;   
     }
 .st-bd {border-style: none;}
 </style>
@@ -671,8 +671,6 @@ if dataset == "Disbursement records":
 
 
 if dataset == "Grant agreements":
-    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
-
     # Loading GF API
     count = 0
     gif_runner = st.empty()
@@ -770,8 +768,12 @@ if dataset == "Grant agreements":
     fig.update_yaxes(showgrid=False, zeroline=True)
     st.plotly_chart(fig, use_container_width=True)
 
-
+    lottie_url = "https://assets8.lottiefiles.com/packages/lf20_sur6ehui.json"
+    lottie_json = load_lottieurl(lottie_url)
+    st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 if dataset == "Implementation periods":
-    col2.markdown("<br>![Alt Text](https://media.giphy.com/media/shNla43zRRWazpOS2X/giphy.gif)", unsafe_allow_html=True)
+    lottie_url = "https://assets8.lottiefiles.com/packages/lf20_sur6ehui.json"
+    lottie_json = load_lottieurl(lottie_url)
+    st_lottie(lottie_json, height=200, key="loading_gif")
