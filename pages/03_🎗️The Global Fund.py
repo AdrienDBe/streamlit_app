@@ -367,7 +367,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=400,
+            height=380,
             title={
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
