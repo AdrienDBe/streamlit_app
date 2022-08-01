@@ -66,6 +66,8 @@ header_space = st.container()
 
 with header_space:
     col1, col2 = st.columns([15, 35], gap='small')
+    col1.write("")
+    #col1.title("Global Fund API explorer")
     col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
 
 with st.sidebar:
@@ -830,6 +832,7 @@ if dataset == "Grant agreements":
         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
+        st.write("In development")
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
         lottie_json = load_lottieurl(lottie_url)
         st_lottie(lottie_json, height=500, key="loading_gif2")
