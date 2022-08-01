@@ -52,7 +52,7 @@ with header_space:
     col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
 
 with st.sidebar:
-    dataset = st.radio("", ('Disbursement records', 'Grant agreements', 'Implementation periods'), horizontal=True)
+    dataset = st.radio("Select API dataset", ('Disbursement records', 'Grant agreements', 'Implementation periods'), horizontal=True)
     st.write("")
 
 if dataset == "Disbursement records":
@@ -654,6 +654,10 @@ if dataset == "Disbursement records":
 
 
 if dataset == "Grant agreements":
+    col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Grant agreements** </span> "
+                "<p style='text-align: justify'> A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
+                "The Country Coordinating Mechanism and the Global Fund work with the partner implementing a grant, the Principal Recipient, to prepare the grant. </span> "
+                "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
     # Loading GF API
     count = 0
     gif_runner = st.empty()
