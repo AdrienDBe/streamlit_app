@@ -36,6 +36,25 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+div[data-testid="metric-container"] {
+   background-color: #12151D;
+   border: 1px solid #283648 ;
+   border-radius: 5px;
+   padding: 1% 1% 1% 5%;
+   color: #04AA6D;
+   overflow-wrap: break-word;
+}
+
+/* breakline for metric text         */
+div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+   overflow-wrap: break-word;
+   white-space: break-spaces;
+   color: white;
+}
+</style>
+""", unsafe_allow_html=True)
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -55,6 +74,45 @@ with st.sidebar:
     dataset = st.radio("Select API dataset", ('Disbursement records', 'Grant agreements', 'Implementation periods'), horizontal=True)
     st.write("")
 
+## List of WHO countries
+@st.cache(show_spinner=False)
+def import_api_WHO_countries(url):
+    service_url0 = url
+    response0 = requests.get(service_url0)
+    # make sure we got a valid response
+    if (response0.ok):
+        # get the full data from the response
+        data0j = response0.json()
+    else:
+        st.caption("API data cannot be loaded")
+    country_list = pd.DataFrame(data0j["value"])
+    return country_list
+with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
+    country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
+    country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
+
+## List of World Bank country with Region and Income Level
+
+WorldBank_countries = wb.economy.DataFrame().reset_index()[['id','name','aggregate','region','incomeLevel']]
+WorldBank_countries =  WorldBank_countries[WorldBank_countries['aggregate']==False].drop('aggregate', axis=1)
+WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
+                            'LIC':'Low income country',
+                            'HIC':'High income country',
+                            'LMC':'Lower middle income country',
+                            'INX': 'Upper middle income country',
+                            'UMC':'Upper middle income country'})
+WorldBank_countries['region'] = WorldBank_countries['region'].map({
+                            'LCN':'Latin America & the Caribbean',
+                            'SAS':'South Asia',
+                            'SSF':'Sub-Saharan Africa',
+                            'ECS':'Europe and Central Asia',
+                            'MEA':'Middle East and North Africa',
+                            'EAS':'East Asia and Pacific',
+                            'NAC':'North America'})
+WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income level","region":"Region"}, inplace = True)
+country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
+
+
 if dataset == "Disbursement records":
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Disbursements records** </span> "
                 "<p style='text-align: justify'> A disbursement corresponds to a tranche transfer of the grant funds for the implementation"
@@ -62,44 +120,6 @@ if dataset == "Disbursement records":
                 " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
                 "Disbursements records. </span> "
                 "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
-
-    ## List of WHO countries
-    @st.cache(show_spinner=False)
-    def import_api_WHO_countries(url):
-        service_url0 = url
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-        else:
-            st.caption("API data cannot be loaded")
-        country_list = pd.DataFrame(data0j["value"])
-        return country_list
-    with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
-        country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
-        country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
-
-    ## List of World Bank country with Region and Income Level
-
-    WorldBank_countries = wb.economy.DataFrame().reset_index()[['id','name','aggregate','region','incomeLevel']]
-    WorldBank_countries =  WorldBank_countries[WorldBank_countries['aggregate']==False].drop('aggregate', axis=1)
-    WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
-                                'LIC':'Low income country',
-                                'HIC':'High income country',
-                                'LMC':'Lower middle income country',
-                                'INX': 'Upper middle income country',
-                                'UMC':'Upper middle income country'})
-    WorldBank_countries['region'] = WorldBank_countries['region'].map({
-                                'LCN':'Latin America & the Caribbean',
-                                'SAS':'South Asia',
-                                'SSF':'Sub-Saharan Africa',
-                                'ECS':'Europe and Central Asia',
-                                'MEA':'Middle East and North Africa',
-                                'EAS':'East Asia and Pacific',
-                                'NAC':'North America'})
-    WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income level","region":"Region"}, inplace = True)
-    country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
     # Loading GF API
     count = 0
@@ -135,13 +155,13 @@ if dataset == "Disbursement records":
     df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
     df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
 
-    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
-                                                            'geographicAreaName',
-                                                            'componentName',
-                                                            'grantAgreementStatusTypeName',
-                                                            'principalRecipientSubClassificationName',
-                                                            'disbursementDate',
-                                                            'disbursementAmount']]
+#    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
+    #                                                            'geographicAreaName',
+    #                                                        'componentName',
+    #                                                        'grantAgreementStatusTypeName',
+    #                                                        'principalRecipientSubClassificationName',
+    #                                                        'disbursementDate',
+    #                                                        'disbursementAmount']]
     df1['disbursementDate'] =  df1['disbursementDate'].astype('datetime64[ns]')
     df1['disbursementDate'] = df1['disbursementDate'].dt.date
 
@@ -169,8 +189,8 @@ if dataset == "Disbursement records":
                     "Middle East and North Africa": "#736ced",
                     "South Asia": "#f07167"}
 
-     #------------------------------------
 
+    # FILTERS ------------------------------------
 
     #clear filters button
     def clear_multi():
@@ -210,41 +230,20 @@ if dataset == "Disbursement records":
         df1_filtered_dates = df1_filtered[(df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year >= start_year) & (
                 df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year <= end_year)]
         # Reset filters button
-
         st.button("Clear filters", on_click=clear_multi)
 
-    st.markdown("""
-    <style>
-    div[data-testid="metric-container"] {
-       background-color: #12151D;
-       border: 1px solid #283648 ;
-       border-radius: 5px;
-       padding: 1% 1% 1% 5%;
-       color: #04AA6D;
-       overflow-wrap: break-word;
-    }
-
-    /* breakline for metric text         */
-    div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
-       overflow-wrap: break-word;
-       white-space: break-spaces;
-       color: white;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
+    # METRICS ------------------------------------
     col1, col2, col3, col4= st.columns([30, 30, 30, 30])
     col1.metric("Number of disbursements","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
     col2.metric("Total amount ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
     col3.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
     col4.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
 
+    # TABS ------------------------------------
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
 
     df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetime64[ns]').dt.year
     df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
-
-
 
     with tab1:
         col1, col2, col3 = st.columns([15, 15, 15])
@@ -260,7 +259,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=400,
+            height=380,
             title={
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
@@ -693,10 +692,18 @@ if dataset == "Grant agreements":
 
     df2 = df2[df2["geographicAreaLevelName"] == 'Country']
 
+    #merge with country info
+    df2.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
+    df2 = pd.merge(df2,
+                  country_list,
+                  on='SpatialDim',
+                  how='inner')
+
     df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
     df2['programStartDate'] = df2['programStartDate'].dt.date
     df2['programEndDate'] = df2['programEndDate'].astype('datetime64[ns]')
     df2['programEndDate'] = df2['programEndDate'].dt.date
+
 
     df2["grantAgreementStatusTypeName"] = pd.Categorical(df2["grantAgreementStatusTypeName"],
                                                          categories=["Terminated", "Administratively Closed", "In Closure", "Active"],
@@ -725,49 +732,116 @@ if dataset == "Grant agreements":
         "In Closure": "#e63946",
         "Active": "#48cae4"}
 
-    # ------------------------------------
+
+    # FILTERS ------------------------------------
+
+    #clear filters button
+    def clear_multi():
+        for key in st.session_state.keys():
+            st.session_state[key] = []
+
+    with st.sidebar:
+
+        # Active Grant filter
+        isActive = st.radio("Filter", ('All grants', 'Active grants'),horizontal=True)
+
+        if isActive == "All grants":
+            df2_group = df2
+        else:
+            df2_group = df2[df2["isActive"]==True]
+
+        # Component filter
+        option_Component = st.multiselect(
+            'Filter component(s)',
+            options=list(df2_group.componentName.sort_values(ascending=True).unique()),
+            key= "component_multiselect")
+        if len(option_Component) == 0:
+            df_group_compo = df2_group
+        else:
+            df_group_compo = df2_group[df2_group["componentName"].isin(option_Component)]
 
 
-    fig = px.scatter(df2, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
-                     log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
-                     marginal_y="box")
-    fig.update_layout(
-        autosize=False,
-        margin=dict(
-            l=0,
-            r=0,
-            b=0,
-            t=50,
-            pad=4,
-            autoexpand=True),
-        height=700,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01),
-        legend_title = 'Grant Agreement Status' )
-    fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
-    fig.update_xaxes(showgrid=False, zeroline=True)
-    fig.update_yaxes(showgrid=False, zeroline=True)
-    st.plotly_chart(fig, use_container_width=True)
+        # Region filter
+        region_filter = st.multiselect(
+            'Select region',
+            options=list(df_group_compo.Region.sort_values(ascending=True).unique()),
+            key= "pr_multiselect")
+        if len(region_filter) == 0:
+            df2_group_region = df_group_compo
+        else:
+            df2_group_region = df_group_compo[df_group_compo["Region"].isin(region_filter)]
+
+        # Country filter
+        country_filter = st.multiselect(
+            'Select country',
+            options=list(df2_group_region.geographicAreaName.sort_values(ascending=True).unique()),
+            key= "pr_multiselect")
+        if len(country_filter) == 0:
+            df2_group_country = df2_group_region
+        else:
+            df2_group_country = df2_group_region[df2_group_region["geographicAreaName"].isin(country_filter)]
+
+        # Timeline filter
+        start_year, end_year = st.select_slider(
+            'Disbursement year range',
+            options=list(df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
+            value=(df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
+                   df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
+
+        # Filtered dataset:
+        df1_filtered_dates = df2_group_country[(df2_group_country.programStartDate.astype('datetime64[ns]').dt.year >= start_year) & (
+                df2_group_country.programStartDate.astype('datetime64[ns]').dt.year <= end_year)]
+        # Reset filters button
+        st.button("Clear filters", on_click=clear_multi)
+
+
+
+    # METRICS ------------------------------------
+
+    col1, col2, col3,col4= st.columns([30, 30, 30, 30])
+    col1.metric("Number of Grants","{:,}".format(len(df1_filtered_dates)))
+    col2.metric("Total signed amount ($)", "{:,}".format(round(df1_filtered_dates.totalSignedAmount.sum())))
+    col3.metric("Total commited amount ($)", "{:,}".format(round(df1_filtered_dates.totalCommittedAmount.sum())))
+    col4.metric("Total disbursed amount ($)", "{:,}".format(round(df1_filtered_dates.totalDisbursedAmount.sum())))
+
+    # TABS ------------------------------------
+
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Grant status", "Regional overview 📈️", "Grant location 🗺️","Grant - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
+
+    with tab1:
+        fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                         log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
+                         marginal_y="box")
+        fig.update_layout(
+            autosize=False,
+            margin=dict(
+                l=0,
+                r=0,
+                b=0,
+                t=50,
+                pad=4,
+                autoexpand=True),
+            height=300,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            legend_title = 'Grant Agreement Status' )
+        fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+        fig.update_xaxes(showgrid=False, zeroline=True, title_text="Grant starting date")
+        fig.update_yaxes(showgrid=False, zeroline=True, title_text="Total signed amount ($)")
+
+        st.plotly_chart(fig, use_container_width=True)
 
     lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
-    with header_space:
-        with col1:
-            st_lottie(lottie_json, height=200, key="loading_gif")
+    with st.sidebar:
+        st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 if dataset == "Implementation periods":
     lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
-    with header_space:
-        with col1:
-            st_lottie(lottie_json, height=200, key="loading_gif")
+    with st.sidebar:
+        st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 # ---- SIDEBAR ----
