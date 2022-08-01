@@ -839,6 +839,7 @@ if dataset == "Grant agreements":
 
 
 if dataset == "Implementation periods":
+    col2.write('')
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation periods section in development** </span>  </p>", unsafe_allow_html=True)
     lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
     lottie_json = load_lottieurl(lottie_url)
