@@ -832,7 +832,6 @@ if dataset == "Grant agreements":
         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
-        st.write("In development")
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
         lottie_json = load_lottieurl(lottie_url)
         st_lottie(lottie_json, height=500, key="loading_gif2")
