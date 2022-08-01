@@ -57,7 +57,7 @@ with st.sidebar:
 
 if dataset == "Disbursement records":
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Disbursements records** </span> "
-                "<p style='text-align: justify'> A disbursement corresponds to the transfer of a specific tranche of the grant funds for the implementation"
+                "<p style='text-align: justify'> A disbursement corresponds to the transfer of a tranche of the grant funds for the implementation"
                 " of Programs.<br>"
                 " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
                 "Disbursements records. </span> "
