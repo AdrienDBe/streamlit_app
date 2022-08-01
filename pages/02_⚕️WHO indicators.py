@@ -37,7 +37,7 @@ st.markdown("""
 <style>
 .streamlit-expanderHeader {
     font-size: medium;
-    color:#ad8585;   
+    color:#05c37d;   
     }
 .st-bd {border-style: none;}
 </style>
