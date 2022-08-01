@@ -821,7 +821,7 @@ if dataset == "Grant agreements":
                 t=50,
                 pad=4,
                 autoexpand=True),
-            height=400,
+            height=380,
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             legend_title = 'Grant Agreement Status' )
