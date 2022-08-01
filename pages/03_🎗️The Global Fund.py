@@ -219,7 +219,7 @@ if dataset == "Disbursement records":
        background-color: #12151D;
        border: 1px solid #283648 ;
        border-radius: 5px;
-       padding: 1% 1% 1% 15%;
+       padding: 1% 1% 1% 5%;
        color: #04AA6D;
        overflow-wrap: break-word;
     }
