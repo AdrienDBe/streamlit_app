@@ -46,7 +46,6 @@ div[data-testid="metric-container"] {
    color: #04AA6D;
    overflow-wrap: break-word;
 }
-
 /* breakline for metric text         */
 div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
    overflow-wrap: break-word;
@@ -806,7 +805,7 @@ if dataset == "Grant agreements":
 
     # TABS ------------------------------------
 
-    tab1, tab2= st.tabs(["Grant status", "WIP"])
+    tab1 = st.tabs(["Grant status"])
 
     with tab1:
         fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
@@ -831,21 +830,18 @@ if dataset == "Grant agreements":
 
         st.plotly_chart(fig, use_container_width=True)
 
-    with tab2:
-        st.write("In development")
-        lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
-        lottie_json = load_lottieurl(lottie_url)
-        st_lottie(lottie_json, height=500, key="loading_gif2")
-
+    lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
+    lottie_json = load_lottieurl(lottie_url)
+    with st.sidebar:
+        st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 if dataset == "Implementation periods":
-    col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation periods section in development** </span>  </p>", unsafe_allow_html=True)
-    lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
+    lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=500, key="loading_gif2")
+    with st.sidebar:
+        st_lottie(lottie_json, height=200, key="loading_gif")
 
-    #col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation periods** </span> </p>", unsafe_allow_html=True)
 
 # ---- SIDEBAR ----
 with st.sidebar:
