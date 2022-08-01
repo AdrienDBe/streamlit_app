@@ -806,7 +806,7 @@ if dataset == "Grant agreements":
 
     # TABS ------------------------------------
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Grant status", "Regional overview 📈️", "Grant location 🗺️","Grant - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
+    tab1 = st.tabs(["Grant status"])
 
     with tab1:
         fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
@@ -821,7 +821,7 @@ if dataset == "Grant agreements":
                 t=50,
                 pad=4,
                 autoexpand=True),
-            height=380,
+            height=300,
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             legend_title = 'Grant Agreement Status' )
