@@ -46,17 +46,18 @@ def load_lottieurl(url: str):
 header_space = st.container()
 
 with header_space:
-    col1, col2 = st.columns([10, 35], gap='medium')
+    col1, col2 = st.columns([12, 35], gap='small')
     col1.write("")
-    col1.title("Global Fund API explorer")
+    #col1.title("Global Fund API explorer")
+    col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
 
 with st.sidebar:
     dataset = st.radio("", ('Disbursement records', 'Grant agreements', 'Implementation periods'), horizontal=True)
     st.write("")
 
 if dataset == "Disbursement records":
-    col2.markdown("<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Disbursements records** </span> "
-                "<p style='text-align: justify'>A disbursement corresponds to the transfer of a specific tranche of the grant funds for the implementation"
+    col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Disbursements records** </span> "
+                "<p style='text-align: justify'> A disbursement corresponds to the transfer of a specific tranche of the grant funds for the implementation"
                 " of Programs.<br>"
                 " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
                 "Disbursements records. </span> "
