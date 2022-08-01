@@ -66,8 +66,6 @@ header_space = st.container()
 
 with header_space:
     col1, col2 = st.columns([15, 35], gap='small')
-    col1.write("")
-    #col1.title("Global Fund API explorer")
     col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
 
 with st.sidebar:
@@ -839,7 +837,6 @@ if dataset == "Grant agreements":
 
 
 if dataset == "Implementation periods":
-    col2.write('')
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation periods section in development** </span>  </p>", unsafe_allow_html=True)
     lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
     lottie_json = load_lottieurl(lottie_url)
