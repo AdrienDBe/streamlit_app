@@ -46,7 +46,7 @@ def load_lottieurl(url: str):
 header_space = st.container()
 
 with header_space:
-    col1, col2 = st.columns([12, 35], gap='small')
+    col1, col2 = st.columns([15, 35], gap='small')
     col1.write("")
     #col1.title("Global Fund API explorer")
     col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
