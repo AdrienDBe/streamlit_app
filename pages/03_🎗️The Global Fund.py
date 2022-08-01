@@ -28,7 +28,7 @@ st.markdown("""
                     padding-top: 3.5rem;
                     padding-right: 1rem;
                     padding-bottom: 3.5rem;
-                    padding-left: 5rem}
+                    padding-left: 2rem}
                .streamlit-expanderHeader {
                     font-size: medium;
                     color:#05c37d}
