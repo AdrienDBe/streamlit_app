@@ -10,74 +10,32 @@ import json
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="GF API explorer", page_icon="🎗", layout="wide")
 
-# Remove whitespace from the top of the page and sidebar
-st.markdown("""
-        <style>
-               .css-18e3th9 {
-                    padding-top: 0rem;
-                    padding-bottom: 10rem;
-                    padding-left: 5rem;
-                    padding-right: 5rem;
-                }
-               .css-1d391kg {
-                    padding-top: 3.5rem;
-                    padding-right: 1rem;
-                    padding-bottom: 3.5rem;
-                    padding-left: 1rem;
-                }
-        </style>
-        """, unsafe_allow_html=True)
-
 # Use local CSS
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 local_css("style/style.css")
 
-# resize expanders
+# Remove whitespace from the top of the page and sidebar
 st.markdown("""
-<style>
-.streamlit-expanderHeader {
-    font-size: medium;
-    color:#05c37d;   
-    }
-.st-bd {border-style: none;}
-</style>
-""", unsafe_allow_html=True)
+        <style>
+               .css-18e3th9 {
+                    padding-top: 0rem;
+                    padding-bottom: 0rem;
+                    padding-left: 3rem;
+                    padding-right: 3rem}
+               .css-1d391kg {
+                    padding-top: 3.5rem;
+                    padding-right: 1rem;
+                    padding-bottom: 3.5rem;
+                    padding-left: 5rem}
+               .streamlit-expanderHeader {
+                    font-size: medium;
+                    color:#05c37d}
+                .st-bd {border-style: none;}
+        </style>
+        """, unsafe_allow_html=True)
 
-# ---- SIDEBAR ----
-with st.sidebar:
-    with st.expander("Read more about The Global Fund"):
-        # The Global Fund details
-        st.markdown("<p style='text-align: justify;'>"
-                "<a href='https://www.theglobalfund.org/en/'>The Global Fund </a> is a partnership designed to accelerate the end of AIDS, tuberculosis and "
-                "malaria as epidemics. <br> It prioritizes: results-based work, accountability, preparing countries"
-                " for graduation from aid, investing in people as assets for development and inclusive governance."
-                " To do so, the Global Fund mobilizes and invests more than US$4 billion a year to support programs "
-                "run by local experts in more than 100 countries in partnership with governments, civil society, "
-                "technical agencies, the private sector and people affected by the diseases. <br><br>"
-                "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
-                      " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
-                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records.</p>",
-                unsafe_allow_html=True)
-    with st.expander("What's an API?"):
-        st.markdown("<p style='text-align: justify;'>"
-                    "The term API stands for Application Programming Interface. "
-                    "API enable applications, here our web app, to communicate with an external data source using simple commands. "
-                    "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
-                    "between computers or between computer programs offering a service to other pieces of software."
-                    "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
-                    " with the purpose of ensuring transparency and a better access to information generated, "
-                    "for the benefit of the stakeholders in their activities.<br>"
-                    "In order to offer more filter options in this app I also imported the "
-                    "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
-                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets."
-                    "</p>", unsafe_allow_html=True)
-    st.caption("<p style='text-align: justify;'>"
-                "Disclaimer: <br /> The information presented in this page is solely made by me in my private capacity. "
-                " <br /> All the data used and displayed is publicly available via the "
-               "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a></p>",
-                unsafe_allow_html=True)
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -85,22 +43,25 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-st.title("Global Fund API explorer")
-col1, col2 = st.columns([20,50],gap='medium')
-dataset = col1.radio("",('Disbursement records', 'Grant agreements', 'Implementation periods'))
+header_space = st.container()
+
+with header_space:
+    col1, col2 = st.columns([10, 35], gap='medium')
+    col1.write("")
+    col1.title("Global Fund API explorer")
+
+with st.sidebar:
+    dataset = st.radio("", ('Disbursement records', 'Grant agreements', 'Implementation periods'), horizontal=True)
+    st.write("")
 
 if dataset == "Disbursement records":
-    col2.markdown("<p style='text-align: justify; font-size: 160%'>"
-            "Disbursements records"
-            "</p>"
-            "<p style='text-align: justify;font-size: 90%''>"
-            "A disbursement corresponds to the transfer of a specific tranche of the grant funds for the implementation"
-            " of Programs. You can visit <a href='https://www.theglobalfund.org/en/funding-model/'>this page</a> to know"
-            " learn about the organization Funding Model."
-            " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
-            "Disbursements records. <br> "
-            "<span style='color:grey'>Loading data takes a few seconds the first time</span> </p>", unsafe_allow_html=True)
-    st.write("---")
+    col2.markdown("<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Disbursements records** </span> "
+                "<p style='text-align: justify'>A disbursement corresponds to the transfer of a specific tranche of the grant funds for the implementation"
+                " of Programs.<br>"
+                " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
+                "Disbursements records. </span> "
+                "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
+
     ## List of WHO countries
     @st.cache(show_spinner=False)
     def import_api_WHO_countries(url):
@@ -215,53 +176,74 @@ if dataset == "Disbursement records":
         for key in st.session_state.keys():
             st.session_state[key] = []
 
-    col1, col2, col3, col4 = st.columns([10,10,10,2],gap='medium')
+    with st.sidebar:
 
-    # Component filter
-    option_map1 = col2.multiselect(
-        'Filter component(s)',
-        options=list(df1.componentName.sort_values(ascending=True).unique()),
-        key= "component_multiselect")
-    if len(option_map1) == 0:
-        df_group_compo = df1
-    else:
-        df_group_compo = df1[df1["componentName"].isin(option_map1)]
+        # Component filter
+        option_map1 = st.multiselect(
+            'Filter component(s)',
+            options=list(df1.componentName.sort_values(ascending=True).unique()),
+            key= "component_multiselect")
+        if len(option_map1) == 0:
+            df_group_compo = df1
+        else:
+            df_group_compo = df1[df1["componentName"].isin(option_map1)]
 
-    # Principal recipient filter
-    option_map2 = col3.multiselect(
-        'Filter Principal Recipient type',
-        options=list(df_group_compo.principalRecipientSubClassificationName.sort_values(ascending=True).unique()),
-        key= "pr_multiselect")
-    if len(option_map2) == 0:
-        df1_filtered = df_group_compo
-    else:
-        df1_filtered = df_group_compo[df_group_compo["principalRecipientSubClassificationName"].isin(option_map2)]
+        # Principal recipient filter
+        option_map2 = st.multiselect(
+            'Filter Principal Recipient type',
+            options=list(df_group_compo.principalRecipientSubClassificationName.sort_values(ascending=True).unique()),
+            key= "pr_multiselect")
+        if len(option_map2) == 0:
+            df1_filtered = df_group_compo
+        else:
+            df1_filtered = df_group_compo[df_group_compo["principalRecipientSubClassificationName"].isin(option_map2)]
 
-    # Timeline filter
-    start_year, end_year = col1.select_slider(
-        'Disbursement year range',
-        options=list(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
-        value=(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
-               df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
+        # Timeline filter
+        start_year, end_year = st.select_slider(
+            'Disbursement year range',
+            options=list(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
+            value=(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
+                   df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
 
-    # Filtered dataset:
-    df1_filtered_dates = df1_filtered[(df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year >= start_year) & (
-            df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year <= end_year)]
+        # Filtered dataset:
+        df1_filtered_dates = df1_filtered[(df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year >= start_year) & (
+                df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year <= end_year)]
+        # Reset filters button
 
-    col1, col2, col3= st.columns([30, 30, 30])
-    col1.metric("Disbursements ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
-    col2.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
-    col3.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
+        st.button("Clear filters", on_click=clear_multi)
+
+    st.markdown("""
+    <style>
+    div[data-testid="metric-container"] {
+       background-color: #12151D;
+       border: 1px solid #283648 ;
+       border-radius: 5px;
+       padding: 1% 1% 1% 15%;
+       color: #04AA6D;
+       overflow-wrap: break-word;
+    }
+
+    /* breakline for metric text         */
+    div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+       overflow-wrap: break-word;
+       white-space: break-spaces;
+       color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3, col4= st.columns([30, 30, 30, 30])
+    col1.metric("Number of disbursements","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
+    col2.metric("Total amount ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
+    col3.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
+    col4.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
 
     df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetime64[ns]').dt.year
     df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
 
-    # Reset filters button
-    col4.write("")
-    col4.write("")
-    col4.button("Clear filters", on_click= clear_multi)
+
 
     with tab1:
         col1, col2, col3 = st.columns([15, 15, 15])
@@ -277,7 +259,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
@@ -314,7 +296,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Yearly disbursements normalized (%)',
                 'x': 0.5,
@@ -355,7 +337,7 @@ if dataset == "Disbursement records":
                 autoexpand=True
             ),
             #width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Total per component ($)',
                 'x': 0.5,
@@ -384,7 +366,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Yearly disbursements ($)',
                 'x': 0.5,
@@ -420,7 +402,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             #width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Yearly disbursements normalized (%)',
                 'x': 0.5,
@@ -457,7 +439,7 @@ if dataset == "Disbursement records":
                 pad=4,
                 autoexpand=True),
             width=800,
-            height=600,
+            height=400,
             title={
                 'text': 'Top 10 disbursement receivers',
                 'x': 0.5,
@@ -753,7 +735,7 @@ if dataset == "Grant agreements":
             t=50,
             pad=4,
             autoexpand=True),
-        height=800,
+        height=700,
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend=dict(
@@ -770,10 +752,52 @@ if dataset == "Grant agreements":
 
     lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=200, key="loading_gif")
+    with header_space:
+        with col1:
+            st_lottie(lottie_json, height=200, key="loading_gif")
 
 
 if dataset == "Implementation periods":
     lottie_url = "https://assets7.lottiefiles.com/packages/lf20_hgswhyif.json"
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=200, key="loading_gif")
+    with header_space:
+        with col1:
+            st_lottie(lottie_json, height=200, key="loading_gif")
+
+
+# ---- SIDEBAR ----
+with st.sidebar:
+    with st.expander("Read more about The Global Fund"):
+        # Information on dataset chosen
+        info_para = st.empty
+        # The Global Fund details
+        st.markdown("<p style='text-align: justify;'>"
+                "<a href='https://www.theglobalfund.org/en/'>The Global Fund </a> is a partnership designed to accelerate the end of AIDS, tuberculosis and "
+                "malaria as epidemics. <br> It prioritizes: results-based work, accountability, preparing countries"
+                " for graduation from aid, investing in people as assets for development and inclusive governance."
+                " To do so, the Global Fund mobilizes and invests more than US$4 billion a year to support programs "
+                "run by local experts in more than 100 countries in partnership with governments, civil society, "
+                "technical agencies, the private sector and people affected by the diseases. <br> You can visit <a href='https://www.theglobalfund.org/en/funding-model/'>this page</a> to"
+                " learn more about the organization Funding Model.<br><br>"
+                "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
+                      " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
+                      " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records.</p>",
+                unsafe_allow_html=True)
+    with st.expander("What's an API?"):
+        st.markdown("<p style='text-align: justify;'>"
+                    "The term API stands for Application Programming Interface. "
+                    "API enable applications, here our web app, to communicate with an external data source using simple commands. "
+                    "<a href='https://en.wikipedia.org/wiki/API'> Wikipedia</a> defines it as a connection "
+                    "between computers or between computer programs offering a service to other pieces of software."
+                    "<br>In the case of the WHO, The Global Fund and the World Bank, all 3 APIs have been created by these organizations"
+                    " with the purpose of ensuring transparency and a better access to information generated, "
+                    "for the benefit of the stakeholders in their activities.<br>"
+                    "In order to offer more filter options in this app I also imported the "
+                    "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
+                    " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets."
+                    "</p>", unsafe_allow_html=True)
+    st.caption("<p style='text-align: justify;'>"
+                "Disclaimer: <br /> The information presented in this page is solely made by me in my private capacity. "
+                " <br /> All the data used and displayed is publicly available via the "
+               "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a></p>",
+                unsafe_allow_html=True)
