@@ -5,6 +5,8 @@ import wbgapi as wb
 import plotly.express as px
 import plotly.graph_objects as go
 from streamlit_lottie import st_lottie
+from datetime import date
+
 import json
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -55,6 +57,46 @@ div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
 }
 </style>
 """, unsafe_allow_html=True)
+
+# Enabling Plotly Scroll Zoom
+config = dict({'scrollZoom': True, 'displaylogo': False})
+
+color_discrete_map = {
+    "HIV": "#fe9000",
+    "Malaria": "#5b8e7d",
+    "Tuberculosis": "#5adbff",
+    "TB/HIV": "#3c6997",
+    "RSSH": "#094074",
+    "Multicomponent": "#ffdd4a"}
+
+color_discrete_map2 = {
+    "Sub-Saharan Africa": "#0081a7",
+    "East Asia and Pacific": "#b392ac",
+    "Europe and Central Asia": "#02c39a",
+    "Latin America & the Caribbean": "#fdfcdc",
+    "Middle East and North Africa": "#736ced",
+    "South Asia": "#f07167"}
+
+color_discrete_map3={
+                "Ministry of Health": "#e6194B",
+                "Ministry of Finance": "#3cb44b",
+                "UN Agency": "#4363d8",
+                "International NGO": "#ffe119",
+                "Other Governmental": "#42d4f4",
+                "International Faith Based Organization": "#f032e6",
+                "Not indicated": "#ffffff",
+                "Local Faith Based Organization": "#fabed4",
+                "Private Sector Entity": "#a9a9a9",
+                "Other Multilateral Organization": "#094074",
+                "Other Community Sector Entity": "#3c6997",
+                "Community Based Organization": "#5b8e7d"}
+
+color_discrete_map4 = {
+    "Administratively Closed": "grey",
+    "Terminated": "#fcd5ce",
+    "In Closure": "#e63946",
+    "Active": "#48cae4"}
+
 
 def load_lottieurl(url: str):
     r = requests.get(url)
@@ -173,21 +215,7 @@ if dataset == "Disbursement records":
                   how='inner')
 
 
-    color_discrete_map={
-                    "HIV": "#fe9000",
-                    "Malaria": "#5b8e7d",
-                    "Tuberculosis": "#5adbff",
-                    "TB/HIV": "#3c6997",
-                    "RSSH": "#094074",
-                    "Multicomponent": "#ffdd4a"}
 
-    color_discrete_map2={
-                    "Sub-Saharan Africa": "#0081a7",
-                    "East Asia and Pacific": "#b392ac",
-                    "Europe and Central Asia": "#02c39a",
-                    "Latin America & the Caribbean": "#fdfcdc",
-                    "Middle East and North Africa": "#736ced",
-                    "South Asia": "#f07167"}
 
 
     # FILTERS ------------------------------------
@@ -200,35 +228,59 @@ if dataset == "Disbursement records":
     with st.sidebar:
 
         # Component filter
-        option_map1 = st.multiselect(
+        option_Component = st.multiselect(
             'Filter component(s)',
             options=list(df1.componentName.sort_values(ascending=True).unique()),
-            key= "component_multiselect")
-        if len(option_map1) == 0:
-            df_group_compo = df1
+            key="component_multiselect")
+        if len(option_Component) == 0:
+            df1_df_group_compo = df1
         else:
-            df_group_compo = df1[df1["componentName"].isin(option_map1)]
+            df1_df_group_compo = df1[df1["componentName"].isin(option_Component)]
 
         # Principal recipient filter
-        option_map2 = st.multiselect(
-            'Filter Principal Recipient type',
-            options=list(df_group_compo.principalRecipientSubClassificationName.sort_values(ascending=True).unique()),
-            key= "pr_multiselect")
-        if len(option_map2) == 0:
-            df1_filtered = df_group_compo
+        option_map_pr = st.multiselect(
+            'Filter PR type',
+            options=list(
+                df1_df_group_compo.principalRecipientSubClassificationName.sort_values(ascending=True).unique()),
+            key="pr_multiselect")
+        if len(option_map_pr) == 0:
+            df_group_pr = df1_df_group_compo
         else:
-            df1_filtered = df_group_compo[df_group_compo["principalRecipientSubClassificationName"].isin(option_map2)]
+            df_group_pr = df1_df_group_compo[
+                df1_df_group_compo["principalRecipientSubClassificationName"].isin(option_map_pr)]
+
+        # Region filter
+        region_filter = st.multiselect(
+            'Select region',
+            options=list(df_group_pr.Region.sort_values(ascending=True).unique()),
+            key="pr_multiselect")
+        if len(region_filter) == 0:
+            df1_group_region = df_group_pr
+        else:
+            df1_group_region = df_group_pr[df_group_pr["Region"].isin(region_filter)]
+
+        # Country filter
+        country_filter = st.multiselect(
+            'Select country',
+            options=list(df1_group_region.geographicAreaName.sort_values(ascending=True).unique()),
+            key="pr_multiselect")
+        if len(country_filter) == 0:
+            df1_group_country = df1_group_region
+        else:
+            df1_group_country = df1_group_region[df1_group_region["geographicAreaName"].isin(country_filter)]
 
         # Timeline filter
         start_year, end_year = st.select_slider(
             'Disbursement year range',
-            options=list(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
-            value=(df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
-                   df1.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
+            options=list(
+                df1_group_country.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
+            value=(df1_group_country.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
+                   df1_group_country.disbursementDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
 
         # Filtered dataset:
-        df1_filtered_dates = df1_filtered[(df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year >= start_year) & (
-                df1_filtered.disbursementDate.astype('datetime64[ns]').dt.year <= end_year)]
+        df1_filtered_dates = df1_group_country[
+            (df1_group_country.disbursementDate.astype('datetime64[ns]').dt.year >= start_year) & (
+                    df1_group_country.disbursementDate.astype('datetime64[ns]').dt.year <= end_year)]
         # Reset filters button
         st.button("Clear filters", on_click=clear_multi)
 
@@ -240,259 +292,375 @@ if dataset == "Disbursement records":
     col4.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
 
     # TABS ------------------------------------
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Components overview 📈", "Regional overview 📈️", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Disbursements overview 📈", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
 
     df1_filtered_dates["Year"] = df1_filtered_dates.disbursementDate.astype('datetime64[ns]').dt.year
     df1_filtered_dates["Year"] = df1_filtered_dates["Year"].astype(int)
 
     with tab1:
-        col1, col2, col3 = st.columns([15, 15, 15])
-        df_line = df1_filtered_dates[["componentName", "disbursementAmount", "Year"]].groupby(["Year","componentName"]).sum().reset_index()
-        fig = px.bar(df_line, x="Year", y="disbursementAmount", color="componentName",color_discrete_map=color_discrete_map)
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            #width=800,
-            height=380,
-            title={
-                'text': 'Yearly disbursements ($)',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            legend=dict(
-                yanchor="top",
-                orientation="h",
-                title="Component")
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=True, zeroline=True)
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        col1.plotly_chart(fig, use_container_width=True)
+        view = st.radio(
+            "Select view",
+            ('Component', 'Region', 'Principal Recipient'),
+            horizontal = True)
+        if view == 'Component':
+            col1, col2, col3 = st.columns([15, 15, 15])
+            df_line = df1_filtered_dates[["componentName", "disbursementAmount", "Year"]].groupby(["Year","componentName"]).sum().reset_index()
+            fig = px.bar(df_line, x="Year", y="disbursementAmount", color="componentName",color_discrete_map=color_discrete_map)
+            fig.update_traces(hovertemplate='%{x} <br> %{y}')
+            fig.update_layout(
+                modebar_remove = ['zoom'],
+                autosize=True,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=380,
+                title={
+                    'text': 'Yearly disbursements ($)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(
+                    yanchor="top",
+                    orientation="h",
+                    title="Component")
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=True, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col1.plotly_chart(fig, use_container_width=True,config=config)
 
-        fig = px.area(df_line,
-                      y = "disbursementAmount",
-                      x = "Year",
-                      color = "componentName",
-                      color_discrete_map=color_discrete_map,
-                      groupnorm='percent')
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            #width=800,
-            height=400,
-            title={
-                'text': 'Yearly disbursements normalized (%)',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            showlegend=False
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=False, zeroline=True)
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        col2.plotly_chart(fig, use_container_width=True)
-
-
-        df_bar = df1_filtered_dates.groupby(['componentName'], as_index=False)['disbursementAmount'].sum()
-        y = ['Multicomponent', 'RSSH', 'TB/HIV', 'Tuberculosis', 'Malaria', 'HIV']
-        fig = px.bar(df_bar, y='componentName', x='disbursementAmount',color = 'componentName',
-                     text_auto=True, color_discrete_map=color_discrete_map)
-        fig.update_layout(barmode='stack', yaxis={'categoryorder': 'array', 'categoryarray': y})
-                          #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True
-            ),
-            #width=800,
-            height=400,
-            title={
-                'text': 'Total per component ($)',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            showlegend=False
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=False, zeroline=False)
-        col3.plotly_chart(fig, use_container_width=True)
+            fig = px.area(df_line,
+                          y = "disbursementAmount",
+                          x = "Year",
+                          color = "componentName",
+                          color_discrete_map=color_discrete_map,
+                          groupnorm='percent')
+            fig.update_traces(mode="lines",
+                              hovertemplate='%{x} <br> %{y:.2f}%')
+            fig.update_layout(
+                autosize=True,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Yearly disbursements normalized (%)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col2.plotly_chart(fig, use_container_width=True,config=config)
 
 
-    # Regional overview
-    with tab2:
-        col1, col2, col3 = st.columns([15, 15, 15],gap='medium')
-        df_line = df1_filtered_dates[["Region", "disbursementAmount", "Year"]].groupby(["Year","Region"]).sum().reset_index()
-        fig = px.bar(df_line, x="Year", y="disbursementAmount", color="Region", color_discrete_map=color_discrete_map2)
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            #width=800,
-            height=380,
-            title={
-                'text': 'Yearly disbursements ($)',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            legend=dict(
-                yanchor="top",
-                orientation="h")
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=True, zeroline=True)
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        col1.plotly_chart(fig, use_container_width=True)
+            df_bar = df1_filtered_dates.groupby(['componentName'], as_index=False)['disbursementAmount'].sum().sort_values('disbursementAmount')
+            list_comp = list(df_bar.componentName.unique())
+            fig = px.bar(df_bar, y='componentName', x='disbursementAmount',color = 'componentName',
+                         text_auto=True, color_discrete_map=color_discrete_map)
+            y = list_comp
+            fig.update_layout(barmode='stack', yaxis={'categoryorder': 'array', 'categoryarray': y})
+            fig.update_traces(hovertemplate=None, hoverinfo='skip')
+                              #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            fig.update_layout(
+                autosize=True,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True
+                ),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Total per component ($)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=False)
+            col3.plotly_chart(fig, use_container_width=True,config=config)
 
-        fig = px.area(df_line,
-                      y = "disbursementAmount",
-                      x = "Year",
-                      color = "Region",
-                      color_discrete_map=color_discrete_map2,
-                      groupnorm='percent')
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            #width=800,
-            height=400,
-            title={
-                'text': 'Yearly disbursements normalized (%)',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            showlegend=False
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=False, zeroline=True)
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        col2.plotly_chart(fig, use_container_width=True)
+        if view == 'Region':
+            col1, col2, col3 = st.columns([15, 15, 15],gap='medium')
+            df_line = df1_filtered_dates[["Region", "disbursementAmount", "Year"]].groupby(["Year","Region"]).sum().reset_index()
+            fig = px.bar(df_line, x="Year", y="disbursementAmount", color="Region", color_discrete_map=color_discrete_map2)
+            fig.update_traces(hovertemplate='%{x} <br> %{y}')
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=380,
+                title={
+                    'text': 'Yearly disbursements ($)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(
+                    yanchor="top",
+                    orientation="h")
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=True, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col1.plotly_chart(fig, use_container_width=True,config=config)
+
+            fig = px.area(df_line,
+                          y = "disbursementAmount",
+                          x = "Year",
+                          color = "Region",
+                          color_discrete_map=color_discrete_map2,
+                          groupnorm='percent')
+            fig.update_traces(mode="lines",
+                              hovertemplate='%{x} <br> %{y:.2f}%')
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Yearly disbursements normalized (%)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col2.plotly_chart(fig, use_container_width=True,config=config)
 
 
-        df_bar2 = df1_filtered_dates.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(
-            by='disbursementAmount', ascending=True).tail(10)
-        fig = px.bar(df_bar2, y='Country', x='disbursementAmount', text_auto=True)
-        for axis in fig.layout:
-            if type(fig.layout[axis]) == go.layout.YAxis:
-                fig.layout[axis].title.text = ''
-            if type(fig.layout[axis]) == go.layout.XAxis:
-                fig.layout[axis].title.text = ''
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            width=800,
-            height=400,
-            title={
-                'text': 'Top 10 disbursement receivers',
-                'x': 0.5,
-                'xanchor': 'center'},
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
-        fig.update_xaxes(showgrid=False, zeroline=True)
-        fig.update_yaxes(showgrid=False, zeroline=False)
-        fig.update_traces(marker_color='#003566',opacity=1)
-        col3.plotly_chart(fig, use_container_width=True)
+            df_bar2 = df1_filtered_dates.groupby(['Country'], as_index=False)['disbursementAmount'].sum().sort_values(
+                by='disbursementAmount', ascending=True).tail(10)
+            fig = px.bar(df_bar2, y='Country', x='disbursementAmount', text_auto=True)
+            fig.update_traces(hovertemplate=None, hoverinfo='skip')
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                width=800,
+                height=400,
+                title={
+                    'text': 'Top 10 disbursement receivers',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=False)
+            fig.update_traces(marker_color='#003566',opacity=1)
+            col3.plotly_chart(fig, use_container_width=True,config=config)
+
+        if view =="Principal Recipient":
+            col1, col2, col3 = st.columns([15, 15, 15],gap='medium')
+            df_line = df1_filtered_dates[["principalRecipientSubClassificationName", "disbursementAmount", "Year"]].groupby(["Year","principalRecipientSubClassificationName"]).sum().reset_index()
+            fig = px.bar(df_line, x="Year", y="disbursementAmount", color="principalRecipientSubClassificationName", color_discrete_map=color_discrete_map3)
+            fig.update_traces(hovertemplate='%{x} <br> %{y}')
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Yearly disbursements ($)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=True, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col1.plotly_chart(fig, use_container_width=True,config=config)
+
+            fig = px.area(df_line,
+                          y = "disbursementAmount",
+                          x = "Year",
+                          color = "principalRecipientSubClassificationName",
+                          color_discrete_map=color_discrete_map3,
+                          groupnorm='percent')
+            fig.update_traces(mode="lines",
+                              hovertemplate='%{x} <br> %{y:.2f}%')
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Yearly disbursements normalized (%)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=True)
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            col2.plotly_chart(fig, use_container_width=True,config=config)
+
+            # Top disbursement receivers
+            df_pr = df1_filtered_dates.groupby(['principalRecipientSubClassificationName'], as_index=False)['disbursementAmount'].sum().sort_values('disbursementAmount')
+            list_pr = list(df_pr.principalRecipientSubClassificationName.unique())
+            fig = px.bar(df_pr, y='principalRecipientSubClassificationName', x='disbursementAmount',color = 'principalRecipientSubClassificationName',
+                         text_auto=True, color_discrete_map=color_discrete_map3)
+            y = list_pr
+            fig.update_layout(barmode='stack', yaxis={'categoryorder': 'array', 'categoryarray': y})
+            fig.update_traces(hovertemplate=None, hoverinfo='skip')
+                              #paper_bgcolor="rgb(255,255,255)", plot_bgcolor="rgb(255,255,255)")
+            for axis in fig.layout:
+                if type(fig.layout[axis]) == go.layout.YAxis:
+                    fig.layout[axis].title.text = ''
+                if type(fig.layout[axis]) == go.layout.XAxis:
+                    fig.layout[axis].title.text = ''
+            fig.update_layout(
+                autosize=True,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True
+                ),
+                #width=800,
+                height=400,
+                title={
+                    'text': 'Total per component ($)',
+                    'x': 0.5,
+                    'xanchor': 'center'},
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False
+            )
+            fig.update_xaxes(showgrid=False, zeroline=True)
+            fig.update_yaxes(showgrid=False, zeroline=False)
+            col3.plotly_chart(fig, use_container_width=True,config=config)
+
+
 
         #Disbursement map
-        with tab3:
+        with tab2:
 
-            df_geo = df1_filtered_dates.groupby(['geographicAreaName', 'SpatialDim'], as_index=False)[
+            df_geo = df1_filtered_dates.groupby(['componentName','geographicAreaName', 'SpatialDim'], as_index=False)[
                 'disbursementAmount'].sum().sort_values(by="disbursementAmount")
 
             fig = go.Figure(
-                data=go.Choropleth(
-                    locations=df_geo["SpatialDim"],
-                    z = df_geo['disbursementAmount'],
-                    colorscale  = "Blues",
-                    showscale=True
-                ),
-                layout = go.Layout(height=500,
-                                   margin=dict(
-                                       l=0,
-                                       r=10,
-                                       b=0,
-                                       t=0,
-                                       pad=4,
-                                       autoexpand=True
-                                   ),
-                                   geo=dict(bgcolor='rgba(0,0,0,0)',
-                                            lakecolor='#4E5D6C',
-                                            visible=False,
-                                            landcolor='#3d3d3d',
-                                            showland=True,
-                                            showcountries=True,
-                                            countrycolor='#5c5c5c',
-                                            countrywidth=0.5,
-                                            projection=dict(
-                                                type='natural earth'
-                                            )
-                                            ))
-            )
+                    data=go.Choropleth(
+                        locations=df_geo["SpatialDim"],
+                        z = df_geo['disbursementAmount'],
+                        colorscale  = "Blues",
+                        showscale=True),
+                    layout = go.Layout(height=500,
+                                       margin=dict(
+                                           l=0,
+                                           r=10,
+                                           b=0,
+                                           t=0,
+                                           pad=4,
+                                           autoexpand=True),
+                                       geo=dict(bgcolor='rgba(0,0,0,0)',
+                                                lakecolor='#4E5D6C',
+                                                visible=False,
+                                                landcolor='#3d3d3d',
+                                                showland=True,
+                                                showcountries=True,
+                                                countrycolor='#5c5c5c',
+                                                countrywidth=0.5,
+                                                projection=dict(type='natural earth'))))
 
-
-            st.plotly_chart(fig, use_container_width=True)
+            fig.update_layout(title="Plot Title")
+            st.plotly_chart(fig, use_container_width=True,config=config)
 
     # Sankey diagriam
-        with tab4:
+        with tab3:
             # Data preparation for Sankey diagrame
 
             df1_sankey = df1_filtered_dates
@@ -578,34 +746,24 @@ if dataset == "Disbursement records":
             fig = genSankey(df5, cat_cols=['a', 'b'], value_cols='Total disbursement',
                             title='Sankey Diagram of The Global Fund Disbursements till date')
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True,config=config)
 
-        with tab5:
+        with tab4:
 
             col1, col2 = st.columns([8, 20])
 
             #Dataframe wrangler
             groupby = col1.radio(
                 "Which dataset do you want?",
-                ('Keep the same filters','Focus on a specific country','All disbursements records'))
+                ('Keep the same filters','All disbursements records'))
 
             if groupby == 'All disbursements records':
                 dl_file = df1[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
-                dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount ($)"]
-
             if groupby == 'Keep the same filters':
                 dl_file = df1_filtered_dates[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate", "disbursementAmount"]].sort_values(by="disbursementDate",ascending = True)
-                dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount ($)"]
 
-            if groupby == 'Focus on a specific country':
-                option = col1.selectbox(
-                    'Select country',
-                    (list(df1_filtered_dates.Country.sort_values(ascending=True).unique())))
-                df_group = df1_filtered_dates[df1_filtered_dates["Country"]==option]
-                df_group.sort_values(by="disbursementDate",ascending = True, inplace = True)
-                dl_file = df_group[["Country", "componentName", "principalRecipientSubClassificationName", "disbursementDate",
-                             "disbursementAmount"]]
-                dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date", "Disbursement amount"]
+            dl_file.columns = ["Country", "Component", "Principal Recipient", "Disbursement date",
+                               "Disbursement amount ($)"]
             col2.dataframe(dl_file.reset_index(drop=True))
 
             @st.cache
@@ -710,29 +868,6 @@ if dataset == "Grant agreements":
                                                          ordered=True)
     df2.sort_values('grantAgreementStatusTypeName', inplace=True)
 
-    color_discrete_map = {
-        "HIV": "#fe9000",
-        "Malaria": "#5b8e7d",
-        "Tuberculosis": "#5adbff",
-        "TB/HIV": "#3c6997",
-        "RSSH": "#094074",
-        "Multicomponent": "#ffdd4a"}
-
-    color_discrete_map2 = {
-        "Sub-Saharan Africa": "#0081a7",
-        "East Asia and Pacific": "#b392ac",
-        "Europe and Central Asia": "#02c39a",
-        "Latin America & the Caribbean": "#fdfcdc",
-        "Middle East and North Africa": "#736ced",
-        "South Asia": "#f07167"}
-
-    color_discrete_map3 = {
-        "Administratively Closed": "grey",
-        "Terminated": "#fcd5ce",
-        "In Closure": "#e63946",
-        "Active": "#48cae4"}
-
-
     # FILTERS ------------------------------------
 
     #clear filters button
@@ -750,6 +885,7 @@ if dataset == "Grant agreements":
         else:
             df2_group = df2[df2["isActive"]==True]
 
+
         # Component filter
         option_Component = st.multiselect(
             'Filter component(s)',
@@ -760,16 +896,27 @@ if dataset == "Grant agreements":
         else:
             df_group_compo = df2_group[df2_group["componentName"].isin(option_Component)]
 
+        # Principal recipient filter
+        option_map_pr = st.multiselect(
+            'Filter PR type',
+            options=list(
+                df_group_compo.principalRecipientSubClassificationName.sort_values(ascending=True).unique()),
+            key="pr_multiselect")
+        if len(option_map_pr) == 0:
+            df_group_pr = df_group_compo
+        else:
+            df_group_pr = df_group_compo[
+                df_group_compo["principalRecipientSubClassificationName"].isin(option_map_pr)]
 
         # Region filter
         region_filter = st.multiselect(
             'Select region',
-            options=list(df_group_compo.Region.sort_values(ascending=True).unique()),
+            options=list(df_group_pr.Region.sort_values(ascending=True).unique()),
             key= "pr_multiselect")
         if len(region_filter) == 0:
-            df2_group_region = df_group_compo
+            df2_group_region = df_group_pr
         else:
-            df2_group_region = df_group_compo[df_group_compo["Region"].isin(region_filter)]
+            df2_group_region = df_group_pr[df_group_pr["Region"].isin(region_filter)]
 
         # Country filter
         country_filter = st.multiselect(
@@ -783,7 +930,7 @@ if dataset == "Grant agreements":
 
         # Timeline filter
         start_year, end_year = st.select_slider(
-            'Disbursement year range',
+            'Program starting date',
             options=list(df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).unique()),
             value=(df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).min(),
                    df2_group_country.programStartDate.astype('datetime64[ns]').dt.year.sort_values(ascending=True).max()))
@@ -798,7 +945,7 @@ if dataset == "Grant agreements":
 
     # METRICS ------------------------------------
 
-    col1, col2, col3,col4= st.columns([30, 30, 30, 30])
+    col1, col2, col3, col4= st.columns([30, 30, 30, 30])
     col1.metric("Number of Grants","{:,}".format(len(df1_filtered_dates)))
     col2.metric("Total signed amount ($)", "{:,}".format(round(df1_filtered_dates.totalSignedAmount.sum())))
     col3.metric("Total commited amount ($)", "{:,}".format(round(df1_filtered_dates.totalCommittedAmount.sum())))
@@ -806,38 +953,239 @@ if dataset == "Grant agreements":
 
     # TABS ------------------------------------
 
-    tab1, tab2= st.tabs(["Grant status", "WIP"])
+    tab1, tab2, tab3 = st.tabs(["Grant status", "Gantt chart", "WIP"])
 
     with tab1:
-        fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
-                         log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map3,
-                         marginal_y="box")
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            height=400,
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            legend_title = 'Grant Agreement Status' )
-        fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
-        fig.update_xaxes(showgrid=False, zeroline=True, title_text="Grant starting date")
-        fig.update_yaxes(showgrid=False, zeroline=True, title_text="Total signed amount ($)")
+        col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
+        view = st.radio(
+            "Select view",
+            ('All grants', 'Grants per component', 'Grants per region'),
+            horizontal = True, key = "scatter_view")
+        if view == 'All grants':
+            fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                             log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map4,
+                             marginal_y="box")
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=300,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title = 'Grant Agreement Status' )
+            fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+            fig.update_xaxes(showgrid=False, zeroline=True, title_text="Grant starting date")
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="Total signed amount ($)")
+        else:
+            fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                             log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map4,
+                             marginal_y="box")
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=300,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title = 'Grant Agreement Status' )
+            fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+            fig.update_xaxes(showgrid=False, zeroline=True, title_text="Grant starting date")
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="Total signed amount ($)")
 
-        st.plotly_chart(fig, use_container_width=True)
+        if view == 'Grants per component':
+            fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                             log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map4,
+                             marginal_y="box", facet_col="componentName")
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=300,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title = 'Grant Agreement Status')
+            fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+            fig.update_xaxes(showgrid=False, zeroline=True, title_text="")
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="")
+            fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+
+        if view == 'Grants per region':
+            fig = px.scatter(df1_filtered_dates, x="programStartDate", y="totalDisbursedAmount", color="grantAgreementStatusTypeName",
+                             log_y=True, hover_data=['totalSignedAmount'],color_discrete_map = color_discrete_map4,
+                             marginal_y="box", facet_col="Region")
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=300,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title = 'Grant Agreement Status')
+            fig.update_traces(opacity=1,marker=dict(line=dict(width=0)))
+            fig.update_xaxes(showgrid=False, zeroline=True, title_text="")
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="")
+            fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+
+        st.plotly_chart(fig, use_container_width=True,config=config)
 
     with tab2:
-        st.write("In development")
+        view2 = st.radio(
+            "Select view",
+            ('All grants', 'Grants per component', 'Grants per region'),
+            horizontal = True, key = "gantt_view")
+        if view2 == 'All grants':
+            fig = px.timeline(df1_filtered_dates.sort_values('programStartDate'),
+                             x_start="programStartDate",
+                             x_end="programEndDate",
+                             y="grantAgreementNumber",
+                             color = "grantAgreementStatusTypeName",
+                             color_discrete_map = color_discrete_map4,
+                             hover_data = {"grantAgreementStatusTypeName": False,
+                                           "geographicAreaName": True,
+                                           "principalRecipientName": True,
+                                                      "programStartDate": True,
+                                                      "programEndDate": True,
+                                                      "grantAgreementTitle": True},
+                             labels={'geographicAreaName':'Country',
+                                    'programStartDate':'Program start date',
+                                    'principalRecipientName':'Principal Recipient',
+                                     'programEndDate':'Program end date',
+                                     'grantAgreementNumber':'Grant agreement number',
+                                     'grantAgreementTitle':'Grant agreement title'})
+
+            fig.add_vline(x=date.today(), line_width=2, line_color="white",line_dash="dot")
+            fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()),xshift=50)
+            fig.update_annotations(font_color="white", font_size = 20)
+            fig.add_vrect(x0="2020-01-01",x1="2022-12-24",
+                          fillcolor="green",
+                          opacity=0.25,
+                          line_width=0)
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=600,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title='Grant Agreement Status')
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="",visible=False)
+            st.plotly_chart(fig, use_container_width=True, config=config)
+
+        if view2 == 'Grants per component':
+            fig = px.timeline(df1_filtered_dates.sort_values('programStartDate'),
+                              x_start="programStartDate",
+                              x_end="programEndDate",
+                              y="grantAgreementNumber",
+                              color="componentName",
+                              color_discrete_map=color_discrete_map,
+                              hover_data={"grantAgreementStatusTypeName": False,
+                                          "geographicAreaName": True,
+                                          "principalRecipientName": True,
+                                          "programStartDate": True,
+                                          "programEndDate": True,
+                                          "grantAgreementTitle": True},
+                              labels={'geographicAreaName': 'Country',
+                                      'programStartDate': 'Program start date',
+                                      'principalRecipientName': 'Principal Recipient',
+                                      'programEndDate': 'Program end date',
+                                      'grantAgreementNumber': 'Grant agreement number',
+                                      'grantAgreementTitle': 'Grant agreement title'})
+
+            fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
+            fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
+            fig.update_annotations(font_color="white", font_size=20)
+            fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
+                          fillcolor="green",
+                          opacity=0.25,
+                          line_width=0)
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=600,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title='Grant Agreement Status')
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
+            st.plotly_chart(fig, use_container_width=True, config=config)
+
+        if view2 == 'Grants per region':
+            fig = px.timeline(df1_filtered_dates.sort_values('programStartDate'),
+                              x_start="programStartDate",
+                              x_end="programEndDate",
+                              y="grantAgreementNumber",
+                              color="Region",
+                              color_discrete_map=color_discrete_map2,
+                              hover_data={"grantAgreementStatusTypeName": False,
+                                          "geographicAreaName": True,
+                                          "principalRecipientName": True,
+                                          "programStartDate": True,
+                                          "programEndDate": True,
+                                          "grantAgreementTitle": True},
+                              labels={'geographicAreaName': 'Country',
+                                      'programStartDate': 'Program start date',
+                                      'principalRecipientName': 'Principal Recipient',
+                                      'programEndDate': 'Program end date',
+                                      'grantAgreementNumber': 'Grant agreement number',
+                                      'grantAgreementTitle': 'Grant agreement title'})
+
+            fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
+            fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
+            fig.update_annotations(font_color="white", font_size=20)
+            fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
+                          fillcolor="green",
+                          opacity=0.25,
+                          line_width=0)
+            fig.update_layout(
+                autosize=False,
+                margin=dict(
+                    l=0,
+                    r=0,
+                    b=0,
+                    t=50,
+                    pad=4,
+                    autoexpand=True),
+                height=600,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend_title='Grant Agreement Status')
+            fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
+            st.plotly_chart(fig, use_container_width=True, config=config)
+
+    with tab3:
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
         lottie_json = load_lottieurl(lottie_url)
         st_lottie(lottie_json, height=500, key="loading_gif2")
-
-
 
 if dataset == "Implementation periods":
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation periods section in development** </span>  </p>", unsafe_allow_html=True)
