@@ -417,7 +417,7 @@ if dataset == "Implementation periods":
                                     size=15))
                     col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                    df_temp2 = df_temp.groupby('componentName').sum().reset_index().sort_values(by='totalSignedAmount',ascending = True)
+                    df_temp2 = df_temp.sort_values('programStartDate')
                     df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
                     df_temp2['disbursedtocommited'].fillna(0, inplace=True)
                     df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
@@ -425,21 +425,21 @@ if dataset == "Implementation periods":
 
                     fig = {
                         'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                        y=df_temp2['componentName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.7,
                                         orientation='h',
                                         marker=dict(color="#023824"),
                                         name= "Signed amount"
                                         ),
                                  go.Bar(x=df_temp2["totalCommittedAmount"],
-                                        y=df_temp2['componentName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.7,
                                         orientation='h',
                                         marker=dict(color="#046944"),
                                         name= "Committed amount"
                                         ),
                                  go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                        y=df_temp2['componentName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.4,
                                         orientation='h',
                                         marker=dict(color="#C1EADB"),
@@ -606,7 +606,7 @@ if dataset == "Implementation periods":
                                     t=50,
                                     pad=4,
                                     autoexpand=True),
-                                height=200,
+                                height=300,
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
                                 legend_title = '',
@@ -616,28 +616,28 @@ if dataset == "Implementation periods":
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                     col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                    df_temp2 = df_temp.groupby('principalRecipientName').sum().reset_index().sort_values(by='totalSignedAmount',ascending = True)
+                    df_temp2 = df_temp.sort_values('programStartDate')
                     df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
                     df_temp2['disbursedtocommited'].fillna(0, inplace=True)
                     df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
                     df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
                     fig = {
                         'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                        y=df_temp2['principalRecipientName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.7,
                                         orientation='h',
                                         marker=dict(color="#023824"),
                                         name= "Signed amount"
                                         ),
                                  go.Bar(x=df_temp2["totalCommittedAmount"],
-                                        y=df_temp2['principalRecipientName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.7,
                                         orientation='h',
                                         marker=dict(color="#046944"),
                                         name= "Committed amount"
                                         ),
                                  go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                        y=df_temp2['principalRecipientName'],
+                                        y=df_temp2['grantAgreementNumber'],
                                         width=0.4,
                                         orientation='h',
                                         marker=dict(color="#C1EADB"),
@@ -653,7 +653,7 @@ if dataset == "Implementation periods":
                                     t=50,
                                     pad=4,
                                     autoexpand=True),
-                                height=200,
+                                height=300,
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
                                 legend_title = '',
@@ -817,8 +817,8 @@ if dataset == "Implementation periods":
                         )
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                     col1.plotly_chart(fig, use_container_width=True, config=config)
-                    df_temp2 = df_temp.groupby('grantAgreementNumber').sum().reset_index().sort_values(
-                        by='totalSignedAmount', ascending=True)
+                    
+                    df_temp2 = df_temp.sort_values('programStartDate')
                     df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
                         'totalCommittedAmount']
                     df_temp2['disbursedtocommited'].fillna(0, inplace=True)
