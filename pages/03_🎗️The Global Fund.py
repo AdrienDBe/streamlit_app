@@ -408,7 +408,7 @@ if dataset == "Implementation periods":
                                     t=50,
                                     pad=4,
                                     autoexpand=True),
-                                height=200,
+                                height=300,
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
                                 legend_title = '',
@@ -455,7 +455,7 @@ if dataset == "Implementation periods":
                                     t=50,
                                     pad=4,
                                     autoexpand=True),
-                                height=200,
+                                height=300,
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
                                 legend_title = '',
@@ -817,7 +817,7 @@ if dataset == "Implementation periods":
                         )
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                     col1.plotly_chart(fig, use_container_width=True, config=config)
-                    
+
                     df_temp2 = df_temp.sort_values('programStartDate')
                     df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
                         'totalCommittedAmount']
