@@ -214,11 +214,16 @@ if dataset == "Implementation periods":
                   how='left')
     df2.Region.fillna('Non-regional IP',inplace=True)
     df2.principalRecipientName.fillna('Not indicated',inplace=True)
+    df2.grantAgreementTitle.fillna('Not indicated', inplace=True)
 
     df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].astype('datetime64[ns]')
     df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].dt.date
     df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].astype('datetime64[ns]')
     df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].dt.date
+    df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
+    df2['programStartDate'] = pd.to_datetime(df2['programStartDate']).dt.date
+    df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
+    df2['programEndDate'] = pd.to_datetime(df2['programEndDate']).dt.date
 
     df2["implementationPeriodStatusTypeName"] = pd.Categorical(df2["implementationPeriodStatusTypeName"],
                                                              categories=["Active", "Financial Closure", "Financially Closed"],
@@ -301,80 +306,11 @@ if dataset == "Implementation periods":
         # Reset filters button
         st.button("Clear filters", on_click=clear_multi)
 
+
     # TABS ------------------------------------
-    tab1, tab2 = st.tabs(["IP timeline", "IP status"])
+    tab1, tab2 = st.tabs(["IP status", "IP timeline"])
 
     with tab1:
-        # METRICS ------------------------------------
-        col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
-        if isActive == "Active IPs":
-            col1.metric("Number of active IPs",
-                        "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
-            col2.metric("Number of active Grants",
-                        "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
-        else:
-            col1.metric("Number of IPs", "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
-            col2.metric("Number of Grants",
-                        "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
-        Number_renewed = df1_filtered_dates.grantAgreementId.value_counts()
-        Number_renewed = Number_renewed[Number_renewed > 1].count()
-        col3.metric("Grants renewed once or more",
-                    "{} %".format(round(Number_renewed / len(df1_filtered_dates.grantAgreementId.unique()) * 100)))
-        min = df1_filtered_dates.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-        max = df1_filtered_dates.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-        df_min_max = pd.merge(min,
-                              max,
-                              on='grantAgreementId',
-                              how='left').reset_index()
-        df_min_max['min'] = df_min_max['min'].apply(pd.Timestamp)
-        df_min_max['max'] = df_min_max['max'].apply(pd.Timestamp)
-        col4.metric("Average IP overall duration", "{:,} year(s)".format(
-            round(((df_min_max['max'] - df_min_max['min']) / np.timedelta64(1, 'Y')).mean(), 1)))
-
-        fig = px.timeline(df1_filtered_dates.sort_values(by='implementationPeriodStartDate',ascending=True),
-                             x_start="implementationPeriodStartDate",
-                             x_end="implementationPeriodEndDate",
-                             y="grantAgreementNumber",
-                             color = "implementationPeriodStatusTypeName",
-                             color_discrete_map = color_discrete_map_ip_status,
-                             hover_data = {"implementationPeriodStatusTypeName": True,
-                                           "geographicAreaName": True,
-                                           "principalRecipientName": True,
-                                          "implementationPeriodStartDate": True,
-                                          "implementationPeriodEndDate": True,
-                                          "componentName": True},
-                             labels={'geographicAreaName':'Country',
-                                     'principalRecipientName': 'Principal Recipient',
-                                    'implementationPeriodStartDate':'IP start date',
-                                     'implementationPeriodEndDate':'IP end date',
-                                     'grantAgreementNumber':'Grant agreement number',
-                                     'grantAgreementTitle':'Grant agreement title'})
-
-        fig.add_vline(x=date.today(), line_width=2, line_color="white",line_dash="dot")
-        fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()),xshift=50)
-        fig.update_annotations(font_color="white", font_size = 20)
-        fig.add_vrect(x0="2020-01-01",x1="2022-12-24",
-                      fillcolor="green",
-                      opacity=0.25,
-                      line_width=0)
-        fig.update_layout(
-            autosize=False,
-            margin=dict(
-                l=0,
-                r=0,
-                b=0,
-                t=50,
-                pad=4,
-                autoexpand=True),
-            height=600,
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            legend_title='Implementation Period Status')
-        fig.update_yaxes(showgrid=False, zeroline=True, title_text="",visible=False)
-        st.plotly_chart(fig, use_container_width=True, config=config)
-
-    with tab2:
-
         view = st.radio(
             "Select view",
             ('Component', 'Principal Recipient', 'Region'),
@@ -437,6 +373,11 @@ if dataset == "Implementation periods":
                             df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
                     df_temp2 = df_temp.groupby('componentName').sum().reset_index().sort_values(by='totalSignedAmount',ascending = True)
+                    df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
+                    df_temp2['disbursedtocommited'].fillna(0, inplace=True)
+                    df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
+                    df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
+
                     fig = {
                         'data': [go.Bar(x=df_temp2["totalSignedAmount"],
                                         y=df_temp2['componentName'],
@@ -457,7 +398,8 @@ if dataset == "Implementation periods":
                                         width=0.4,
                                         orientation='h',
                                         marker=dict(color="#C1EADB"),
-                                        name= "Disbursed amount"
+                                        name= "Disbursed amount",
+                                        text=df_temp2['disbursedtocommited']
                                         )
                                  ],
                         'layout': go.Layout(barmode='overlay',autosize=False,
@@ -470,7 +412,11 @@ if dataset == "Implementation periods":
                                     autoexpand=True),
                                 height=200,
                                 paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)'),
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend_title = '',
+                                font=dict(
+                                    family="Arial",
+                                    size=15))
                         }
 
                     col1.plotly_chart(fig, use_container_width=True, config=config)
@@ -479,8 +425,8 @@ if dataset == "Implementation periods":
                                       x_start="implementationPeriodStartDate",
                                       x_end="implementationPeriodEndDate",
                                       y="grantAgreementNumber",
-                                      color = "componentName",
-                                      color_discrete_map=color_discrete_map,
+                                      color = "implementationPeriodStatusTypeName",
+                                      color_discrete_map=color_discrete_map_ip_status,
                                       hover_data={"grantAgreementStatusTypeName": False,
                                                   "geographicAreaName": True,
                                                   "principalRecipientName": True,
@@ -496,25 +442,28 @@ if dataset == "Implementation periods":
 
                     fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                     fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
-                    fig.update_annotations(font_color="white", font_size=20)
+                    fig.update_annotations(font_color="white", font_size=15)
                     fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
                                   fillcolor="green",
                                   opacity=0.25,
                                   line_width=0)
-                    fig.update_layout(
-                        autosize=False,
-                        margin=dict(
-                            l=0,
-                            r=0,
-                            b=0,
-                            t=50,
-                            pad=4,
-                            autoexpand=True),
-                        height=200,
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        legend_title='Grant Agreement Status')
+
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
+                    fig.update_layout(autosize=False,
+                                margin=dict(
+                                    l=0,
+                                    r=0,
+                                    b=0,
+                                    t=50,
+                                    pad=4,
+                                    autoexpand=True),
+                                height=200,
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend_title = '',
+                                font=dict(
+                                    family="Arial",
+                                    size=15))
                     col2.plotly_chart(fig, use_container_width=True, config=config)
 
                     with st.expander("See grant(s) detail"):
@@ -624,6 +573,10 @@ if dataset == "Implementation periods":
                             df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
                     df_temp2 = df_temp.groupby('principalRecipientName').sum().reset_index().sort_values(by='totalSignedAmount',ascending = True)
+                    df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
+                    df_temp2['disbursedtocommited'].fillna(0, inplace=True)
+                    df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
+                    df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
                     fig = {
                         'data': [go.Bar(x=df_temp2["totalSignedAmount"],
                                         y=df_temp2['principalRecipientName'],
@@ -644,7 +597,8 @@ if dataset == "Implementation periods":
                                         width=0.4,
                                         orientation='h',
                                         marker=dict(color="#C1EADB"),
-                                        name= "Disbursed amount"
+                                        name= "Disbursed amount",
+                                        text=df_temp2['disbursedtocommited']
                                         )
                                  ],
                         'layout': go.Layout(barmode='overlay',autosize=False,
@@ -655,9 +609,13 @@ if dataset == "Implementation periods":
                                     t=50,
                                     pad=4,
                                     autoexpand=True),
-                                height=300,
+                                height=200,
                                 paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)'),
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend_title = '',
+                                font=dict(
+                                    family="Arial",
+                                    size=15))
                         }
 
                     col1.plotly_chart(fig, use_container_width=True, config=config)
@@ -667,8 +625,8 @@ if dataset == "Implementation periods":
                                       x_start="implementationPeriodStartDate",
                                       x_end="implementationPeriodEndDate",
                                       y="grantAgreementNumber",
-                                      color = "componentName",
-                                      color_discrete_map=color_discrete_map,
+                                      color = "implementationPeriodStatusTypeName",
+                                      color_discrete_map=color_discrete_map_ip_status,
                                       hover_data={"grantAgreementStatusTypeName": False,
                                                   "geographicAreaName": True,
                                                   "principalRecipientName": True,
@@ -684,24 +642,26 @@ if dataset == "Implementation periods":
 
                     fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                     fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
-                    fig.update_annotations(font_color="white", font_size=20)
+                    fig.update_annotations(font_color="white", font_size=15)
                     fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
                                   fillcolor="green",
                                   opacity=0.25,
                                   line_width=0)
-                    fig.update_layout(
-                        autosize=False,
-                        margin=dict(
-                            l=0,
-                            r=0,
-                            b=0,
-                            t=50,
-                            pad=4,
-                            autoexpand=True),
-                        height=300,
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        legend_title='Grant Agreement Status')
+                    fig.update_layout(autosize=False,
+                                margin=dict(
+                                    l=0,
+                                    r=0,
+                                    b=0,
+                                    t=50,
+                                    pad=4,
+                                    autoexpand=True),
+                                height=200,
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend_title = '',
+                                font=dict(
+                                    family="Arial",
+                                    size=15))
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                     col2.plotly_chart(fig, use_container_width=True, config=config)
 
@@ -815,6 +775,11 @@ if dataset == "Implementation periods":
                             df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
                     df_temp2 = df_temp.groupby('geographicAreaName').sum().reset_index().sort_values(by='totalSignedAmount',ascending = True)
+                    df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
+                    df_temp2['disbursedtocommited'].fillna(0, inplace=True)
+                    df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
+                    df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
+
                     fig = {
                         'data': [go.Bar(x=df_temp2["totalSignedAmount"],
                                         y=df_temp2['geographicAreaName'],
@@ -835,7 +800,8 @@ if dataset == "Implementation periods":
                                         width=0.4,
                                         orientation='h',
                                         marker=dict(color="#C1EADB"),
-                                        name= "Disbursed amount"
+                                        name= "Disbursed amount",
+                                        text=df_temp2['disbursedtocommited']
                                         )
                                  ],
                         'layout': go.Layout(barmode='overlay',autosize=False,
@@ -848,7 +814,10 @@ if dataset == "Implementation periods":
                                     autoexpand=True),
                                 height=300,
                                 paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)'),
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                font=dict(
+                                    family="Arial",
+                                    size=15))
                         }
 
                     col1.plotly_chart(fig, use_container_width=True, config=config)
@@ -858,8 +827,8 @@ if dataset == "Implementation periods":
                                       x_start="implementationPeriodStartDate",
                                       x_end="implementationPeriodEndDate",
                                       y="grantAgreementNumber",
-                                      color = "componentName",
-                                      color_discrete_map=color_discrete_map,
+                                      color = "implementationPeriodStatusTypeName",
+                                      color_discrete_map=color_discrete_map_ip_status,
                                       hover_data={"grantAgreementStatusTypeName": False,
                                                   "geographicAreaName": True,
                                                   "principalRecipientName": True,
@@ -875,7 +844,7 @@ if dataset == "Implementation periods":
                     fig.update_traces( marker_line_color='white',line_width=10, opacity=1,selector=dict(fill='toself'))
                     fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                     fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
-                    fig.update_annotations(font_color="white", font_size=20)
+                    fig.update_annotations(font_color="white", font_size=15)
                     fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
                                   fillcolor="green",
                                   opacity=0.25,
@@ -892,7 +861,11 @@ if dataset == "Implementation periods":
                         height=300,
                         paper_bgcolor='rgba(0,0,0,0)',
                         plot_bgcolor='rgba(0,0,0,0)',
-                        legend_title='Grant Agreement Status')
+                        legend_title='',
+                        font=dict(
+                            family="Arial",
+                            size=15)
+                        )
                     fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                     col2.plotly_chart(fig, use_container_width=True, config=config)
 
@@ -945,6 +918,75 @@ if dataset == "Implementation periods":
                             file_name='GF_Grants_API.csv'
                         )
                     st.write('---')
+    with tab2:
+        # METRICS ------------------------------------
+        col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
+        if isActive == "Active IPs":
+            col1.metric("Number of active IPs",
+                        "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
+            col2.metric("Number of active Grants",
+                        "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
+        else:
+            col1.metric("Number of IPs", "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
+            col2.metric("Number of Grants",
+                        "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
+        Number_renewed = df1_filtered_dates.grantAgreementId.value_counts()
+        Number_renewed = Number_renewed[Number_renewed > 1].count()
+        col3.metric("Grants renewed once or more",
+                    "{} %".format(round(Number_renewed / len(df1_filtered_dates.grantAgreementId.unique()) * 100)))
+        min = df1_filtered_dates.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
+        max = df1_filtered_dates.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
+        df_min_max = pd.merge(min,
+                              max,
+                              on='grantAgreementId',
+                              how='left').reset_index()
+        df_min_max['min'] = df_min_max['min'].apply(pd.Timestamp)
+        df_min_max['max'] = df_min_max['max'].apply(pd.Timestamp)
+        col4.metric("Average IP overall duration", "{:,} year(s)".format(
+            round(((df_min_max['max'] - df_min_max['min']) / np.timedelta64(1, 'Y')).mean(), 1)))
+
+        fig = px.timeline(df1_filtered_dates.sort_values(by='implementationPeriodStartDate', ascending=True),
+                          x_start="implementationPeriodStartDate",
+                          x_end="implementationPeriodEndDate",
+                          y="grantAgreementNumber",
+                          color="implementationPeriodStatusTypeName",
+                          color_discrete_map=color_discrete_map_ip_status,
+                          hover_data={"implementationPeriodStatusTypeName": True,
+                                      "geographicAreaName": True,
+                                      "principalRecipientName": True,
+                                      "implementationPeriodStartDate": True,
+                                      "implementationPeriodEndDate": True,
+                                      "componentName": True},
+                          labels={'geographicAreaName': 'Country',
+                                  'principalRecipientName': 'Principal Recipient',
+                                  'implementationPeriodStartDate': 'IP start date',
+                                  'implementationPeriodEndDate': 'IP end date',
+                                  'grantAgreementNumber': 'Grant agreement number',
+                                  'grantAgreementTitle': 'Grant agreement title'})
+
+        fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
+        fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
+        fig.update_annotations(font_color="white", font_size=20)
+        fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
+                      fillcolor="green",
+                      opacity=0.25,
+                      line_width=0)
+        fig.update_layout(
+            autosize=False,
+            margin=dict(
+                l=0,
+                r=0,
+                b=0,
+                t=50,
+                pad=4,
+                autoexpand=True),
+            height=600,
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            legend_title='Implementation Period Status')
+        fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
+        st.plotly_chart(fig, use_container_width=True, config=config)
+
 
 if dataset == "Disbursements":
     col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Disbursements records** </span> "
