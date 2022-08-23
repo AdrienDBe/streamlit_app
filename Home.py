@@ -55,9 +55,9 @@ with work_container:
     with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
         def load_lottieurl(url: str):
             r = requests.get(url)
-        if r.status_code != 200:
-            return None
-        return r.json()
+            if r.status_code != 200:
+              return None
+            return r.json()
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
         lottie_json = load_lottieurl(lottie_url)
         st_lottie(lottie_json, height=500, key="loading_gif2")
