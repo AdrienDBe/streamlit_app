@@ -54,6 +54,7 @@ with work_container:
     """, unsafe_allow_html=True)
 
     with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
+        st.write("Mission description to be detailed in upcoming update")
         def load_lottieurl(url: str):
             r = requests.get(url)
             if r.status_code != 200:
