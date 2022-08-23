@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_lottie import st_lottie
 
 # emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 
@@ -51,6 +52,16 @@ with work_container:
     </style>
     """, unsafe_allow_html=True)
 
+    with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
+        def load_lottieurl(url: str):
+        r = requests.get(url)
+        if r.status_code != 200:
+            return None
+        return r.json()
+        lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
+        lottie_json = load_lottieurl(lottie_url)
+        st_lottie(lottie_json, height=500, key="loading_gif2")
+  
     with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
         **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
