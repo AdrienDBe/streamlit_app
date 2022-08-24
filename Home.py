@@ -68,8 +68,8 @@ with work_container:
         st.markdown('''
         **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
         \n- Created program control and reports to MoHs & global funders
-        \n- Coordinate cross-functional teams in EMEA and APAC on program activities
-        \n- Manage program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
+        \n- Coordinated cross-functional teams in EMEA and APAC on program activities
+        \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
         
         \n**ANALYTICS: Reporting automation, dashboard development**
         \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
