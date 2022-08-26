@@ -66,7 +66,7 @@ def load_lottieurl(url: str):
     return r.json()
 
 count = 0
-@st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
+@st.cache(show_spinner=False)
 def start_message():
     # check if first load, if so it will take a few sec to load so we want to display a nice svg
     global count
@@ -86,12 +86,11 @@ if count == 1:
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
                    "<br/><br/> I made this app to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
-                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer</a> for more information.</p>",
+                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for more information.</p>",
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
-            global confirmation
-            confirmation += 1
+            st.experimental_rerun()
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
