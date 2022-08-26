@@ -66,7 +66,7 @@ def load_lottieurl(url: str):
     return r.json()
 
 count = 0
-@st.cache(show_spinner=False)
+st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
 def start_message():
     # check if first load, if so it will take a few sec to load so we want to display a nice svg
     global count
