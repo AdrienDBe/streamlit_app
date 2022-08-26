@@ -69,7 +69,7 @@ count = 0
 def start_message():
     # check if first load, if so it will take a few sec to load so we want to display a nice svg
     global count
-    count += 1
+    count = 1
 start_message()
 if count == 1:
     arrival_message = st.empty()
