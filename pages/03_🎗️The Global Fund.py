@@ -49,7 +49,6 @@ div[data-testid="metric-container"] {
    color: #04AA6D;
    overflow-wrap: break-word;
 }
-
 /* breakline for metric text         */
 div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
    overflow-wrap: break-word;
@@ -65,14 +64,14 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-if 'count' not in st.session_state:
-	st.session_state.count = 0
-
+count = 0
+@st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
 def start_message():
-    # check if first load
-    st.session_state.count += 1
-
-if st.session_state.count == 0:
+    # check if first load, if so it will take a few sec to load so we want to display a nice svg
+    global count
+    count = 1
+start_message()
+if count == 1:
     arrival_message = st.empty()
     with arrival_message.container():
         col1, col2 = st.columns([15, 35], gap='small')
@@ -86,20 +85,18 @@ if st.session_state.count == 0:
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
                    "<br/><br/> I made this app to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
-                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for more information.</p>",
+                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer</a> for more information.</p>",
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
-            st.experimental_rerun()
+            global confirmation
+            confirmation += 1
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
             st_lottie(lottie_json, height=400, key="loading_gif2")
 
-start_message()
-
-
-if st.session_state.count > 1:
+else:
     # Enabling Plotly Scroll Zoom
     config = dict({'scrollZoom': True, 'displaylogo': False})
 
