@@ -68,11 +68,6 @@ def load_lottieurl(url: str):
 if 'count' not in st.session_state:
 	st.session_state.count = 0
 
-@st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
-def start_message():
-    # check if first load
-    st.session_state.count += 1
-
 if st.session_state.count == 0:
     arrival_message = st.empty()
     with arrival_message.container():
@@ -91,16 +86,14 @@ if st.session_state.count == 0:
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
+            st.session_state.count = 1
             st.experimental_rerun()
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
             st_lottie(lottie_json, height=400, key="loading_gif2")
 
-start_message()
-
-
-if st.session_state.count > 1:
+if st.session_state.count >= 1:
     # Enabling Plotly Scroll Zoom
     config = dict({'scrollZoom': True, 'displaylogo': False})
 
