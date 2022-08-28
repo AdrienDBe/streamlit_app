@@ -73,7 +73,7 @@ if st.session_state.count == 0:
         col1, col2 = st.columns([15, 35], gap='small')
         col2.markdown(
             "<br><br>"
-            "<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Disclaimer** </span> </p>",
+            "<span style='text-align: justify; font-size: 280%;  color:#ffffff'> **Disclaimer** </span> </p>",
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
                    "The information presented in this page is solely made by me in my private capacity. "
@@ -182,14 +182,16 @@ if st.session_state.count >= 1:
     header_space = st.container()
 
     with header_space:
-        col1, col2 = st.columns([15, 35], gap='small')
+        col1, col2 = st.columns([10, 35], gap='small')
         col1.write("")
-        #col1.title("Global Fund API explorer")
-        col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
-        dataset = st.radio("Select Dataset", ('Implementation periods', 'Disbursements', 'Reporting results' ), horizontal=True)
+        col1.markdown("<span style='text-align: justify; font-size: 280% ; color:#ffffff'> **Global Fund <br>API explorer** </span> </p>", unsafe_allow_html=True)
+
+    with st.sidebar:
+        dataset = st.radio("Select Dataset", ('Implementation periods', 'Disbursements', 'Reporting results'),
+                           horizontal=True)
 
     if dataset == "Reporting results":
-        col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Reporting results <br >Section in development** </span> </p>", unsafe_allow_html=True)
+        col2.markdown("<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Reporting results <br >Section in development** </span> </p>", unsafe_allow_html=True)
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
         lottie_json = load_lottieurl(lottie_url)
         st_lottie(lottie_json, height=500, key="loading_gif2")
@@ -292,8 +294,8 @@ if st.session_state.count >= 1:
         country_list, df2 = Loading_API()
         gif_runner.empty()
 
-        col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation Periods** </span> "
-                    "<p style='text-align: justify'> A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
+        col2.markdown("<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Implementation Periods** </span> <br>"
+                    "A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
                     "The Country Coordinating Mechanism and the Global Fund work with the partner implementing a grant, the Principal Recipient, to prepare the grant. </span> "
                     "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
 
@@ -390,7 +392,7 @@ if st.session_state.count >= 1:
                     with st.container():
 
                         st.markdown(
-                            "<span style='text-align: justify; font-size: 120%;font-family: Arial; color:#04AA6D'> **{}** </span></p>".format(i),
+                            "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **{}** </span></p>".format(i),
                             unsafe_allow_html=True)
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
@@ -480,7 +482,6 @@ if st.session_state.count >= 1:
                                     plot_bgcolor='rgba(0,0,0,0)',
                                     legend_title = '',
                                     font=dict(
-                                        family="Arial",
                                         size=15))
                         col1.plotly_chart(fig, use_container_width=True, config=config)
 
@@ -527,7 +528,6 @@ if st.session_state.count >= 1:
                                     plot_bgcolor='rgba(0,0,0,0)',
                                     legend_title = '',
                                     font=dict(
-                                        family="Arial",
                                         size=15))
                             }
 
@@ -590,7 +590,7 @@ if st.session_state.count >= 1:
                     with st.container():
 
                         st.markdown(
-                            "<span style='text-align: justify; font-size: 120%;font-family: Arial; color:#04AA6D'> **{}** </span></p>".format(i),
+                            "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **{}** </span></p>".format(i),
                             unsafe_allow_html=True)
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
@@ -678,7 +678,6 @@ if st.session_state.count >= 1:
                                     plot_bgcolor='rgba(0,0,0,0)',
                                     legend_title = '',
                                     font=dict(
-                                        family="Arial",
                                         size=15))
                         fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                         col1.plotly_chart(fig, use_container_width=True, config=config)
@@ -725,7 +724,6 @@ if st.session_state.count >= 1:
                                     plot_bgcolor='rgba(0,0,0,0)',
                                     legend_title = '',
                                     font=dict(
-                                        family="Arial",
                                         size=15))
                             }
 
@@ -787,7 +785,7 @@ if st.session_state.count >= 1:
 
                     with st.container():
                         st.markdown(
-                            "<span style='text-align: justify; font-size: 120%;font-family: Arial; color:#04AA6D'> **{}** </span></p>".format(i),
+                            "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **{}** </span></p>".format(i),
                             unsafe_allow_html=True)
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
@@ -879,7 +877,6 @@ if st.session_state.count >= 1:
                             plot_bgcolor='rgba(0,0,0,0)',
                             legend_title='',
                             font=dict(
-                                family="Arial",
                                 size=15)
                             )
                         fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
@@ -928,7 +925,6 @@ if st.session_state.count >= 1:
                                                 paper_bgcolor='rgba(0,0,0,0)',
                                                 plot_bgcolor='rgba(0,0,0,0)',
                                                 font=dict(
-                                                    family="Arial",
                                                     size=15))
                         }
 
@@ -1096,13 +1092,12 @@ if st.session_state.count >= 1:
                                     paper_bgcolor='rgba(0,0,0,0)',
                                     plot_bgcolor='rgba(0,0,0,0)',
                                     font=dict(
-                                        family="Arial",
                                         size=15))
                 }
             col2.plotly_chart(fig, use_container_width=True, config=config)
 
     if dataset == "Disbursements":
-        col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Disbursements records** </span> "
+        col2.markdown("<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Disbursements records** </span> "
                     "<p style='text-align: justify'> A disbursement corresponds to a tranche transfer of the grant funds for the implementation"
                     " of Programs.<br>"
                     " In order to visualize disbursement information data we load and explore the API de-normalized view of all Grant Agreement "
