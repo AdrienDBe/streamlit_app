@@ -49,7 +49,6 @@ div[data-testid="metric-container"] {
    color: #04AA6D;
    overflow-wrap: break-word;
 }
-
 /* breakline for metric text         */
 div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
    overflow-wrap: break-word;
@@ -1223,10 +1222,10 @@ if st.session_state.count >= 1:
 
         # METRICS ------------------------------------
         col1, col2, col3, col4= st.columns([30, 30, 30, 30])
-        col1.metric("Number of disbursements (since 2018)","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
+        col1.metric("Number of disbursements","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
         col2.metric("Total amount ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
-        col3.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
-        col4.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
+        col3.metric("First record", "{}".format(min(pd.to_datetime(df1_filtered_dates.disbursementDate).dt.date)))
+        col4.metric("Last record", "{}".format(max(pd.to_datetime(df1_filtered_dates.disbursementDate).dt.date)))
 
         # TABS ------------------------------------
         tab1, tab2, tab3, tab4 = st.tabs(["Disbursements overview 📈", "Disbursements map 🗺️","Components - Region - Country (Sankey Diagram) 📍", "Download Data 🔢"])
