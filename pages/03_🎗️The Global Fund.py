@@ -78,7 +78,7 @@ if st.session_state.count == 0:
         col2.write("<p style='text-align: justify;'>"
                    "The information presented in this app are a subset (from 2018 onwards) of data publicly available in the "
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
-                   "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
+                   "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library use for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
                    "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for accurate information.</p>",
                    unsafe_allow_html=True)
