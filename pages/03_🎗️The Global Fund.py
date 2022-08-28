@@ -76,12 +76,11 @@ if st.session_state.count == 0:
             "<span style='text-align: justify; font-size: 280%;  color:#ffffff'> **Disclaimer** </span> </p>",
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
-                   "The information presented in this page is solely made by me in my private capacity. "
-                   "<br/> This app is using a subset (2018 onwards) of data publicly available from the "
+                   "The information presented in this app are a subset (from 2018 onwards) of data publicly available in the "
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
-                   "<br/><br/> I made this app to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
+                   "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library use for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
-                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for more information.</p>",
+                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for accurate information.</p>",
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
@@ -386,7 +385,7 @@ if st.session_state.count >= 1:
 
             if view == 'Component':
 
-                for i in df1_filtered_dates.componentName.unique():
+                for i in ["HIV","Tuberculosis","Malaria","TB/HIV","RSSH","Multicomponent"]::
                     df_temp = df1_filtered_dates[df1_filtered_dates['componentName']==i]
                     with st.container():
 
@@ -446,11 +445,12 @@ if st.session_state.count >= 1:
                                           y="grantAgreementNumber",
                                           color = "implementationPeriodStatusTypeName",
                                           color_discrete_map=color_discrete_map_ip_status,
-                                          hover_data={"grantAgreementStatusTypeName": False,
+                                          hover_data={"implementationPeriodStatusTypeName": False,
+						      "grantAgreementStatusTypeName": False,
                                                       "geographicAreaName": True,
                                                       "principalRecipientName": True,
-                                                      "programStartDate": True,
-                                                      "programEndDate": True,
+                                                      "programStartDate": False,
+                                                      "programEndDate": False,
                                                       "grantAgreementTitle": True},
                                           labels={'geographicAreaName': 'Country',
                                                   'implementationPeriodStartDate': 'Program start date',
