@@ -76,7 +76,7 @@ if st.session_state.count == 0:
             "<span style='text-align: justify; font-size: 280%;  color:#ffffff'> **Disclaimer** </span> </p>",
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
-                   "The information presented in this app are a subset (from 2018 onwards) of data publicly available in the "
+                   "The information presented in this app is a subset (from 2018 onwards) of data publicly available in the "
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
                    "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library use for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
