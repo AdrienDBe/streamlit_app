@@ -77,7 +77,7 @@ if st.session_state.count == 0:
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
                    "The information presented in this page is solely made by me in my private capacity. "
-                   "<br/> This app is using a subset (2018 onwards) of data publicly available from the "
+                   "<br/> This app is using a subset (from 2018 onwards) of data publicly available in the "
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
                    "<br/><br/> I made this app to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
