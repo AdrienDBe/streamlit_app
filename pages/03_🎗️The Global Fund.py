@@ -76,11 +76,12 @@ if st.session_state.count == 0:
             "<span style='text-align: justify; font-size: 280%;  color:#ffffff'> **Disclaimer** </span> </p>",
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
-                   "The information presented in this app are a subset (from 2018 onwards) of data publicly available in the "
+                   "The information presented in this page is solely made by me in my private capacity. "
+                   "<br/> This app is using a subset (2018 onwards) of data publicly available from the "
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
-                   "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library use for data exploration and visualization, please do not consider it as a "
+                   "<br/><br/> I made this app to demonstrate streamlit library capacity for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
-                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for accurate information.</p>",
+                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for more information.</p>",
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
@@ -276,7 +277,9 @@ if st.session_state.count >= 1:
             df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].dt.date
             df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].astype('datetime64[ns]')
             df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].dt.date
+            df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
             df2['programStartDate'] = pd.to_datetime(df2['programStartDate']).dt.date
+            df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
             df2['programEndDate'] = pd.to_datetime(df2['programEndDate']).dt.date
 
             df2["implementationPeriodStatusTypeName"] = pd.Categorical(df2["implementationPeriodStatusTypeName"],
@@ -382,7 +385,8 @@ if st.session_state.count >= 1:
                 horizontal = True, key = "scatter_view")
 
             if view == 'Component':
-                for i in ["HIV","Tuberculosis","Malaria","TB/HIV","RSSH","Multicomponent"]:
+
+                for i in df1_filtered_dates.componentName.unique():
                     df_temp = df1_filtered_dates[df1_filtered_dates['componentName']==i]
                     with st.container():
 
@@ -392,14 +396,14 @@ if st.session_state.count >= 1:
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
                         if isActive == "Active IPs":
-                            col1.metric("Number of active IPs (since 2018)",
+                            col1.metric("Number of active IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
                             col2.metric("Number of active Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         else:
-                            col1.metric("Number of IPs (since 2018)",
+                            col1.metric("Number of IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
-                            col2.metric("Number of Grants (since 2018)", "{:,}".format(
+                            col2.metric("Number of Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         Number_renewed = df_temp.grantAgreementId.value_counts()
                         Number_renewed = Number_renewed[Number_renewed > 1].count()
@@ -590,14 +594,14 @@ if st.session_state.count >= 1:
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
                         if isActive == "Active IPs":
-                            col1.metric("Number of active IPs (since 2018)",
+                            col1.metric("Number of active IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
                             col2.metric("Number of active Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         else:
-                            col1.metric("Number of IPs (since 2018)",
+                            col1.metric("Number of IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
-                            col2.metric("Number of Grants (since 2018)", "{:,}".format(
+                            col2.metric("Number of Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         Number_renewed = df_temp.grantAgreementId.value_counts()
                         Number_renewed = Number_renewed[Number_renewed > 1].count()
@@ -640,12 +644,11 @@ if st.session_state.count >= 1:
                                           y="grantAgreementNumber",
                                           color = "implementationPeriodStatusTypeName",
                                           color_discrete_map=color_discrete_map_ip_status,
-                                          hover_data={
-                                                      "implementationPeriodStatusTypeName": False,
+                                          hover_data={"grantAgreementStatusTypeName": False,
                                                       "geographicAreaName": True,
                                                       "principalRecipientName": True,
-                                                      "programStartDate": False,
-                                                      "programEndDate": False,
+                                                      "programStartDate": True,
+                                                      "programEndDate": True,
                                                       "grantAgreementTitle": True},
                                           labels={'geographicAreaName': 'Country',
                                                   'implementationPeriodStartDate': 'Program start date',
@@ -786,14 +789,14 @@ if st.session_state.count >= 1:
 
                         col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
                         if isActive == "Active IPs":
-                            col1.metric("Number of active IPs (since 2018)",
+                            col1.metric("Number of active IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
                             col2.metric("Number of active Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         else:
-                            col1.metric("Number of IPs (since 2018)",
+                            col1.metric("Number of IPs",
                                         "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
-                            col2.metric("Number of Grants (since 2018)", "{:,}".format(
+                            col2.metric("Number of Grants", "{:,}".format(
                                 len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                         Number_renewed = df_temp.grantAgreementId.value_counts()
                         Number_renewed = Number_renewed[Number_renewed > 1].count()
@@ -979,13 +982,13 @@ if st.session_state.count >= 1:
             # METRICS ------------------------------------
             col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
             if isActive == "Active IPs":
-                col1.metric("Number of active IPs (since 2018)",
+                col1.metric("Number of active IPs",
                             "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
-                col2.metric("Number of active Grants (since 2018)",
+                col2.metric("Number of active Grants",
                             "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
             else:
-                col1.metric("Number of IPs (since 2018)", "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
-                col2.metric("Number of Grants (since 2018)",
+                col1.metric("Number of IPs", "{:,}".format(len(df1_filtered_dates.groupby(['grantAgreementNumber']))))
+                col2.metric("Number of Grants",
                             "{:,}".format(len(df1_filtered_dates['grantAgreementImplementationPeriodId'].unique())))
             Number_renewed = df1_filtered_dates.grantAgreementId.value_counts()
             Number_renewed = Number_renewed[Number_renewed > 1].count()
