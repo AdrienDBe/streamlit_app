@@ -73,7 +73,7 @@ if st.session_state.count == 0:
     with arrival_message.container():
         col1, col2 = st.columns([15, 35], gap='small')
         col2.markdown(
-            "<br><br><br>"
+            "<br><br>"
             "<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Disclaimer** </span> </p>",
             unsafe_allow_html=True)
         col2.write("<p style='text-align: justify;'>"
@@ -91,7 +91,8 @@ if st.session_state.count == 0:
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
-            st_lottie(lottie_json, height=400, key="loading_gif2")
+            st.markdown("<br>",unsafe_allow_html=True)
+            st_lottie(lottie_json, height=350, key="loading_gif2")
 
 if st.session_state.count >= 1:
     # Enabling Plotly Scroll Zoom
