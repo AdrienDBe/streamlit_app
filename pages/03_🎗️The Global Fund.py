@@ -80,7 +80,7 @@ if st.session_state.count == 0:
                    "<a href='https://data-service.theglobalfund.org/api'>The Global Fund API </a>."
                    "<br/><br/> I developped this web app in my private capacity to demonstrate streamlit library use for data exploration and visualization, please do not consider it as a "
                    "source of information related to the Global Fund."
-                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer </a> for accurate information.</p>",
+                   "<br/> Always refer to the Global Fund official <a href='https://data.theglobalfund.org/'> data explorer</a> for accurate information.</p>",
                    unsafe_allow_html=True)
         disclaimer_confirmation = col2.button('I understand')
         if disclaimer_confirmation:
