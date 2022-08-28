@@ -439,7 +439,7 @@ if st.session_state.count >= 1:
                             if len(GN) != 0:
                                 df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
-                        fig = px.timeline(df_temp.sort_values('programStartDate'),
+                        fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
                                           x_start="implementationPeriodStartDate",
                                           x_end="implementationPeriodEndDate",
                                           y="grantAgreementNumber",
@@ -484,7 +484,7 @@ if st.session_state.count >= 1:
                                         size=15))
                         col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                        df_temp2 = df_temp.sort_values('programStartDate')
+                        df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
                         df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
                         df_temp2['disbursedtocommited'].fillna(0, inplace=True)
                         df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
@@ -638,7 +638,7 @@ if st.session_state.count >= 1:
                             if len(GN) != 0:
                                 df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
-                        fig = px.timeline(df_temp.sort_values('programStartDate'),
+                        fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
                                           x_start="implementationPeriodStartDate",
                                           x_end="implementationPeriodEndDate",
                                           y="grantAgreementNumber",
@@ -681,7 +681,7 @@ if st.session_state.count >= 1:
                         fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                         col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                        df_temp2 = df_temp.sort_values('programStartDate')
+                        df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
                         df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
                         df_temp2['disbursedtocommited'].fillna(0, inplace=True)
                         df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
@@ -836,7 +836,7 @@ if st.session_state.count >= 1:
                             if len(GN) != 0:
                                 df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
-                        fig = px.timeline(df_temp.sort_values('programStartDate'),
+                        fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
                                           x_start="implementationPeriodStartDate",
                                           x_end="implementationPeriodEndDate",
                                           y="grantAgreementNumber",
@@ -881,7 +881,7 @@ if st.session_state.count >= 1:
                         fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                         col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                        df_temp2 = df_temp.sort_values('programStartDate')
+                        df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
                         df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
                             'totalCommittedAmount']
                         df_temp2['disbursedtocommited'].fillna(0, inplace=True)
