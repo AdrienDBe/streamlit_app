@@ -94,6 +94,47 @@ if st.session_state.count == 0:
             st.markdown("<br>",unsafe_allow_html=True)
             st_lottie(lottie_json, height=350, key="loading_gif2")
 
+
+@st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
+def Loading_country_list():
+
+    service_url0 = "https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues"
+    response0 = requests.get(service_url0)
+    # make sure we got a valid response
+    if (response0.ok):
+        # get the full data from the response
+        data0j = response0.json()
+    else:
+        st.caption("API data cannot be loaded")
+    country_list = pd.DataFrame(data0j["value"])
+    country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
+
+    ## List of World Bank country with Region and Income Level
+    WorldBank_countries = wb.economy.DataFrame().reset_index()[
+        ['id', 'name', 'aggregate', 'region', 'incomeLevel']]
+    WorldBank_countries = WorldBank_countries[WorldBank_countries['aggregate'] == False].drop('aggregate',
+                                                                                              axis=1)
+    WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
+        'LIC': 'Low income country',
+        'HIC': 'High income country',
+        'LMC': 'Lower middle income country',
+        'INX': 'Upper middle income country',
+        'UMC': 'Upper middle income country'})
+    WorldBank_countries['region'] = WorldBank_countries['region'].map({
+        'LCN': 'Latin America & the Caribbean',
+        'SAS': 'South Asia',
+        'SSF': 'Sub-Saharan Africa',
+        'ECS': 'Europe and Central Asia',
+        'MEA': 'Middle East and North Africa',
+        'EAS': 'East Asia and Pacific',
+        'NAC': 'North America'})
+    WorldBank_countries.rename(columns={"id": "SpatialDim", "incomeLevel": "Income level", "region": "Region"},
+                               inplace=True)
+    country_list = country_list.merge(WorldBank_countries, how='left', on='SpatialDim')
+    return country_list
+
+country_list = Loading_country_list()
+
 if st.session_state.count >= 1:
     # Enabling Plotly Scroll Zoom
     config = dict({'scrollZoom': True, 'displaylogo': False})
@@ -148,44 +189,6 @@ if st.session_state.count >= 1:
         col1.markdown("<span style='text-align: justify; font-size: 280%; font-family: Arial ; color:#ffffff'> **Global Fund API explorer** </span> </p>", unsafe_allow_html=True)
         dataset = st.radio("Select Dataset", ('Implementation periods', 'Disbursements', 'Reporting results' ), horizontal=True)
 
-    ## List of WHO countries
-    @st.cache(show_spinner=False)
-    def import_api_WHO_countries(url):
-        service_url0 = url
-        response0 = requests.get(service_url0)
-        # make sure we got a valid response
-        if (response0.ok):
-            # get the full data from the response
-            data0j = response0.json()
-        else:
-            st.caption("API data cannot be loaded")
-        country_list = pd.DataFrame(data0j["value"])
-        return country_list
-    with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
-        country_list = import_api_WHO_countries("https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues")
-        country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
-
-    ## List of World Bank country with Region and Income Level
-
-    WorldBank_countries = wb.economy.DataFrame().reset_index()[['id','name','aggregate','region','incomeLevel']]
-    WorldBank_countries =  WorldBank_countries[WorldBank_countries['aggregate']==False].drop('aggregate', axis=1)
-    WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
-                                'LIC':'Low income country',
-                                'HIC':'High income country',
-                                'LMC':'Lower middle income country',
-                                'INX': 'Upper middle income country',
-                                'UMC':'Upper middle income country'})
-    WorldBank_countries['region'] = WorldBank_countries['region'].map({
-                                'LCN':'Latin America & the Caribbean',
-                                'SAS':'South Asia',
-                                'SSF':'Sub-Saharan Africa',
-                                'ECS':'Europe and Central Asia',
-                                'MEA':'Middle East and North Africa',
-                                'EAS':'East Asia and Pacific',
-                                'NAC':'North America'})
-    WorldBank_countries.rename(columns={"id":"SpatialDim","incomeLevel":"Income level","region":"Region"}, inplace = True)
-    country_list = country_list.merge(WorldBank_countries, how='left', on='SpatialDim')
-
     if dataset == "Reporting results":
         col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Reporting results <br >Section in development** </span> </p>", unsafe_allow_html=True)
         lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
@@ -193,21 +196,14 @@ if st.session_state.count >= 1:
         st_lottie(lottie_json, height=500, key="loading_gif2")
 
     if dataset == "Implementation periods":
-        col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation Periods** </span> "
-                    "<p style='text-align: justify'> A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
-                    "The Country Coordinating Mechanism and the Global Fund work with the partner implementing a grant, the Principal Recipient, to prepare the grant. </span> "
-                    "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
+
+        # Loading API from WHO WB and GF ---------------------------------------------------
 
         count = 0
         gif_runner = st.empty()
 
-        # Loading GF API
-        count = 0
-        gif_runner = st.empty()
-
-
-        @st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
-        def Loading_API(url):
+        @st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
+        def Loading_API():
             # check if first load, if so it will take a few sec to load so we want to display a nice svg
             global count
             count += 1
@@ -217,8 +213,43 @@ if st.session_state.count >= 1:
                 lottie_container = st.empty()
                 with lottie_container:
                     st_lottie(lottie_json, height=350, key="loading_gif")
+
+            service_url0 = "https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues"
+            response0 = requests.get(service_url0)
+            # make sure we got a valid response
+            if (response0.ok):
+                # get the full data from the response
+                data0j = response0.json()
+            else:
+                st.caption("API data cannot be loaded")
+            country_list = pd.DataFrame(data0j["value"])
+            country_list.rename(columns={"Code": "SpatialDim", "Title": "Country"}, inplace=True)
+
+            ## List of World Bank country with Region and Income Level
+            WorldBank_countries = wb.economy.DataFrame().reset_index()[
+                ['id', 'name', 'aggregate', 'region', 'incomeLevel']]
+            WorldBank_countries = WorldBank_countries[WorldBank_countries['aggregate'] == False].drop('aggregate',
+                                                                                                      axis=1)
+            WorldBank_countries['incomeLevel'] = WorldBank_countries['incomeLevel'].map({
+                'LIC': 'Low income country',
+                'HIC': 'High income country',
+                'LMC': 'Lower middle income country',
+                'INX': 'Upper middle income country',
+                'UMC': 'Upper middle income country'})
+            WorldBank_countries['region'] = WorldBank_countries['region'].map({
+                'LCN': 'Latin America & the Caribbean',
+                'SAS': 'South Asia',
+                'SSF': 'Sub-Saharan Africa',
+                'ECS': 'Europe and Central Asia',
+                'MEA': 'Middle East and North Africa',
+                'EAS': 'East Asia and Pacific',
+                'NAC': 'North America'})
+            WorldBank_countries.rename(columns={"id": "SpatialDim", "incomeLevel": "Income level", "region": "Region"},
+                                       inplace=True)
+            country_list = country_list.merge(WorldBank_countries, how='left', on='SpatialDim')
+
             # reading api
-            service_url0 = url
+            service_url0 = 'https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods'
             response0 = requests.get(service_url0)
             # make sure we got a valid response
             if (response0.ok):
@@ -229,36 +260,43 @@ if st.session_state.count >= 1:
             df2 = pd.DataFrame(data0j["value"])
             if count == 1:
                 lottie_container.empty()
-            return df2
 
-        df2 = Loading_API('https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods')
-        df2.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
+            df2.principalRecipientSubClassificationName.fillna('Not indicated', inplace=True)
+
+            # merge with country info
+            df2.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
+            df2 = pd.merge(df2,
+                           country_list,
+                           on='SpatialDim',
+                           how='left')
+            df2.Region.fillna('Non-regional IP', inplace=True)
+            df2.principalRecipientName.fillna('Not indicated', inplace=True)
+            df2.grantAgreementTitle.fillna('Not indicated', inplace=True)
+
+            df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].astype('datetime64[ns]')
+            df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].dt.date
+            df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].astype('datetime64[ns]')
+            df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].dt.date
+            df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
+            df2['programStartDate'] = pd.to_datetime(df2['programStartDate']).dt.date
+            df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
+            df2['programEndDate'] = pd.to_datetime(df2['programEndDate']).dt.date
+
+            df2["implementationPeriodStatusTypeName"] = pd.Categorical(df2["implementationPeriodStatusTypeName"],
+                                                                       categories=["Active", "Financial Closure",
+                                                                                   "Financially Closed"],
+                                                                       ordered=True)
+            df2.sort_values('implementationPeriodStatusTypeName', inplace=True)
+            df2 = df2[df2['programStartDate'].dt.year >= 2018]
+            return country_list, df2
+
+        country_list, df2 = Loading_API()
         gif_runner.empty()
 
-        #merge with country info
-        df2.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
-        df2 = pd.merge(df2,
-                      country_list,
-                      on='SpatialDim',
-                      how='left')
-        df2.Region.fillna('Non-regional IP',inplace=True)
-        df2.principalRecipientName.fillna('Not indicated',inplace=True)
-        df2.grantAgreementTitle.fillna('Not indicated', inplace=True)
-
-        df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].astype('datetime64[ns]')
-        df2['implementationPeriodStartDate'] = df2['implementationPeriodStartDate'].dt.date
-        df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].astype('datetime64[ns]')
-        df2['implementationPeriodEndDate'] = df2['implementationPeriodEndDate'].dt.date
-        df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
-        df2['programStartDate'] = pd.to_datetime(df2['programStartDate']).dt.date
-        df2['programStartDate'] = df2['programStartDate'].astype('datetime64[ns]')
-        df2['programEndDate'] = pd.to_datetime(df2['programEndDate']).dt.date
-
-        df2["implementationPeriodStatusTypeName"] = pd.Categorical(df2["implementationPeriodStatusTypeName"],
-                                                                 categories=["Active", "Financial Closure", "Financially Closed"],
-                                                                 ordered=True)
-        df2.sort_values('implementationPeriodStatusTypeName', inplace=True)
-        df2 = df2[df2['programStartDate'].dt.year >= 2018]
+        col2.markdown("<span style='text-align: justify; font-size: 280%;font-family: Arial; color:#04AA6D'> **Implementation Periods** </span> "
+                    "<p style='text-align: justify'> A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
+                    "The Country Coordinating Mechanism and the Global Fund work with the partner implementing a grant, the Principal Recipient, to prepare the grant. </span> "
+                    "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>", unsafe_allow_html=True)
 
         # FILTERS ------------------------------------
 
@@ -1075,7 +1113,7 @@ if st.session_state.count >= 1:
         # Loading GF API
         count = 0
         @st.cache(show_spinner=False,suppress_st_warning=True,allow_output_mutation=True)
-        def Loading_API(url):
+        def Loading_API_disbursements():
             # check if first load, if so it will take a few sec to load so we want to display a nice svg
             global count
             count += 1
@@ -1086,7 +1124,7 @@ if st.session_state.count >= 1:
                     with lottie_container:
                         st_lottie(lottie_json, height=350, key="loading_gif")
             # reading api
-            service_url0 = url
+            service_url0 = "https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements"
             response0 = requests.get(service_url0)
             # make sure we got a valid response
             if (response0.ok):
@@ -1099,30 +1137,19 @@ if st.session_state.count >= 1:
             if count == 1:
                 lottie_container.empty()
 
+            df1.principalRecipientSubClassificationName.fillna('Not indicated', inplace=True)
+            df1['disbursementDate'] = df1['disbursementDate'].astype('datetime64[ns]')
+            df1['disbursementDate'] = pd.to_datetime(df1['disbursementDate'], errors='coerce')
+            df1 = df1[df1['disbursementDate'].dt.year >= 2018]
+            # merge with country info
+            df1.rename(columns={"geographicAreaCode_ISO3": "SpatialDim"}, inplace=True)
             return df1
 
-    #--------
-
-        df1 = Loading_API("https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementDisbursements")
-        df1.principalRecipientSubClassificationName.fillna('Not indicated',inplace=True)
-
-    #    df1 = df1[df1["geographicAreaLevelName"] == 'Country'][['geographicAreaCode_ISO3',
-        #                                                            'geographicAreaName',
-        #                                                        'componentName',
-        #                                                        'grantAgreementStatusTypeName',
-        #                                                        'principalRecipientSubClassificationName',
-        #                                                        'disbursementDate',
-        #                                                        'disbursementAmount']]
-        df1['disbursementDate'] =  df1['disbursementDate'].astype('datetime64[ns]')
-        df1['disbursementDate'] = df1['disbursementDate'].dt.date
-        df1 = df1[df1['disbursementDate'].dt.year >= 2018]
-
-        #merge with country info
-        df1.rename(columns={"geographicAreaCode_ISO3":"SpatialDim"}, inplace = True)
+        df1 = Loading_API_disbursements()
         df1 = pd.merge(df1,
-                      country_list,
-                      on='SpatialDim',
-                      how='left')
+                       country_list,
+                       on='SpatialDim',
+                       how='left')
 
 
         # FILTERS ------------------------------------
