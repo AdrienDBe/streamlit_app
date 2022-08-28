@@ -1223,7 +1223,7 @@ if st.session_state.count >= 1:
 
         # METRICS ------------------------------------
         col1, col2, col3, col4= st.columns([30, 30, 30, 30])
-        col1.metric("Number of disbursements","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
+        col1.metric("Number of disbursements (since 2018)","{:,}".format(len(df1_filtered_dates.disbursementAmount)))
         col2.metric("Total amount ($)", "{:,}".format(round(df1_filtered_dates.disbursementAmount.sum())))
         col3.metric("First record", "{}".format(min(df1_filtered_dates.disbursementDate)))
         col4.metric("Last record", "{}".format(max(df1_filtered_dates.disbursementDate)))
