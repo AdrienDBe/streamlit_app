@@ -385,7 +385,7 @@ if st.session_state.count >= 1:
 
             if view == 'Component':
 
-                for i in ["HIV","Tuberculosis","Malaria","TB/HIV","RSSH","Multicomponent"]::
+                for i in ["HIV","Tuberculosis","Malaria","TB/HIV","RSSH","Multicomponent"]:
                     df_temp = df1_filtered_dates[df1_filtered_dates['componentName']==i]
                     with st.container():
 
