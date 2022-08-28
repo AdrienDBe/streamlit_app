@@ -183,7 +183,6 @@ if st.session_state.count >= 1:
 
     with header_space:
         col1, col2 = st.columns([12, 35], gap='small')
-        col1.write("")
         col1.markdown("<span style='text-align: justify; font-size: 280% ; color:#ffffff'> **Global Fund <br>API explorer** </span> </p>", unsafe_allow_html=True)
 
     with st.sidebar:
