@@ -387,196 +387,197 @@ if st.session_state.count >= 1:
             if view == 'Component':
                 for i in ["HIV","Tuberculosis","Malaria","TB/HIV","RSSH","Multicomponent"]:
                     df_temp = df1_filtered_dates[df1_filtered_dates['componentName']==i]
-                    with st.container():
-                        st.markdown(
-                            "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **{}** </span></p>".format(i),
-                            unsafe_allow_html=True)
-                        col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
-                        if isActive == "Active IPs":
-                            col1.metric("Number of active IPs (since 2018)",
-                                        "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
-                            col2.metric("Number of active Grants", "{:,}".format(
-                                len(df_temp['grantAgreementImplementationPeriodId'].unique())))
-                        else:
-                            col1.metric("Number of IPs (since 2018)",
-                                        "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
-                            col2.metric("Number of Grants (since 2018)", "{:,}".format(
-                                len(df_temp['grantAgreementImplementationPeriodId'].unique())))
-                        Number_renewed = df_temp.grantAgreementId.value_counts()
-                        Number_renewed = Number_renewed[Number_renewed > 1].count()
-                        col3.metric("Principal Recipient(s)","{:,}".format(len(df_temp["principalRecipientName"].unique())))
-                        min = df_temp.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-                        max = df_temp.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-                        df_temp_min_max = pd.merge(min,
-                                              max,
-                                              on='grantAgreementId',
-                                              how='left').reset_index()
-                        df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
-                        df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                        col4.metric("Average IP overall duration", "{:,} year(s)".format(
-                            round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'Y')).mean(), 1)))
+                    if len(df_temp.index) != 0:
+                        with st.container():
+                            st.markdown(
+                                "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **{}** </span></p>".format(i),
+                                unsafe_allow_html=True)
+                            col1, col2, col3, col4 = st.columns([30, 30, 30, 30])
+                            if isActive == "Active IPs":
+                                col1.metric("Number of active IPs (since 2018)",
+                                            "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
+                                col2.metric("Number of active Grants", "{:,}".format(
+                                    len(df_temp['grantAgreementImplementationPeriodId'].unique())))
+                            else:
+                                col1.metric("Number of IPs (since 2018)",
+                                            "{:,}".format(len(df_temp.groupby(['grantAgreementNumber']))))
+                                col2.metric("Number of Grants (since 2018)", "{:,}".format(
+                                    len(df_temp['grantAgreementImplementationPeriodId'].unique())))
+                            Number_renewed = df_temp.grantAgreementId.value_counts()
+                            Number_renewed = Number_renewed[Number_renewed > 1].count()
+                            col3.metric("Principal Recipient(s)","{:,}".format(len(df_temp["principalRecipientName"].unique())))
+                            min = df_temp.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
+                            max = df_temp.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
+                            df_temp_min_max = pd.merge(min,
+                                                  max,
+                                                  on='grantAgreementId',
+                                                  how='left').reset_index()
+                            df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
+                            df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
+                            col4.metric("Average IP overall duration", "{:,} year(s)".format(
+                                round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'Y')).mean(), 1)))
 
-                        col1, col2= st.columns([15,15],gap ='large')
+                            col1, col2= st.columns([15,15],gap ='large')
 
-                        if len(df_temp.principalRecipientName.unique()) == 1:
-                            col1.write(df_temp.principalRecipientName.unique()[0])
-                        else:
-                            PR = col1.multiselect(
-                                "{} Principal Recipient(s)".format(len(df_temp.principalRecipientName.unique())),
-                                (list(df_temp.principalRecipientName.unique())))
-                            if len(PR) != 0:
-                                df_temp = df_temp[df_temp['principalRecipientName'].isin(PR)]
+                            if len(df_temp.principalRecipientName.unique()) == 1:
+                                col1.write(df_temp.principalRecipientName.unique()[0])
+                            else:
+                                PR = col1.multiselect(
+                                    "{} Principal Recipient(s)".format(len(df_temp.principalRecipientName.unique())),
+                                    (list(df_temp.principalRecipientName.unique())))
+                                if len(PR) != 0:
+                                    df_temp = df_temp[df_temp['principalRecipientName'].isin(PR)]
 
-                        if len(df_temp.grantAgreementNumber.unique()) == 1:
-                            col2.write(df_temp.grantAgreementNumber.unique()[0])
-                        else:
-                            GN = col2.multiselect(
-                                "{} IP(s)".format(len(df_temp.grantAgreementNumber.unique())),
-                                (list(df_temp.grantAgreementNumber.unique())))
-                            if len(GN) != 0:
-                                df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
+                            if len(df_temp.grantAgreementNumber.unique()) == 1:
+                                col2.write(df_temp.grantAgreementNumber.unique()[0])
+                            else:
+                                GN = col2.multiselect(
+                                    "{} IP(s)".format(len(df_temp.grantAgreementNumber.unique())),
+                                    (list(df_temp.grantAgreementNumber.unique())))
+                                if len(GN) != 0:
+                                    df_temp = df_temp[df_temp['grantAgreementNumber'].isin(GN)]
 
-                        fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
-                                          x_start="implementationPeriodStartDate",
-                                          x_end="implementationPeriodEndDate",
-                                          y="grantAgreementNumber",
-                                          color = "implementationPeriodStatusTypeName",
-                                          color_discrete_map=color_discrete_map_ip_status,
-                                          hover_data={"grantAgreementStatusTypeName": False,
-                                                      "geographicAreaName": True,
-                                                      "principalRecipientName": True,
-                                                      "programStartDate": True,
-                                                      "programEndDate": True,
-                                                      "grantAgreementTitle": True},
-                                          labels={'geographicAreaName': 'Country',
-                                                  'implementationPeriodStartDate': 'Program start date',
-                                                  'principalRecipientName': 'Principal Recipient',
-                                                  'implementationPeriodEndDate': 'Program end date',
-                                                  'grantAgreementNumber': 'Grant agreement number',
-                                                  'grantAgreementTitle': 'Grant agreement title'})
+                            fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
+                                              x_start="implementationPeriodStartDate",
+                                              x_end="implementationPeriodEndDate",
+                                              y="grantAgreementNumber",
+                                              color = "implementationPeriodStatusTypeName",
+                                              color_discrete_map=color_discrete_map_ip_status,
+                                              hover_data={"grantAgreementStatusTypeName": False,
+                                                          "geographicAreaName": True,
+                                                          "principalRecipientName": True,
+                                                          "programStartDate": True,
+                                                          "programEndDate": True,
+                                                          "grantAgreementTitle": True},
+                                              labels={'geographicAreaName': 'Country',
+                                                      'implementationPeriodStartDate': 'Program start date',
+                                                      'principalRecipientName': 'Principal Recipient',
+                                                      'implementationPeriodEndDate': 'Program end date',
+                                                      'grantAgreementNumber': 'Grant agreement number',
+                                                      'grantAgreementTitle': 'Grant agreement title'})
 
-                        fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
-                        fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
-                        fig.update_annotations(font_color="white", font_size=15)
-                        fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
-                                      fillcolor="green",
-                                      opacity=0.25,
-                                      line_width=0)
+                            fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
+                            fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()), xshift=50)
+                            fig.update_annotations(font_color="white", font_size=15)
+                            fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
+                                          fillcolor="green",
+                                          opacity=0.25,
+                                          line_width=0)
 
-                        fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
-                        fig.update_layout(autosize=False,
-                                    margin=dict(
-                                        l=0,
-                                        r=0,
-                                        b=0,
-                                        t=50,
-                                        pad=4,
-                                        autoexpand=True),
-                                    height=300,
-                                    paper_bgcolor='rgba(0,0,0,0)',
-                                    plot_bgcolor='rgba(0,0,0,0)',
-                                    legend_title = '',
-                                    font=dict(
-                                        size=15))
-                        col1.plotly_chart(fig, use_container_width=True, config=config)
+                            fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
+                            fig.update_layout(autosize=False,
+                                        margin=dict(
+                                            l=0,
+                                            r=0,
+                                            b=0,
+                                            t=50,
+                                            pad=4,
+                                            autoexpand=True),
+                                        height=300,
+                                        paper_bgcolor='rgba(0,0,0,0)',
+                                        plot_bgcolor='rgba(0,0,0,0)',
+                                        legend_title = '',
+                                        font=dict(
+                                            size=15))
+                            col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                        df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
-                        df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
-                        df_temp2['disbursedtocommited'].fillna(0, inplace=True)
-                        df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
-                        df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
+                            df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
+                            df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2['totalCommittedAmount']
+                            df_temp2['disbursedtocommited'].fillna(0, inplace=True)
+                            df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
+                            df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
 
-                        fig = {
-                            'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                            y=df_temp2['grantAgreementNumber'],
-                                            width=0.7,
-                                            orientation='h',
-                                            marker=dict(color="#023824"),
-                                            name= "Signed amount"
-                                            ),
-                                     go.Bar(x=df_temp2["totalCommittedAmount"],
-                                            y=df_temp2['grantAgreementNumber'],
-                                            width=0.7,
-                                            orientation='h',
-                                            marker=dict(color="#046944"),
-                                            name= "Committed amount"
-                                            ),
-                                     go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                            y=df_temp2['grantAgreementNumber'],
-                                            width=0.4,
-                                            orientation='h',
-                                            marker=dict(color="#C1EADB"),
-                                            name= "Disbursed amount",
-                                            text=df_temp2['disbursedtocommited']
-                                            )
-                                     ],
-                            'layout': go.Layout(barmode='overlay',autosize=False,
-                                    margin=dict(
-                                        l=0,
-                                        r=0,
-                                        b=0,
-                                        t=50,
-                                        pad=4,
-                                        autoexpand=True),
-                                    height=300,
-                                    paper_bgcolor='rgba(0,0,0,0)',
-                                    plot_bgcolor='rgba(0,0,0,0)',
-                                    legend_title = '',
-                                    font=dict(
-                                        size=15))
-                            }
+                            fig = {
+                                'data': [go.Bar(x=df_temp2["totalSignedAmount"],
+                                                y=df_temp2['grantAgreementNumber'],
+                                                width=0.7,
+                                                orientation='h',
+                                                marker=dict(color="#023824"),
+                                                name= "Signed amount"
+                                                ),
+                                         go.Bar(x=df_temp2["totalCommittedAmount"],
+                                                y=df_temp2['grantAgreementNumber'],
+                                                width=0.7,
+                                                orientation='h',
+                                                marker=dict(color="#046944"),
+                                                name= "Committed amount"
+                                                ),
+                                         go.Bar(x=df_temp2["totalDisbursedAmount"],
+                                                y=df_temp2['grantAgreementNumber'],
+                                                width=0.4,
+                                                orientation='h',
+                                                marker=dict(color="#C1EADB"),
+                                                name= "Disbursed amount",
+                                                text=df_temp2['disbursedtocommited']
+                                                )
+                                         ],
+                                'layout': go.Layout(barmode='overlay',autosize=False,
+                                        margin=dict(
+                                            l=0,
+                                            r=0,
+                                            b=0,
+                                            t=50,
+                                            pad=4,
+                                            autoexpand=True),
+                                        height=300,
+                                        paper_bgcolor='rgba(0,0,0,0)',
+                                        plot_bgcolor='rgba(0,0,0,0)',
+                                        legend_title = '',
+                                        font=dict(
+                                            size=15))
+                                }
 
-                        col2.plotly_chart(fig, use_container_width=True, config=config)
+                            col2.plotly_chart(fig, use_container_width=True, config=config)
 
-                        with st.expander("See grant(s) detail"):
-                            col1, col2 = st.columns([90, 10])
-                            df_temp1 = df_temp[['geographicAreaName',
-                                                   'componentName',
-                                                   'grantAgreementNumber',
-                                                   'isActive',
-                                                   'grantAgreementStatusTypeName',
-                                                   'grantAgreementTitle',
-                                                   'programStartDate',
-                                                   'programEndDate',
-                                                   'portfolioManager',
-                                                   'portfolioManagerEmailAddress',
-                                                   'applicantName',
-                                                   'principalRecipientName',
-                                                   'principalRecipientSubClassificationName',
-                                                   'currency',
-                                                   'totalSignedAmount',
-                                                   'totalCommittedAmount',
-                                                   'totalDisbursedAmount']]
-                            df_temp2 = df_temp1.reset_index(drop=True)
-                            df_temp2.columns = ['Country',
-                                                   'Component',
-                                                   'Grant agreement number',
-                                                   'Is the Grant Active',
-                                                   'Grant agreement status type',
-                                                   'Grant agreement title',
-                                                   'Program start date',
-                                                   'Program end date',
-                                                   'Portfolio manager',
-                                                   'Portfolio manager email address',
-                                                   'Applicant name',
-                                                   'Principal recipient name',
-                                                   'Principal recipient sub-classification',
-                                                   'Currency',
-                                                   'Signed amount',
-                                                   'Committed amount',
-                                                   'Disbursed amount']
-                            col1.dataframe(df_temp2)
-                            @st.cache
-                            def convert_df(df1_filtered_dates2):
-                                # IMPORTANT: Cache the conversion to prevent computation on every rerun
-                                return df_temp.to_csv().encode('utf-8')
-                            csv = convert_df(df_temp2)
-                            col2.download_button(
-                                label="Download data as CSV",
-                                data=csv,
-                                file_name='GF_Grants_API.csv'
-                            )
-                        st.write('---')
+                            with st.expander("See grant(s) detail"):
+                                col1, col2 = st.columns([90, 10])
+                                df_temp1 = df_temp[['geographicAreaName',
+                                                       'componentName',
+                                                       'grantAgreementNumber',
+                                                       'isActive',
+                                                       'grantAgreementStatusTypeName',
+                                                       'grantAgreementTitle',
+                                                       'programStartDate',
+                                                       'programEndDate',
+                                                       'portfolioManager',
+                                                       'portfolioManagerEmailAddress',
+                                                       'applicantName',
+                                                       'principalRecipientName',
+                                                       'principalRecipientSubClassificationName',
+                                                       'currency',
+                                                       'totalSignedAmount',
+                                                       'totalCommittedAmount',
+                                                       'totalDisbursedAmount']]
+                                df_temp2 = df_temp1.reset_index(drop=True)
+                                df_temp2.columns = ['Country',
+                                                       'Component',
+                                                       'Grant agreement number',
+                                                       'Is the Grant Active',
+                                                       'Grant agreement status type',
+                                                       'Grant agreement title',
+                                                       'Program start date',
+                                                       'Program end date',
+                                                       'Portfolio manager',
+                                                       'Portfolio manager email address',
+                                                       'Applicant name',
+                                                       'Principal recipient name',
+                                                       'Principal recipient sub-classification',
+                                                       'Currency',
+                                                       'Signed amount',
+                                                       'Committed amount',
+                                                       'Disbursed amount']
+                                col1.dataframe(df_temp2)
+                                @st.cache
+                                def convert_df(df1_filtered_dates2):
+                                    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+                                    return df_temp.to_csv().encode('utf-8')
+                                csv = convert_df(df_temp2)
+                                col2.download_button(
+                                    label="Download data as CSV",
+                                    data=csv,
+                                    file_name='GF_Grants_API.csv'
+                                )
+                            st.write('---')
 
             if view == 'Principal Recipient':
 
