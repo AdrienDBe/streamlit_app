@@ -192,7 +192,7 @@ if st.session_state.count >= 1:
     country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
     # TABS ------------------------------------
-    tab1, tab2 = st.tabs(["Explore single indicators", "Visualize multidimensional indicators"])
+    tab1, tab2 = st.tabs(["Single indicator", "Multidimensional indicators"])
 
     # ---- SIDEBAR ---- TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
