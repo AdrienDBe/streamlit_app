@@ -304,7 +304,7 @@ if st.session_state.count >= 1:
                     )
                     for trace in fig.data:
                         trace.line.width = 2
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 if hue == 'Income level':
                     generate_plot('Income level')
                 elif hue == 'Region':
@@ -349,7 +349,7 @@ if st.session_state.count >= 1:
                         )
                         for trace in fig.data:
                             trace.line.width = 2
-                        st.plotly_chart(fig, use_container_width=True)
+                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
             with col2:
                 # Get the last year from the "Year" column
@@ -359,13 +359,13 @@ if st.session_state.count >= 1:
 
                 fig = px.choropleth(df_last_year, locations='Country', color=hue,color_discrete_map=c, locationmode='country names')
                 # Remove the background color
-                fig.update_layout(geo=dict(visible=False,bgcolor='rgba(0,0,0,0)',lakecolor='rgba(0,0,0,0)',landcolor='rgba(0,0,0,0)',
-                                              subunitcolor='rgba(0,0,0,0)',showcountries=False))
-                fig.update_traces(marker_line_width=0)
+                fig.update_layout(geo=dict(visible=False,bgcolor='rgba(0,0,0,0)',lakecolor='rgba(0,0,0,0)',landcolor='white',
+                                              subunitcolor='rgba(0,0,0,0)',showcountries=True))
+                fig.update_traces(marker_line_width=1)
                 fig.update_geos(fitbounds="locations")
                 # Remove the legend & Set the plot size
                 fig.update_layout(showlegend=False, width=200, height=200, margin={"r":0,"t":0,"l":0,"b":0})
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
                 grouped_df = df.groupby([hue, 'Year']).mean().reset_index()
                 year_max = grouped_df['Year'].max()
