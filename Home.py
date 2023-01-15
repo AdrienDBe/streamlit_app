@@ -56,10 +56,10 @@ with work_container:
     with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
         st.markdown('''
         **INFORMATION & PROCESS MANAGEMENT** `Operational efficiency within the Grant Management Division`
-        n- Business Process Monitoring & Analytics
-        Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
-        n- Business Process Management<brEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
-        n- Business Process Enhancement<brDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
+        \n- Business Process Monitoring & Analytics
+        \Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
+        \n- Business Process Management<brEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
+        \n- Business Process Enhancement<brDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
         ''')
     with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
@@ -67,7 +67,6 @@ with work_container:
         \n- Created program control and reports to MoHs & global funders
         \n- Coordinated cross-functional teams in EMEA and APAC on program activities
         \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
-        
         \n**ANALYTICS: Reporting automation, dashboard development**
         \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
         \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
