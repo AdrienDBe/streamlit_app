@@ -84,8 +84,19 @@ if st.session_state.count == 0:
                    "This app imports data from the World Health Organization (WHO) API and displays it in a Streamlit web app."
                    "<br/>It allows the user to select a disease (Tuberculosis, Malaria, or HIV) and then displays a list of indicators"
                    " related to the chosen disease. The user can then select a specific indicator and view data for that indicator."
-                   " The data is also grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection. <br><br>",
+                   " The data is also grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection. ",
                    unsafe_allow_html=True)
+
+        st.subheader("API status")
+        url = "https://ghoapi.azureedge.net/api/Indicator"
+        response = requests.get(url)
+        if response.status_code != 200:
+            st.markdown("<p style='text-align: justify;'>"
+                        "There seems to be an error (status code: {}) with the <a href='https://ghoapi.azureedge.net/api/Indicator'> WHO API </a> "
+                        "<br>This app will be accessible once the API is back online ".format(response.status_code)
+                        ,unsafe_allow_html=True)
+        else:
+            st.caption("Connection to WHO API established successfully!")
 
         with st.expander("Read more about the World Health Organization, what is an API and how to access WHO API"):
 
@@ -119,25 +130,28 @@ if st.session_state.count == 0:
 
 
         col1, col2 = st.columns([10, 35], gap='small')
-        col2.title("Disclaimer")
-        col2.write("<p style='text-align: justify;'>"
-            "Please note that the information provided in this page is created and shared by me as an individual and "
-            "should not be taken as an official representation of the World Health Organization (WHO). "
-            "<br>For accurate and up-to-date information, please consult the WHO's official website.",
-            unsafe_allow_html=True)
-
-        disclaimer_confirmation = col2.button('I understand')
-        if disclaimer_confirmation:
-            st.session_state.count = 1
-            st.experimental_rerun()
+        with col2:
+            st.markdown("<br><br>",
+                        unsafe_allow_html=True)
+            st.subheader("Disclaimer")
+            st.write("<p style='text-align: justify;'>"
+                "Please note that the information provided in this page is created and shared by me as an individual and "
+                "should not be taken as an official representation of the World Health Organization (WHO). "
+                "For accurate and up-to-date information, please consult the WHO's official website.",
+                unsafe_allow_html=True)
+            if response.status_code == 200:
+                disclaimer_confirmation = col2.button('I understand')
+                if disclaimer_confirmation:
+                    st.session_state.count = 1
+                    st.experimental_rerun()
 
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
-
             st_lottie(lottie_json, height=250, key="loading_gif2")
 
 if st.session_state.count >= 1:
+
     st.title("WHO indicators")
 
     ## List of WHO countries
@@ -194,9 +208,17 @@ if st.session_state.count >= 1:
     # TABS ------------------------------------
     tab1, tab2 = st.tabs(["Single indicator", "Multidimensional indicators"])
 
-    # ---- SIDEBAR ---- TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    # ---- SIDEBAR ----
 
     with st.sidebar:
+
+        url = "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'Turberculosis')"
+        response = requests.get(url)
+        if response.status_code == 200:
+            st.caption("Connection to WHO API established successfully!")
+        else:
+            st.write("Error connecting to API. Status code:", response.status_code)
+
         ## List of WHO indicators
         who_indic_container = st.container()
         with who_indic_container:
@@ -205,34 +227,22 @@ if st.session_state.count >= 1:
                 'Display the list of indicators for: ',
                 options=['Tuberculosis', 'Malaria', 'HIV'])
 
-
             # Import API data
-            @st.cache
+            @st.cache(suppress_st_warning=True)
             def import_api_WHO_indicators(url):
                 service_url0 = url
                 response0 = requests.get(service_url0)
-                # make sure we got a valid response
-                print(response0)
                 if (response0.ok):
                     # get the full data from the response
                     data0j = response0.json()
-                else:
-                    st.caption("API data cannot be loaded")
                 data0a = pd.DataFrame(data0j["value"])
                 return data0a
 
+            data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(disease))
+            option_indicators_name = st.selectbox('Display records for: ',data0a.IndicatorName.unique())
+            selection_indicator_code = data0a[data0a['IndicatorName']==option_indicators_name][['IndicatorCode']].iloc[0][0]
 
-            with st.spinner('Loading indicators data from WHO API (it will take a few seconds the first time)'):
-                data0a = import_api_WHO_indicators(
-                    "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
-                        disease))
-
-            option_indicators_name = st.selectbox('Display records for: ', data0a.IndicatorName.unique())
-            selection_indicator_code = \
-            data0a[data0a['IndicatorName'] == option_indicators_name][['IndicatorCode']].iloc[0][0]
-
-
-            @st.cache
+            @st.cache(suppress_st_warning=True)
             def import_api_WHO_indicator_name(url):
                 service_url0 = url
                 response0 = requests.get(service_url0)
@@ -244,21 +254,18 @@ if st.session_state.count >= 1:
                     st.caption("API data cannot be loaded")
                 return data0j
 
-
             with st.spinner('Loading country data from WHO API (it will take a few seconds the first time)'):
-                data0j = import_api_WHO_indicator_name(
-                    "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+                data0j = import_api_WHO_indicator_name("https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
                 data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
                 data0a = pd.DataFrame(data0j["value"])
-            # merge with country info
+            #merge with country info
             df = pd.merge(data0a,
                           country_list,
                           on='SpatialDim',
                           how='inner')
-            df.rename(columns={"TimeDim": "Year", "NumericValue": "Value"}, inplace=True)
-            df = df[(df['SpatialDimType'] == 'COUNTRY') | (df['SpatialDimType'] == 'COUNTRY')][
-                ['Country', 'SpatialDim', 'Year', 'Value', 'ParentTitle', 'Region', 'Income level']]
-            hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=False)
+            df.rename(columns={"TimeDim":"Year","NumericValue":"Value"}, inplace = True)
+            df = df[(df['SpatialDimType'] == 'COUNTRY') | (df['SpatialDimType'] == 'COUNTRY')][['Country','SpatialDim', 'Year', 'Value','ParentTitle','Region','Income level']]
+            hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
 
 
     with tab1:
@@ -300,7 +307,8 @@ if st.session_state.count >= 1:
                             showgrid=True,
                             gridcolor='#252323',
                             gridwidth=1
-                        )
+                        ),
+                        height=600, margin={"r": 0, "t": 50, "l": 0, "b": 0}
                     )
                     for trace in fig.data:
                         trace.line.width = 2
@@ -319,53 +327,41 @@ if st.session_state.count >= 1:
                         container = col1.container()
                         selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
                         df_country = df[df["Country"].isin(selected_options)]
-                        fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c, title = "{}".format(option_indicators_name))
-                        fig.update_layout(
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=20, color='white')
-                            ),
-                            legend=dict(
-                                font=dict(size=15, color='white')
-                            ),
-                            xaxis=go.layout.XAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
-                            ),
-                            yaxis=go.layout.YAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
+                        if len(selected_options) > 0:
+                            fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c, title = "{}".format(option_indicators_name))
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')
+                                ),
+                                legend=dict(
+                                    font=dict(size=15, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=600, margin={"r": 0, "t": 50, "l": 0, "b": 0}
                             )
-                        )
-                        for trace in fig.data:
-                            trace.line.width = 2
-                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                            for trace in fig.data:
+                                trace.line.width = 2
+                            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
             with col2:
-                # Get the last year from the "Year" column
-                last_year = df['Year'].max()
-                # Create a new DataFrame with only the rows from the last year
-                df_last_year = df[df['Year'] == last_year]
-
-                fig = px.choropleth(df_last_year, locations='Country', color=hue,color_discrete_map=c, locationmode='country names')
-                # Remove the background color
-                fig.update_layout(geo=dict(visible=False,bgcolor='rgba(0,0,0,0)',lakecolor='rgba(0,0,0,0)',landcolor='white',
-                                              subunitcolor='rgba(0,0,0,0)',showcountries=True))
-                fig.update_traces(marker_line_width=1)
-                fig.update_geos(fitbounds="locations")
-                # Remove the legend & Set the plot size
-                fig.update_layout(showlegend=False, width=200, height=200, margin={"r":0,"t":0,"l":0,"b":0})
-                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
                 grouped_df = df.groupby([hue, 'Year']).mean().reset_index()
                 year_max = grouped_df['Year'].max()
@@ -375,17 +371,35 @@ if st.session_state.count >= 1:
                 year_min_min_val = round(grouped_df[grouped_df['Year'] == year_min]['Value'].min())
                 year_min_max_val = round(grouped_df[grouped_df['Year'] == year_min]['Value'].max())
 
-                st.write("<p style='text-align: right;'>"
-                       "{}: <br> ".format(year_min),
-                       "Min value {}<br>".format(year_min_min_val),
-                       "Max value {}<br><br>".format(year_min_max_val),
-                       "{}: <br> ".format(year_max),
-                       "Min value {}<br>".format(year_max_min_val),
-                       "Max value {}".format(year_max_max_val),
-                       unsafe_allow_html=True)
+
+                # Get the last year from the "Year" column
+                last_year = df['Year'].max()
+                # Create a new DataFrame with only the rows from the last year
+                df_last_year = df[df['Year'] == last_year]
+
+                if (hue == "Country"):
+                    if(len(selected_options) < len(df_last_year['Country'])):
+                        df_last_year = df_last_year[df_last_year["Country"].isin(selected_options)]
+                if (hue != "Country") or ((hue == "Country") and len(selected_options) > 0):
+                    st.write("<p style='text-align: right;'>"
+                             "{}: <br> ".format(year_min),
+                             "Min value {}<br>".format(year_min_min_val),
+                             "Max value {}<br><br>".format(year_min_max_val),
+                             "{}: <br> ".format(year_max),
+                             "Min value {}<br>".format(year_max_min_val),
+                             "Max value {}".format(year_max_max_val),
+                             unsafe_allow_html=True)
 
 
-
+                    fig = px.choropleth(df_last_year, locations='Country', color=hue,color_discrete_map=c, locationmode='country names')
+                    # Remove the background color
+                    fig.update_layout(geo=dict(visible=False,bgcolor='rgba(0,0,0,0)',lakecolor='rgba(0,0,0,0)',landcolor='white',
+                                                  subunitcolor='rgba(0,0,0,0)',showcountries=True,projection_type='natural earth',fitbounds="locations"))
+                    fig.update_traces(marker_line_width=1)
+                    #fig.update_geos()
+                    # Remove the legend & Set the plot size
+                    fig.update_layout(showlegend=False, width= 100, height=250, margin={"r":0,"t":0,"l":0,"b":0})
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
 
     # ---- SIDEBAR ----
