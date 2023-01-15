@@ -79,7 +79,7 @@ if st.session_state.count == 0:
     with arrival_message.container():
 
         st.title("WHO API explorer")
-
+        st.subheader("Indicators exploration tool")
         st.write("<p style='text-align: justify;'>"
                    "This app imports data from the World Health Organization (WHO) API and displays it in a Streamlit web app."
                    "<br/>It allows the user to select a disease (Tuberculosis, Malaria, or HIV) and then displays a list of indicators"
