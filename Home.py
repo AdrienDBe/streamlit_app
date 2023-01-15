@@ -54,17 +54,13 @@ with work_container:
     """, unsafe_allow_html=True)
 
     with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
-        st.write("Mission description to be detailed in upcoming update")
-        def load_lottieurl(url: str):
-            r = requests.get(url)
-            if r.status_code != 200:
-              return None
-            return r.json()
-        lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
-        lottie_json = load_lottieurl(lottie_url)
-        st_lottie(lottie_json, height=500, key="loading_gif2")
-  
-    with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
+        st.markdown('''
+        **BUSINESS PROCESS REPORTING** `Operational efficiency within the Grant Management Division`
+        \n- Business Process Monitoring & Analytics: Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
+        \n- Business Process Management: Ensure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
+        \n- Business Process Enhancement: Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
+        ''')
+   with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
         **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
         \n- Created program control and reports to MoHs & global funders
