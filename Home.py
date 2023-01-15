@@ -25,7 +25,7 @@ with st.container():
     st.title("Adrien Debruge")
     col1, col2 = st.columns((2,1))
     with col1:
-        st.header("Welcome:wave:")
+        st.subheader("Welcome:wave:")
         st.markdown("<p style='text-align: justify;'>"
                     "I am enthusiastic about the intersection of International Development and Technology,"
                     " and constantly searching for new and innovative ways to present and display strategic insights."
