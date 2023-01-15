@@ -58,8 +58,10 @@ with work_container:
         **INFORMATION & PROCESS MANAGEMENT** `Operational efficiency within the Grant Management Division`
         \n- Business Process Monitoring & Analytics
         \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
-        \n- Business Process Management<brEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
-        \n- Business Process Enhancement<brDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
+        \n- Business Process Management
+        \nEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
+        \n- Business Process Enhancement
+        \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
         ''')
     with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
