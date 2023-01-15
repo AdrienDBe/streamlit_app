@@ -26,7 +26,7 @@ with st.container():
     col1, col2 = st.columns((2,1))
     with col1:
         st.header("Welcome:wave:")
-        st.markdown("<p style='text-align: justify;'>I am passionate about International Development, "
+        st.markdown("<p style='text-align: justify;'>I am passionated about International Development, "
                     "Technology and looking for ways to frame and visualize strategic insights.<br>"
                     "<br> This web app is built on Streamlit and you will find information on my profile along"
                     " with a portfolio of projects. Please note that I am no expert, just a casual coder and analytics"
