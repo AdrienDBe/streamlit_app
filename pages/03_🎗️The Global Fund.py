@@ -58,6 +58,17 @@ div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
 </style>
 """, unsafe_allow_html=True)
 
+# resize expanders
+st.markdown("""
+<style>
+.streamlit-expanderHeader {
+    font-size: medium;
+    color:#ad8585;   
+    }
+.st-bd {border-style: none;}
+</style>
+""", unsafe_allow_html=True)
+
 def load_lottieurl(url: str):
     r = requests.get(url)
     if r.status_code != 200:
