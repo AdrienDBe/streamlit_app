@@ -91,12 +91,13 @@ if st.session_state.count == 0:
         url = "https://ghoapi.azureedge.net/api/Indicator"
         response = requests.get(url)
         if response.status_code != 200:
-            st.markdown("<p style='text-align: justify;'>"
-                        "There seems to be an error (status code: {}) with the <a href='https://ghoapi.azureedge.net/api/Indicator'> WHO API </a> "
-                        "<br>This app will be accessible once the API is back online ".format(response.status_code)
-                        ,unsafe_allow_html=True)
+            st.warning(
+                "There seems to be an error with the WHO API (status code: {})".format(response.status_code))
         else:
-            st.caption("Connection to WHO API established successfully!")
+            st.success("Connection to the WHO API established successfully")
+        if response.status_code != 200 or response2.status_code != 200:
+            st.info("This app will be accessible once the connection is back")
+
 
         with st.expander("Read more about the World Health Organization, what is an API and how to access WHO API"):
 
