@@ -96,7 +96,7 @@ if st.session_state.count == 0:
 
         url2 = "https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods"
         response2 = requests.get(url2)
-        if response2.status_code == 200:
+        if response2.status_code != 200:
             st.warning( "There seems to be an error with the Global Fund API (status code: {})".format(response2.status_code))
             st.markdown("<p style='text-align: justify;'>"
                         "The API is currently unavailable (see <a href='https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods'> this link </a> )".format(response1.status_code)
