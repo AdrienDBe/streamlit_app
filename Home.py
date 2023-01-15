@@ -54,12 +54,13 @@ with work_container:
     """, unsafe_allow_html=True)
 
     with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
-        st.markdown(
-        "**INFORMATION & PROCESS MANAGEMENT** `Operational efficiency within the Grant Management Division`"
-        "n- Business Process Monitoring & Analytics <br/> Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate"
-        "n- Business Process Management<brEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments"
-        "n- Business Process Enhancement<brDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting"
-         ,unsafe_allow_html=True)
+        st.markdown('''
+        **INFORMATION & PROCESS MANAGEMENT** `Operational efficiency within the Grant Management Division`
+        n- Business Process Monitoring & Analytics
+        Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
+        n- Business Process Management<brEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
+        n- Business Process Enhancement<brDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
+        ''')
     with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
         **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
