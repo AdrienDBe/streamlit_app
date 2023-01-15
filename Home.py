@@ -29,7 +29,7 @@ with st.container():
         st.markdown("<p style='text-align: justify;'>"
                     "I am enthusiastic about the intersection of International Development and Technology,"
                     " and constantly searching for new and innovative ways to present and display strategic insights."
-                    "<br><br>My web application, built using Streamlit, contains my profile and a collection of projects."
+                    "<br><br>My web application, built using Streamlit, contains my profile and a collection of personal projects using Python for data visualization and machine learning."
                     "<br>Although I am not an expert, I am an experienced coder and data analyst, and I welcome any feedback."
                     "<br><br>If you have any questions or comments, please don't hesitate to contact me through the form on this page. I hope you enjoy my work."
                     ,
