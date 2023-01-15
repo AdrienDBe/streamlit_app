@@ -15,7 +15,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(page_title="Adrien Debruge", page_icon="📄", layout="wide")
+st.set_page_config(page_title="Adrien Debruge", layout="wide")
 
 # Custom function for printing text
 def txt3(a, b):
