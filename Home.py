@@ -2,9 +2,18 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
 
-# emojis list: https://www.webfx.com/tools/emoji-cheat-sheet/
 
-st.set_page_config(page_title="Adrien Debruge", page_icon=":computer:", layout="wide")
+st.markdown("""
+    <head>
+        <title>Adrien Debruge</title>
+        <link rel='icon' type='image/png' href='path_to_icon.png'>
+    </head>
+    <style>
+        body {
+            width: 100%;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Custom function for printing text
 def txt3(a, b):
