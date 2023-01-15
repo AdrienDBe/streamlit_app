@@ -26,12 +26,13 @@ with st.container():
     col1, col2 = st.columns((2,1))
     with col1:
         st.header("Welcome:wave:")
-        st.markdown("<p style='text-align: justify;'>I am passionated about International Development, "
-                    "Technology and looking for ways to frame and visualize strategic insights.<br>"
-                    "<br> This web app is built on Streamlit and you will find information on my profile along"
-                    " with a portfolio of projects. Please note that I am no expert, just a casual coder and analytics"
-                    " practitioner so any feedback is welcome!<br>"
-                    "<br>Feel free to reach out via the form at the bottom of this page and I hope you enjoy my work.",
+        st.markdown("<p style='text-align: justify;'>"
+                    "I am enthusiastic about the intersection of International Development and Technology,"
+                    "and am constantly searching for new and innovative ways to present and display strategic insights."
+                    "<br>My web application, built using Streamlit, contains my profile and a collection of projects."
+                    "Although I am not an expert, I am an experienced coder and data analyst, and I welcome any feedback."
+                    "<br>If you have any questions or comments, please don't hesitate to contact me through the form on this page. I hope you enjoy my work."
+                    ,
                     unsafe_allow_html=True)
     with col2:
         # picture
