@@ -97,7 +97,7 @@ if st.session_state.count == 0:
             col2.warning(
                 "There seems to be an error with the WHO API (status code: {})".format(response.status_code))
         else:
-            col2.success("Connection to the WHO API established successfully")
+            col2.success("Connection established successfully")
         if response.status_code != 200:
             col2.info("This app will be accessible once the connection is back")
 
