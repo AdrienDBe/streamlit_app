@@ -384,7 +384,10 @@ if st.session_state.count >= 1:
             # st.plotly_chart(fig, config={'displayModeBar': False})
 
         with col2:
-
+            # Get the last year from the "Year" column
+            last_year = df['Year'].max()
+            # Create a new DataFrame with only the rows from the last year
+            df_last_year = df[df['Year'] == last_year]
             if (hue == "Country"):
                 if(len(selected_options) < len(df_last_year['Country'])):
                     df_last_year = df_last_year[df_last_year["Country"].isin(selected_options)]
