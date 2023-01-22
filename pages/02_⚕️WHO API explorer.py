@@ -212,8 +212,31 @@ if st.session_state.count >= 1:
     # TABS ------------------------------------
     tab1, tab2 = st.tabs(["Explore a single indicator", "Explore multiple indicators"])
 
-    # ---- SIDEBAR ----
+    # Import API data ------------------------------------
+    @st.cache(suppress_st_warning=True, show_spinner=False)
+    def import_api_WHO_indicators(url):
+        service_url0 = url
+        response0 = requests.get(service_url0)
+        if (response0.ok):
+            # get the full data from the response
+            data0j = response0.json()
+        data0a = pd.DataFrame(data0j["value"])
+        return data0a
 
+
+    @st.cache(suppress_st_warning=True, show_spinner=False)
+    def import_api_WHO_indicator_name(url):
+        service_url0 = url
+        response0 = requests.get(service_url0)
+        # make sure we got a valid response
+        if (response0.ok):
+            # get the full data from the response
+            data0j = response0.json()
+        else:
+            st.caption("API data cannot be loaded")
+        return data0j
+
+    # ---- SIDEBAR ----
     with st.sidebar:
         ## List of WHO indicators
         who_indic_container = st.container()
@@ -221,118 +244,63 @@ if st.session_state.count >= 1:
             st.subheader("API explorer")
             url = "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'Turberculosis')"
             response = requests.get(url)
-            if response.status_code == 200:
-                st.caption("Connection to WHO API established successfully!")
-            else:
+            if response.status_code != 200:
                 st.write("Error connecting to API. Status code:", response.status_code)
-
-            disease = st.selectbox(
-                'Display the list of indicators for: ',
-                options=['Tuberculosis', 'Malaria', 'HIV'])
-
-            # Import API data
-            @st.cache(suppress_st_warning=True, show_spinner=False)
-            def import_api_WHO_indicators(url):
-                service_url0 = url
-                response0 = requests.get(service_url0)
-                if (response0.ok):
-                    # get the full data from the response
-                    data0j = response0.json()
-                data0a = pd.DataFrame(data0j["value"])
-                return data0a
-
-            data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(disease))
-            option_indicators_name = st.selectbox('Display records for: ',data0a.IndicatorName.unique())
-            selection_indicator_code = data0a[data0a['IndicatorName']==option_indicators_name][['IndicatorCode']].iloc[0][0]
-
-            @st.cache(suppress_st_warning=True, show_spinner=False)
-            def import_api_WHO_indicator_name(url):
-                service_url0 = url
-                response0 = requests.get(service_url0)
-                # make sure we got a valid response
-                if (response0.ok):
-                    # get the full data from the response
-                    data0j = response0.json()
+            else:
+                st.caption("Connection to WHO API established successfully!")
+                data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+                textbox_keyword = st.text_input('Keyword search', 'HIV', key="indicator2keyword")
+                if textbox_keyword == "":
+                    st.selectbox("Select metric", data0a.IndicatorName.unique().tolist())
                 else:
-                    st.caption("API data cannot be loaded")
-                return data0j
+                    data0a = import_api_WHO_indicators(
+                        "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                            textbox_keyword))
+                    if data0a.empty == True:
+                        st.warning("No indicator found, try another keyword (e.g. 'HIV')")
+                    else:
+                        selected_indicator = st.selectbox("Select metric", data0a.IndicatorName.unique().tolist())
 
-            data0j = import_api_WHO_indicator_name("https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
-            data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
-            data0a = pd.DataFrame(data0j["value"])
-            #merge with country info
-            df = pd.merge(data0a,
-                          country_list,
-                          on='SpatialDim',
-                          how='inner')
+                        selection_indicator_code = data0a[data0a['IndicatorName']==selected_indicator][['IndicatorCode']].iloc[0][0]
 
-            df = df[(df['SpatialDimType'] == 'COUNTRY') | (df['SpatialDimType'] == 'COUNTRY')][['Country','SpatialDim', 'TimeDim', 'NumericValue','ParentTitle','Region','Income level']]
-            df.rename(columns={"TimeDim":"Year","NumericValue":"Value"}, inplace = True)
+                        data0j = import_api_WHO_indicator_name("https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+                        data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
+                        data0a = pd.DataFrame(data0j["value"])
+                        if data0a['Dim1'].str.contains('BTSX').any() == True:
+                            data0a = data0a[data0a['Dim1']=="BTSX"]
+                        #merge with country info
+                        df = pd.merge(data0a,
+                                      country_list,
+                                      on='SpatialDim',
+                                      how='inner')
+
+                        df = df[(df['SpatialDimType'] == 'COUNTRY') | (df['SpatialDimType'] == 'COUNTRY')][['Country','SpatialDim', 'TimeDim', 'NumericValue','ParentTitle','Region','Income level']]
+                        df.rename(columns={"TimeDim":"Year","NumericValue":"Value"}, inplace = True)
+
 
 
     with tab1:
-        st.subheader(option_indicators_name)
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
-            # map hue category to a color
-            @st.cache(show_spinner=False)
-            def generate_color_map():
-                return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
-
-            c = generate_color_map()
-
-            @st.cache(show_spinner=False)
-            def generate_grouped_data(hue):
-                return df.groupby(['Year', hue], as_index=False).mean()
-            grouped_data = generate_grouped_data(hue)
-
-            def generate_plot(data, hue):
-                fig = px.line(data, x="Year", y="Value", color=hue, color_discrete_map=c)
-                fig.update_layout(
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    title=go.layout.Title(
-                        text=fig.layout.title.text,
-                        xref='paper',
-                        x=0.5,
-                        font=dict(size=20, color='white')
-                    ),
-                    xaxis=go.layout.XAxis(
-                        tickfont=dict(size=15),
-                        titlefont=dict(size=15),
-                        showgrid=True,
-                        gridcolor='#252323',
-                        gridwidth=1
-                    ),
-                    yaxis=go.layout.YAxis(
-                        tickfont=dict(size=15),
-                        titlefont=dict(size=15),
-                        showgrid=True,
-                        gridcolor='#252323',
-                        gridwidth=1
-                    ),
-                    height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0},
-                )
-                for trace in fig.data:
-                    trace.line.width = 2
-                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-            if hue == 'Region':
-                generate_plot(grouped_data,'Region')
-            if hue == 'Income level':
-                generate_plot(grouped_data,'Income level')
-            if hue == 'Country':
-                # checkbox all countries
-                all = col1.checkbox("All countries", value=True)
-                if all:
-                    selected_options = df.Country.unique()
-                    generate_plot(grouped_data,'Country')
+        try:
+            if df.empty == True:
+                st.info("No data found, please enter a new keyword or select another metric")
+            else:
+                if df["Year"].min() == df["Year"].max():
+                    st.subheader("{} ({})".format(selected_indicator,df["Year"].min()))
                 else:
-                    container = col1.container()
-                    selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
-                    df_country = df[df["Country"].isin(selected_options)]
-                    if len(selected_options) > 0:
-                        fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c)
+                    st.subheader("{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                col1, col2 = st.columns([1, 1])
+                with col1:
+                    hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
+                    # map hue category to a color
+                    @st.cache(show_spinner=False)
+                    def generate_color_map():
+                        return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
+                    c = generate_color_map()
+
+                    grouped_data = df.groupby(['Year', hue], as_index=False).mean()
+
+                    def generate_stripplot(data, hue):
+                        fig = px.strip(data, y="Value", color = hue, hover_data = data[['Country','Year','Value']])
                         fig.update_layout(
                             paper_bgcolor='rgba(0,0,0,0)',
                             plot_bgcolor='rgba(0,0,0,0)',
@@ -342,8 +310,27 @@ if st.session_state.count >= 1:
                                 x=0.5,
                                 font=dict(size=20, color='white')
                             ),
-                            legend=dict(
-                                font=dict(size=15, color='white')
+                            yaxis=go.layout.YAxis(
+                                tickfont=dict(size=15),
+                                titlefont=dict(size=15),
+                                showgrid=True,
+                                gridcolor='#252323',
+                                gridwidth=1
+                            ),
+                            height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0},
+                        )
+                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+                    def generate_plot(data, hue):
+                        fig = px.line(data, x="Year", y="Value", color=hue, color_discrete_map=c)
+                        fig.update_layout(
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            title=go.layout.Title(
+                                text=fig.layout.title.text,
+                                xref='paper',
+                                x=0.5,
+                                font=dict(size=20, color='white')
                             ),
                             xaxis=go.layout.XAxis(
                                 tickfont=dict(size=15),
@@ -359,58 +346,345 @@ if st.session_state.count >= 1:
                                 gridcolor='#252323',
                                 gridwidth=1
                             ),
-                            height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                            height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0},
                         )
                         for trace in fig.data:
                             trace.line.width = 2
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
-            # # Get the last year from the "Year" column
-            # last_year = df['Year'].max()
-            # # Create a new DataFrame with only the rows from the last year
-            # df_last_year = df[df['Year'] == last_year]
-            # @st.cache()
-            # def generate_chloropeth_dimension(df_last_year, hue, c):
-            #     fig = px.choropleth(df_last_year, locations='Country', color=hue, color_discrete_map=c,
-            #                         locationmode='country names')
-            #     fig.update_layout(
-            #         geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
-            #                  subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
-            #                  fitbounds="locations"),
-            #         showlegend=False, autosize=False, width = 100, margin={"r": 10, "t": 0, "l": 0, "b": 0})
-            #     fig.update_traces(marker_line_width=1)
-            #     return fig
-            # fig = generate_chloropeth_dimension(df_last_year, hue, c)
-            # st.plotly_chart(fig, config={'displayModeBar': False})
+                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Region':
+                        generate_plot(grouped_data,'Region')
+                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Region':
+                        generate_stripplot(df,'Region')
 
-        with col2:
-            # Get the last year from the "Year" column
-            last_year = df['Year'].max()
-            # Create a new DataFrame with only the rows from the last year
-            df_last_year = df[df['Year'] == last_year]
-            if (hue == "Country"):
-                if(len(selected_options) < len(df_last_year['Country'])):
-                    df_last_year = df_last_year[df_last_year["Country"].isin(selected_options)]
+                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Income level':
+                        generate_plot(grouped_data,'Income level')
+                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Income level':
+                        generate_stripplot(df, 'Income level')
 
-            year_selected = st.slider('Select year',
-                                int(df['Year'].min()), int(df['Year'].max()), int(df['Year'].max()))
-            df_chloropet = df[df['Year'] == year_selected]
-            #@st.cache()
-            def generate_chloropeth_dimension2(df_chloropet):
-                fig = px.choropleth(df_chloropet, locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis')
-                fig.update_layout(
-                    geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
-                             subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
-                             fitbounds="locations"),
-                    autosize=False,
-                    height=400,
-                    margin={"r": 0, "t": 0, "l": 0, "b": 0})
-                fig.update_traces(marker_line_width=1)
-                return fig
-            fig = generate_chloropeth_dimension2(df_chloropet)
-            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-	
-	
+                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Country':
+                        # checkbox all countries
+                        all = col1.checkbox("All countries", value=True)
+                        if all:
+                            selected_options = df.Country.unique()
+                            generate_plot(grouped_data,'Country')
+                        else:
+                            container = col1.container()
+                            selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
+                            df_country = df[df["Country"].isin(selected_options)]
+                            if len(selected_options) > 0:
+                                fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c)
+                                fig.update_layout(
+                                    paper_bgcolor='rgba(0,0,0,0)',
+                                    plot_bgcolor='rgba(0,0,0,0)',
+                                    title=go.layout.Title(
+                                        text=fig.layout.title.text,
+                                        xref='paper',
+                                        x=0.5,
+                                        font=dict(size=20, color='white')
+                                    ),
+                                    legend=dict(
+                                        font=dict(size=15, color='white')
+                                    ),
+                                    xaxis=go.layout.XAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1
+                                    ),
+                                    yaxis=go.layout.YAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1
+                                    ),
+                                    height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                                )
+                                for trace in fig.data:
+                                    trace.line.width = 2
+                                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Country':
+                        # checkbox all countries
+                        all = col1.checkbox("All countries", value=True)
+                        if all:
+                            selected_options = df.Country.unique()
+                            generate_stripplot(df,"Country")
+                        else:
+                            container = col1.container()
+                            selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
+                            df_country = df[df["Country"].isin(selected_options)]
+                            generate_stripplot(df_country,"Country")
+
+
+
+                    # # Get the last year from the "Year" column
+                    # last_year = df['Year'].max()
+                    # # Create a new DataFrame with only the rows from the last year
+                    # df_last_year = df[df['Year'] == last_year]
+                    # @st.cache()
+                    # def generate_chloropeth_dimension(df_last_year, hue, c):
+                    #     fig = px.choropleth(df_last_year, locations='Country', color=hue, color_discrete_map=c,
+                    #                         locationmode='country names')
+                    #     fig.update_layout(
+                    #         geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
+                    #                  subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
+                    #                  fitbounds="locations"),
+                    #         showlegend=False, autosize=False, width = 100, margin={"r": 10, "t": 0, "l": 0, "b": 0})
+                    #     fig.update_traces(marker_line_width=1)
+                    #     return fig
+                    # fig = generate_chloropeth_dimension(df_last_year, hue, c)
+                    # st.plotly_chart(fig, config={'displayModeBar': False})
+
+                with col2:
+                    # Get the last year from the "Year" column
+                    last_year = df['Year'].max()
+                    # Create a new DataFrame with only the rows from the last year
+                    df_last_year = df[df['Year'] == last_year]
+                    if (hue == "Country"):
+                        if(len(selected_options) < len(df_last_year['Country'])):
+                            df_last_year = df_last_year[df_last_year["Country"].isin(selected_options)]
+                    if df['Year'].min() != df['Year'].max():
+                        year_selected = st.slider('Select year',
+                                            int(df['Year'].min()), int(df['Year'].max()), int(df['Year'].max()))
+                    else:
+                        year_selected = df['Year'].max()
+                    df_chloropet = df[df['Year'] == year_selected]
+                    #@st.cache()
+                    def generate_chloropeth_dimension2(df_chloropet):
+                        fig = px.choropleth(df_chloropet, locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis')
+                        fig.update_layout(
+                            geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
+                                     subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
+                                     fitbounds="locations"),
+                            autosize=False,
+                            height=400,
+                            margin={"r": 0, "t": 0, "l": 0, "b": 0})
+                        fig.update_traces(marker_line_width=1)
+                        return fig
+                    fig = generate_chloropeth_dimension2(df_chloropet)
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        except NameError:
+            st.info("Please enter a new keyword")
+    with tab2:
+        try:
+            if df.empty == True:
+                st.info("No data found, please enter a new keyword or select another metric")
+
+            if df.empty != True:
+                col1, col2, col3 = st.columns([4, 2, 1], gap = "small")
+                metric = col1.radio("Compare the indicator selected with:",('Population (World Bank API)', '2nd WHO indicator', '3rd or more WHO indicator(s)'), horizontal=True)
+
+                if metric == 'Population (World Bank API)':
+                    with st.spinner("Loading data..."):
+                        @st.cache(show_spinner=(False),allow_output_mutation=True)
+                        def load_WB_pop_data(datemax):
+                            df_pop = wb.data.DataFrame(['SP.POP.TOTL'], time=range(2000, datemax), skipBlanks=True, columns='series').reset_index()
+                            df_pop.rename(columns={"economy": "SpatialDim","time": "Year", "SP.POP.TOTL": "Population"}, inplace=True)
+                            df_pop["Year"] = df_pop["Year"].str.replace('YR', '')
+                            df_pop["Year"] = df_pop['Year'].astype('int')
+                            return df_pop
+                        df_pop = load_WB_pop_data(2030)
+                        df_withpop = pd.merge(df,
+                                      df_pop,
+                                      on=['SpatialDim', 'Year'],
+                                      how='inner')
+
+                        hue = col2.radio("Display data per:", ('Region', 'Income level', 'Country',"Cluster with K-Means"), horizontal=True,key = "radio_tab2")
+
+                        if grouped_data['Year'].max() == grouped_data['Year'].min():
+                            year_selected2 = df_withpop['Year'].max()
+                        else:
+                            year_selected2 = col3.slider('Select year:',
+                                                         int(df_withpop['Year'].min()), int(df_withpop['Year'].max()),
+                                                         int(df_withpop['Year'].max()), key="yearslider_pop")
+
+                        st.subheader("{} ({})".format(selected_indicator, year_selected2))
+
+                        if hue == "Cluster with K-Means":
+                            from sklearn.cluster import KMeans
+                            import plotly.graph_objects as go
+                            from sklearn.preprocessing import StandardScaler
+
+                            # Select the columns 'Population' and 'Value' as the X values
+                            X = df_withpop[['Population', 'Value']]
+
+                            # Scale the data using StandardScaler
+                            scaler = StandardScaler()
+                            scaler.fit(X)
+                            X_scaled = scaler.transform(X)
+
+                            # Create an empty list to store the within-cluster sum of squares (WCSS) for each number of clusters
+                            wcss = []
+
+                            # Loop through a range of number of clusters
+                            for i in range(1, 11):
+                                kmeans = KMeans(n_clusters=i)
+                                kmeans.fit(X_scaled)
+                                wcss.append(kmeans.inertia_)
+
+                            # Create a Plotly line plot of the WCSS vs the number of clusters
+                            fig = go.Figure()
+                            fig.add_trace(go.Scatter(x=list(range(1, 11)),  y=wcss, mode='lines+markers', marker=dict(size=10,
+                                                                                                               color='red',
+                                                                                                               symbol='cross')))
+                            fig.update_layout(title='The Elbow Method',
+                                              xaxis_title='Number of clusters',
+                                              yaxis_title='Within-cluster Sum of Squares (WCSS)')
+                            col1, col2 = st.columns([1,2], gap = "small")
+                            col1.plotly_chart(fig, use_container_width=True)
+
+                            # Import necessary libraries
+                            from sklearn.cluster import KMeans
+                            from sklearn.preprocessing import StandardScaler
+                            # Select the columns 'Population' and 'Value' as the X values
+                            X = df_withpop[['Population', 'Value']]
+                            # Create an instance of StandardScaler
+                            scaler = StandardScaler()
+                            # Fit the scaler to the X values
+                            scaler.fit(X)
+                            # Scale the X values
+                            X_scaled = scaler.transform(X)
+                            # Create an instance of KMeans with the number of clusters desired
+                            kmeans = KMeans(n_clusters=5)
+                            # Fit the model to the scaled data
+                            kmeans.fit(X_scaled)
+                            # Get the cluster labels for each row
+                            labels = kmeans.labels_
+                            # Add the labels to the dataframe as a new column
+                            df_withpop_Kmeans = df_withpop
+                            df_withpop_Kmeans['Cluster with K-Means'] = labels.astype(str)
+                            df_withpop_Kmeans = df_withpop_Kmeans[df_withpop_Kmeans['Year'] == year_selected2]
+                            fig = px.scatter(df_withpop_Kmeans, x="Population", y="Value", hover_data=(df_withpop_Kmeans), log_x=True,
+                                             color=hue, color_discrete_map=c)
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')
+                                ),
+                                legend=dict(
+                                    font=dict(size=15, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1,
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                            )
+                            fig.update_xaxes(type="log")
+                            col2.plotly_chart(fig, use_container_width=True)
+
+                        if hue != "CLuster with K-Means":
+                            # map hue category to a color
+                            @st.cache(show_spinner=False)
+                            def generate_color_map():
+                                return dict(zip(df_withpop[hue].unique(), px.colors.qualitative.Plotly))
+                            c = generate_color_map()
+                            @st.cache(show_spinner=False)
+                            def generate_grouped_data(hue):
+                                return df_withpop.groupby(['Year', hue], as_index=False).mean()
+                            grouped_data = generate_grouped_data(hue)
+
+                            df_withpop = df_withpop[df_withpop['Year'] == year_selected2]
+
+                            def generate_scatter(data,hue):
+                                fig = px.scatter(data, x="Population", y="Value",hover_data=(df_withpop),log_x=True,color=hue, color_discrete_map=c)
+                                fig.update_layout(
+                                    paper_bgcolor='rgba(0,0,0,0)',
+                                    plot_bgcolor='rgba(0,0,0,0)',
+                                    title=go.layout.Title(
+                                        text=fig.layout.title.text,
+                                        xref='paper',
+                                        x=0.5,
+                                        font=dict(size=20, color='white')
+                                    ),
+                                    legend=dict(
+                                        font=dict(size=15, color='white')
+                                    ),
+                                    xaxis=go.layout.XAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1,
+                                    ),
+                                    yaxis=go.layout.YAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1
+                                    ),
+                                    height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                                )
+                                fig.update_xaxes(type="log")
+                                st.plotly_chart(fig,use_container_width=True)
+
+                            generate_scatter(df_withpop, hue)
+
+
+                if metric == '2nd WHO indicator':
+                    with st.spinner("Loading data..."):
+                        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+                        col1, col2 = st.columns([1, 5])
+                        with col1:
+                            textbox_keyword = st.text_input('Keyword search', 'HIV',key="indicator2keyword")
+                            if textbox_keyword == "":
+                                col2.selectbox("Select 2nd metric",data0a.IndicatorName.unique().tolist())
+                            else:
+                                data0a = import_api_WHO_indicators(
+                                    "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                                        textbox_keyword))
+                                if data0a.empty == True:
+                                    col2.warning("No indicator found, try another keyword (e.g. 'HIV')")
+                                else:
+                                    metric2 = col2.selectbox("Select 2nd metric", data0a.IndicatorName.unique().tolist())
+
+                if metric == '3rd or more WHO indicator(s)':
+                    if metric2 !="":
+                        metric3_1 = metric2
+                        col1, col2 = st.columns([1, 5])
+                        with col1:
+                            textbox_keyword = st.text_input('Keyword search', '')
+                            if textbox_keyword == "":
+                                col2.selectbox("Select another metric",data0a.IndicatorName.unique().tolist())
+                            else:
+                                data0a = import_api_WHO_indicators(
+                                    "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                                        textbox_keyword))
+                                metric2 = col2.selectbox("Select 2nd metric", data0a.IndicatorName.unique().tolist())
+
+
+
+
+                if metric == '3rd or more WHO indicator(s)':
+                    with st.spinner("Loading data..."):
+                        st.caption("let's go")
+
+        except NameError:
+            st.info("Please enter a new keyword")
+
+
+
+
+
+
 
     # ---- SIDEBAR ----
     def sidebar():
@@ -444,6 +718,7 @@ if st.session_state.count >= 1:
                        "<a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'>WHO API </a></p>",
                        unsafe_allow_html=True)
     sidebar()
+
 
 
 
