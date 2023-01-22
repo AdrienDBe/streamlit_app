@@ -474,7 +474,7 @@ if st.session_state.count >= 1:
                 st.info("No data found, please enter a new keyword or select another metric")
 
             if df.empty != True:
-                col1, col2, col3 = st.columns([4, 2, 1], gap = "small")
+                col1, col2, col3 = st.columns([3, 3, 1], gap = "small")
                 metric = col1.radio("Compare the indicator selected with:",('Population (World Bank API)', '2nd WHO indicator', '3rd or more WHO indicator(s)'), horizontal=True)
 
                 if metric == 'Population (World Bank API)':
