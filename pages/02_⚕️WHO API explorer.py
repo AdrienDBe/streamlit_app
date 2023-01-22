@@ -494,22 +494,25 @@ if st.session_state.count >= 1:
 
                         hue = col2.radio("Display data per:", ('Region', 'Income level', 'Country',"Cluster with K-Means"), horizontal=True,key = "radio_tab2")
 
-                        if grouped_data['Year'].max() == grouped_data['Year'].min():
+                        if df_withpop['Year'].max() == df_withpop['Year'].min():
                             year_selected2 = df_withpop['Year'].max()
                         else:
                             year_selected2 = col3.slider('Select year:',
                                                          int(df_withpop['Year'].min()), int(df_withpop['Year'].max()),
                                                          int(df_withpop['Year'].max()), key="yearslider_pop")
+                            
+                            df_withpop = df_withpop[df_withpop['Year']==year_selected2]
 
                         st.subheader("{} ({})".format(selected_indicator, year_selected2))
 
                         if hue == "Cluster with K-Means":
+
                             from sklearn.cluster import KMeans
                             import plotly.graph_objects as go
                             from sklearn.preprocessing import StandardScaler
 
                             # Select the columns 'Population' and 'Value' as the X values
-                            X = df_withpop[['Population', 'Value']]
+                            X = df_withpop[['Population', 'Value']].dropna()
 
                             # Scale the data using StandardScaler
                             scaler = StandardScaler()
@@ -540,7 +543,7 @@ if st.session_state.count >= 1:
                             from sklearn.cluster import KMeans
                             from sklearn.preprocessing import StandardScaler
                             # Select the columns 'Population' and 'Value' as the X values
-                            X = df_withpop[['Population', 'Value']]
+                            X = df_withpop[['Population', 'Value']].dropna()
                             # Create an instance of StandardScaler
                             scaler = StandardScaler()
                             # Fit the scaler to the X values
@@ -554,11 +557,12 @@ if st.session_state.count >= 1:
                             # Get the cluster labels for each row
                             labels = kmeans.labels_
                             # Add the labels to the dataframe as a new column
-                            df_withpop_Kmeans = df_withpop
-                            df_withpop_Kmeans['Cluster with K-Means'] = labels.astype(str)
-                            df_withpop_Kmeans = df_withpop_Kmeans[df_withpop_Kmeans['Year'] == year_selected2]
+                            df_withpop_Kmeans = df_withpop.dropna()
+                            df_withpop_Kmeans['Cluster'] = labels
+                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'] +1
+                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'].astype(str)
                             fig = px.scatter(df_withpop_Kmeans, x="Population", y="Value", hover_data=(df_withpop_Kmeans), log_x=True,
-                                             color=hue, color_discrete_map=c)
+                                             color="Cluster", color_discrete_map=c)
                             fig.update_layout(
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
@@ -590,7 +594,7 @@ if st.session_state.count >= 1:
                             fig.update_xaxes(type="log")
                             col2.plotly_chart(fig, use_container_width=True)
 
-                        if hue != "CLuster with K-Means":
+                        if hue != "Cluster with K-Means":
                             # map hue category to a color
                             @st.cache(show_spinner=False)
                             def generate_color_map():
