@@ -249,7 +249,7 @@ if st.session_state.count >= 1:
             else:
                 st.caption("Connection to WHO API established successfully!")
                 data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
-                textbox_keyword = st.text_input('Keyword search', 'HIV', key="indicator2keyword")
+                textbox_keyword = st.text_input('Keyword search', 'HIV', key="indicator2keyword2")
                 if textbox_keyword == "":
                     st.selectbox("Select metric", data0a.IndicatorName.unique().tolist())
                 else:
@@ -474,7 +474,7 @@ if st.session_state.count >= 1:
                 st.info("No data found, please enter a new keyword or select another metric")
 
             if df.empty != True:
-                col1, col2, col3 = st.columns([3, 3, 1], gap = "small")
+                col1, col2, col3 = st.columns([4, 2, 1], gap = "small")
                 metric = col1.radio("Compare the indicator selected with:",('Population (World Bank API)', '2nd WHO indicator', '3rd or more WHO indicator(s)'), horizontal=True)
 
                 if metric == 'Population (World Bank API)':
@@ -500,7 +500,7 @@ if st.session_state.count >= 1:
                             year_selected2 = col3.slider('Select year:',
                                                          int(df_withpop['Year'].min()), int(df_withpop['Year'].max()),
                                                          int(df_withpop['Year'].max()), key="yearslider_pop")
-                            
+
                             df_withpop = df_withpop[df_withpop['Year']==year_selected2]
 
                         st.subheader("{} ({})".format(selected_indicator, year_selected2))
@@ -523,7 +523,7 @@ if st.session_state.count >= 1:
                             wcss = []
 
                             # Loop through a range of number of clusters
-                            for i in range(1, 11):
+                            for i in range(1, 10):
                                 kmeans = KMeans(n_clusters=i)
                                 kmeans.fit(X_scaled)
                                 wcss.append(kmeans.inertia_)
@@ -533,11 +533,42 @@ if st.session_state.count >= 1:
                             fig.add_trace(go.Scatter(x=list(range(1, 11)),  y=wcss, mode='lines+markers', marker=dict(size=10,
                                                                                                                color='red',
                                                                                                                symbol='cross')))
-                            fig.update_layout(title='The Elbow Method',
-                                              xaxis_title='Number of clusters',
-                                              yaxis_title='Within-cluster Sum of Squares (WCSS)')
-                            col1, col2 = st.columns([1,2], gap = "small")
+                            fig.update_layout(
+                                title='The Elbow Method',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend=dict(
+                                    font=dict(size=15, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    title = "Number of clusters",
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1,
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    title='Within-cluster Sum of Squares (WCSS)',
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=300, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                                )
+
+                            col1, col2 = st.columns([1,3], gap = "small")
                             col1.plotly_chart(fig, use_container_width=True)
+
+                            n_clusters = col1.slider("Adjust number", min_value=1, max_value=10, value=5)
+                            with col1.expander("Learn about the elbow method"):
+                                st.info("The elbow method is a way to figure out how many clusters to use when doing "
+                                          "a k-means analysis. It's done by trying different numbers of clusters and "
+                                          "seeing how good the clusters are. Then, we plot the results and look for a 'bend'"
+                                          " in the graph called the 'elbow'. The number of clusters we chose at that "
+                                          "bend is the best number of clusters to use.")
 
                             # Import necessary libraries
                             from sklearn.cluster import KMeans
@@ -551,7 +582,7 @@ if st.session_state.count >= 1:
                             # Scale the X values
                             X_scaled = scaler.transform(X)
                             # Create an instance of KMeans with the number of clusters desired
-                            kmeans = KMeans(n_clusters=5)
+                            kmeans = KMeans(n_clusters)
                             # Fit the model to the scaled data
                             kmeans.fit(X_scaled)
                             # Get the cluster labels for each row
@@ -589,10 +620,11 @@ if st.session_state.count >= 1:
                                     gridcolor='#252323',
                                     gridwidth=1
                                 ),
-                                height=400, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                                height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0}
                             )
                             fig.update_xaxes(type="log")
                             col2.plotly_chart(fig, use_container_width=True)
+
 
                         if hue != "Cluster with K-Means":
                             # map hue category to a color
@@ -648,7 +680,7 @@ if st.session_state.count >= 1:
                         data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
                         col1, col2 = st.columns([1, 5])
                         with col1:
-                            textbox_keyword = st.text_input('Keyword search', 'HIV',key="indicator2keyword")
+                            textbox_keyword = st.text_input('Keyword search', '',key="indicator2keyword")
                             if textbox_keyword == "":
                                 col2.selectbox("Select 2nd metric",data0a.IndicatorName.unique().tolist())
                             else:
