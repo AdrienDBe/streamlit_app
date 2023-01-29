@@ -335,6 +335,7 @@ if st.session_state.count >= 1:
                             ),
                             height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
                         )
+                        fig.update_traces({'marker': {'size': 15}})
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
                     def generate_plot(data, hue):
