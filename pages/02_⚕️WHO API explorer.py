@@ -447,7 +447,7 @@ if st.session_state.count >= 1:
                     df_chloropet = df[df['Year'] == year_selected]
                     #@st.cache()
                     def generate_chloropeth_dimension2(df_chloropet):
-                        fig = px.choropleth(df_chloropet, locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis', title ="{} ({})".format(selected_indicator,df["Year"].min()))
+                        fig = px.choropleth(df_chloropet, locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis', title ="{} ({})".format(selected_indicator,year_selected))
                         fig.update_layout(
                             title=go.layout.Title(
                                 text=fig.layout.title.text,
