@@ -266,14 +266,13 @@ if st.session_state.count >= 1:
             "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
         data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
         data0a = pd.DataFrame(data0j["value"])
-        if data0a['Dim1'].str.contains('BTSX').any() == True:
-            data0a = data0a[data0a['Dim1'] == "BTSX"]
+        # if data0a['Dim1'].str.contains('BTSX').any() == True:
+        #     data0a = data0a[data0a['Dim1'] == "BTSX"]
 
-        if data0a['Value'].str.contains('Yes').any():
-            st.write("Note to myself: fix categorical value type")
-            data0a['Value'] = data0a['Value'].map({'Not applicable': np.nan, 'No': 0, 'Yes': 1})
-            data0a['NumericValue'] = data0a['Value']
-            data0a.drop(['Value'], axis=1, inplace= True)
+        if data0a.NumericValue.dtype != np.number:
+            isCategorical = True
+        else:
+            isCategorical = False
 
         # merge with country info
         df = pd.merge(data0a,
@@ -282,9 +281,14 @@ if st.session_state.count >= 1:
                       how='inner')
 
         df = df[(df['SpatialDimType'] == 'COUNTRY') | (df['SpatialDimType'] == 'COUNTRY')][
-            ['Country', 'SpatialDim', 'TimeDim', 'NumericValue', 'ParentTitle', 'Region', 'Income level']]
+            ['Country', 'SpatialDim', 'Dim1','Dim2', 'TimeDim', 'Value', 'NumericValue', 'ParentTitle', 'Region', 'Income level']]
 
-        df.rename(columns={"TimeDim": "Year", "NumericValue": "Value"}, inplace=True)
+        df.sort_values(by=['SpatialDim', 'TimeDim'], ascending=True, inplace=True)
+
+        df.rename(columns={"Value": "Category","TimeDim": "Year", "NumericValue": "Value"}, inplace=True)
+
+        if df['Dim1'].str.contains('BTSX').any() == True:
+            df['Dim1'] = df['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
 
     view = col3.radio("Combine with",
                         ('Single metric','Population', 'Other indicator(s)'),
@@ -294,30 +298,28 @@ if st.session_state.count >= 1:
     # CONTENT ------------------------------------
     if view == "Single metric":
         try:
-            if df.empty == True:
+            if df.Year.isnull().all():
+                st.error("This indicator is not dated, please select another")
+            elif df.empty == True:
                 st.info("No data found, please enter a new keyword or select another metric")
             else:
-                col1, col2 = st.columns([1, 1])
-                with col1:
-                    hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
-                with col2:
-                    if df['Year'].min() != df['Year'].max():
-                        year_selected = st.slider('Select year',
-                                            int(df['Year'].min()), int(df['Year'].max()), int(df['Year'].max()))
-                    else:
-                        year_selected = df['Year'].max()
-                col1, col2 = st.columns([1, 1])
-                with col1:
-                    # map hue category to a color
-                    @st.cache(show_spinner=False)
-                    def generate_color_map():
-                        return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
-                    c = generate_color_map()
+                #st.table(df)
+                if len(df.Dim1.unique()) > 1 == True:
+                    Dim1 = st.radio("Select dimension:", (df.Dim1.unique()), horizontal=True)
+                    df = df[(df['Dim1'] == Dim1)]
+                if len(df.Dim2.unique()) > 1 == True:
+                    Dim2 = st.radio("Select dimension:", (df.Dim2.unique()), horizontal=True)
+                    df = df[(df['Dim2'] == Dim2)]
 
-                    grouped_data = df.groupby(['Year', hue], as_index=False).mean()
 
-                    def generate_stripplot(data, hue):
-                        fig = px.strip(data, y="Value", color = hue, hover_data = data[['Country','Year','Value']],title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
+
+                col1, col2 = st.columns([1, 1])
+
+                with col1:
+                    if isCategorical == True:
+                        dfg = df.groupby(["Category",hue]).count().reset_index()
+                        fig = px.histogram(dfg, x=hue, y="Country", color = "Category",barnorm='percent',text_auto='.0f')
                         fig.update_layout(
                             paper_bgcolor='rgba(0,0,0,0)',
                             plot_bgcolor='rgba(0,0,0,0)',
@@ -333,143 +335,168 @@ if st.session_state.count >= 1:
                                 gridcolor='#252323',
                                 gridwidth=1
                             ),
-                            height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
+                            height=500, margin={"r": 0, "t": 30, "l": 0, "b": 0},
                         )
-                        fig.update_traces({'marker': {'size': 12}})
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
-                    def generate_plot(data, hue):
-                        fig = px.line(data, x="Year", y="Value", color=hue, color_discrete_map=c,title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
-                        fig.update_layout(
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=20, color='white')
-                            ),
-                            xaxis=go.layout.XAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
-                            ),
-                            yaxis=go.layout.YAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
-                            ),
-                            height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
-                        )
-                        for trace in fig.data:
-                            trace.line.width = 2
-                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                    if isCategorical == False:
+                        # map hue category to a color
+                        @st.cache(show_spinner=False)
+                        def generate_color_map():
+                            return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
+                        c = generate_color_map()
 
-                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Region':
-                        generate_plot(grouped_data,'Region')
-                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Region':
-                        generate_stripplot(df,'Region')
+                        grouped_data = df.groupby(['Year', hue], as_index=False).mean()
 
-                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Income level':
-                        generate_plot(grouped_data,'Income level')
-                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Income level':
-                        generate_stripplot(df, 'Income level')
+                        def generate_stripplot(data, hue):
+                            fig = px.strip(data, y="Value", color = hue, hover_data = data[['Country','Year','Value']],title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    font=dict(size=20, color='white')
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
+                            )
+                            fig.update_traces({'marker': {'size': 12}})
+                            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
-                    if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Country':
-                        # checkbox all countries
-                        all = col1.checkbox("All countries", value=True)
-                        if all:
-                            selected_options = df.Country.unique()
-                            generate_plot(grouped_data,'Country')
-                        else:
-                            container = col1.container()
-                            selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
-                            df_country = df[df["Country"].isin(selected_options)]
-                            if len(selected_options) > 0:
-                                fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c, title="{} ({})".format(selected_indicator,df["Year"].min()))
-                                fig.update_layout(
-                                    paper_bgcolor='rgba(0,0,0,0)',
-                                    plot_bgcolor='rgba(0,0,0,0)',
-                                    title=go.layout.Title(
-                                        text=fig.layout.title.text,
-                                        xref='paper',
-                                        x=0.5,
-                                        font=dict(size=20, color='white')
-                                    ),
-                                    legend=dict(
-                                        font=dict(size=15, color='white')
-                                    ),
-                                    xaxis=go.layout.XAxis(
-                                        tickfont=dict(size=15),
-                                        titlefont=dict(size=15),
-                                        showgrid=True,
-                                        gridcolor='#252323',
-                                        gridwidth=1
-                                    ),
-                                    yaxis=go.layout.YAxis(
-                                        tickfont=dict(size=15),
-                                        titlefont=dict(size=15),
-                                        showgrid=True,
-                                        gridcolor='#252323',
-                                        gridwidth=1
-                                    ),
-                                    height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0}
-                                )
-                                for trace in fig.data:
-                                    trace.line.width = 2
-                                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                        def generate_plot(data, hue):
+                            fig = px.line(data, x="Year", y="Value", color=hue, color_discrete_map=c,title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
+                            )
+                            for trace in fig.data:
+                                trace.line.width = 2
+                            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
-                    if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Country':
-                        # checkbox all countries
-                        all = col1.checkbox("All countries", value=True)
-                        if all:
-                            selected_options = df.Country.unique()
-                            generate_stripplot(df,"Country")
-                        else:
-                            container = col1.container()
-                            selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
-                            df_country = df[df["Country"].isin(selected_options)]
-                            generate_stripplot(df_country,"Country")
+                        if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Region':
+                            generate_plot(grouped_data,'Region')
+                        if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Region':
+                            generate_stripplot(df,'Region')
+
+                        if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Income level':
+                            generate_plot(grouped_data,'Income level')
+                        if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Income level':
+                            generate_stripplot(df, 'Income level')
+
+                        if grouped_data['Year'].max() != grouped_data['Year'].min() and hue == 'Country':
+                            # checkbox all countries
+                            all = col1.checkbox("All countries", value=True)
+                            if all:
+                                selected_options = df.Country.unique()
+                                generate_plot(grouped_data,'Country')
+                            else:
+                                container = col1.container()
+                                selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
+                                df_country = df[df["Country"].isin(selected_options)]
+                                if len(selected_options) > 0:
+                                    fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c, title="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                                    fig.update_layout(
+                                        paper_bgcolor='rgba(0,0,0,0)',
+                                        plot_bgcolor='rgba(0,0,0,0)',
+                                        title=go.layout.Title(
+                                            text=fig.layout.title.text,
+                                            xref='paper',
+                                            x=0.5,
+                                            font=dict(size=20, color='white')
+                                        ),
+                                        legend=dict(
+                                            font=dict(size=15, color='white')
+                                        ),
+                                        xaxis=go.layout.XAxis(
+                                            tickfont=dict(size=15),
+                                            titlefont=dict(size=15),
+                                            showgrid=True,
+                                            gridcolor='#252323',
+                                            gridwidth=1
+                                        ),
+                                        yaxis=go.layout.YAxis(
+                                            tickfont=dict(size=15),
+                                            titlefont=dict(size=15),
+                                            showgrid=True,
+                                            gridcolor='#252323',
+                                            gridwidth=1
+                                        ),
+                                        height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0}
+                                    )
+                                    for trace in fig.data:
+                                        trace.line.width = 2
+                                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
+                        if grouped_data['Year'].max() == grouped_data['Year'].min() and hue == 'Country':
+                            # checkbox all countries
+                            all = col1.checkbox("All countries", value=True)
+                            if all:
+                                selected_options = df.Country.unique()
+                                generate_stripplot(df,"Country")
+                            else:
+                                container = col1.container()
+                                selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
+                                df_country = df[df["Country"].isin(selected_options)]
+                                generate_stripplot(df_country,"Country")
 
                 with col2:
-                    # Get the last year from the "Year" column
-                    last_year = df['Year'].max()
-                    # Create a new DataFrame with only the rows from the last year
-                    df_last_year = df[df['Year'] == last_year]
-                    if (hue == "Country"):
-                        if(len(selected_options) < len(df_last_year['Country'])):
-                            df_last_year = df_last_year[df_last_year["Country"].isin(selected_options)]
-
-                    df_chloropet = df[df['Year'] == year_selected]
-                    #@st.cache()
-                    def generate_chloropeth_dimension2(data):
-                        fig = px.choropleth(data, locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis', title ="{} ({})".format(selected_indicator,year_selected))
-                        fig.update_layout(
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=20, color='white')
-                            ),
-                            geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
-                                     subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
-                                     fitbounds="locations"),
-                            autosize=False,
-                            height=400,
-                            margin={"r": 0, "t": 30, "l": 0, "b": 0})
-                        fig.update_traces(marker_line_width=1)
-                        return fig
-                    fig = generate_chloropeth_dimension2(df_chloropet)
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                    if isCategorical == False:
+                        #@st.cache()
+                        def generate_chloropeth_dimension2(data):
+                            fig = px.choropleth(data, animation_frame="Year",locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis', title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig.update_layout(
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')
+                                ),
+                                geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
+                                         subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
+                                         fitbounds="locations"),
+                                autosize=False,
+                                height=400,
+                                margin={"r": 0, "t": 30, "l": 0, "b": 0})
+                            fig.update_traces(marker_line_width=1)
+                            return fig
+                        #df['col'].ffill()
+                        fig = generate_chloropeth_dimension2(df)
+                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         except NameError:
             st.info("Please enter a new keyword")
 
     if view == "Population":
-        if df.empty == True:
+        if df.Year.isnull().all():
+            st.error("This indicator is not dated, please select another")
+        elif df.empty == True:
             st.info("No data found, please enter a new keyword or select another metric")
         if df.empty != True:
             with st.spinner("Loading data..."):
@@ -492,13 +519,10 @@ if st.session_state.count >= 1:
                     year_selected2 = col1.slider('Select year',
                                                  int(df_withpop['Year'].min()), int(df_withpop['Year'].max()),
                                                  int(df_withpop['Year'].max()), key="yearslider_pop")
-
-
                     df_withpop = df_withpop[df_withpop['Year']==year_selected2]
 
                 hue = col2.radio("Display data per", ('Region', 'Income level', 'Country',"Cluster"), horizontal=True,key = "radio_tab2")
                 axis = col3.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=True, key="scale")
-
 
                 # map hue category to a color
                 @st.cache(show_spinner=False)
@@ -507,191 +531,193 @@ if st.session_state.count >= 1:
                 c = generate_color_map()
 
                 if hue != "Cluster":
-                    @st.cache(show_spinner=False)
-                    def generate_grouped_data(hue):
-                        return df_withpop.groupby(['Year', hue], as_index=False).mean()
-                    grouped_data = generate_grouped_data(hue)
+                    if isCategorical == False:
+                        @st.cache(show_spinner=False)
+                        def generate_grouped_data(hue):
+                            return df_withpop.groupby(['Year', hue], as_index=False).mean()
+                        grouped_data = generate_grouped_data(hue)
 
-                    df_withpop = df_withpop[df_withpop['Year'] == year_selected2]
+                        df_withpop = df_withpop[df_withpop['Year'] == year_selected2]
 
-                    def generate_scatter(data,hue):
-                        fig = px.scatter(data, x="Population", y="Value",hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
-                                         title= "{} ({})".format(selected_indicator, year_selected2))
-                        fig.update_layout(
-                            font=dict(family="calibri"),
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=25, color='white')),
-                            legend=dict(font=dict(size=15, color='white')),
-                            xaxis=go.layout.XAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1,),
-                            yaxis=go.layout.YAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1),
-                            height=500,
-                            margin={"r": 0, "t": 50, "l": 0, "b": 0})
-                        fig.update_traces(marker=dict(size=15,
-                                                      line=dict(width=1.5,
-                                                                color='black')),
-                                          selector=dict(mode='markers'))
-                        fig.update_xaxes(type="log")
-                        if axis == "Logarithmic":
+                        def generate_scatter(data,hue):
+                            fig = px.scatter(data, x="Population", y="Value",hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
+                                             title= "{} ({})".format(selected_indicator, year_selected2))
+                            fig.update_layout(
+                                font=dict(family="calibri"),
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=25, color='white')),
+                                legend=dict(font=dict(size=15, color='white')),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1,),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1),
+                                height=500,
+                                margin={"r": 0, "t": 50, "l": 0, "b": 0})
+                            fig.update_traces(marker=dict(size=15,
+                                                          line=dict(width=1.5,
+                                                                    color='black')),
+                                              selector=dict(mode='markers'))
                             fig.update_xaxes(type="log")
-                            fig.update_yaxes(type="log")
-                        if axis == "Linear":
-                            fig.update_xaxes(type="linear")
-                            fig.update_yaxes(type="linear")
-                        st.plotly_chart(fig,use_container_width=True)
+                            if axis == "Logarithmic":
+                                fig.update_xaxes(type="log")
+                                fig.update_yaxes(type="log")
+                            if axis == "Linear":
+                                fig.update_xaxes(type="linear")
+                                fig.update_yaxes(type="linear")
+                            st.plotly_chart(fig,use_container_width=True)
 
-                    generate_scatter(df_withpop, hue)
+                        generate_scatter(df_withpop, hue)
 
 
                 if hue == "Cluster":
-                    try:
-                        from sklearn.cluster import KMeans
-                        import plotly.graph_objects as go
-                        from sklearn.preprocessing import StandardScaler
+                    if isCategorical == False:
+                        try:
+                            from sklearn.cluster import KMeans
+                            import plotly.graph_objects as go
+                            from sklearn.preprocessing import StandardScaler
 
-                        n_clusters = col4.slider("Adjust number of clusters", min_value=1, max_value=10, value=5)
+                            n_clusters = col4.slider("Adjust number of clusters", min_value=1, max_value=10, value=5)
 
-                        # Select the columns 'Population' and 'Value' as the X values
-                        X = df_withpop[['Population', 'Value']].dropna()
+                            # Select the columns 'Population' and 'Value' as the X values
+                            X = df_withpop[['Population', 'Value']].dropna()
 
-                        # Scale the data using StandardScaler
-                        scaler = StandardScaler()
-                        scaler.fit(X)
-                        X_scaled = scaler.transform(X)
+                            # Scale the data using StandardScaler
+                            scaler = StandardScaler()
+                            scaler.fit(X)
+                            X_scaled = scaler.transform(X)
 
-                        # Create an empty list to store the within-cluster sum of squares (WCSS) for each number of clusters
-                        wcss = []
+                            # Create an empty list to store the within-cluster sum of squares (WCSS) for each number of clusters
+                            wcss = []
 
-                        # Loop through a range of number of clusters
-                        for i in range(1, 10):
-                            kmeans = KMeans(n_clusters=i)
+                            # Loop through a range of number of clusters
+                            for i in range(1, 10):
+                                kmeans = KMeans(n_clusters=i)
+                                kmeans.fit(X_scaled)
+                                wcss.append(kmeans.inertia_)
+
+                            # Create a Plotly line plot of the WCSS vs the number of clusters
+                            fig = go.Figure()
+                            fig = px.line(x=list(range(1, 10)), y=wcss)
+                            fig.update_layout(
+                                title=go.layout.Title(
+                                    text="Elbow Method",
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')),
+                                xaxis_title="Number of clusters",
+                                yaxis_title='WCSS',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                legend=dict(
+                                    font=dict(size=15, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    title = "Number of clusters",
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1,
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    title='Within-cluster Sum of Squares (WCSS)',
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+                                )
+                            fig.update_traces(line_color='#04AA6D')
+                            col1, col2 = st.columns([1,3], gap="medium")
+                            col1.plotly_chart(fig, use_container_width=True)
+
+                            # Import necessary libraries
+                            from sklearn.cluster import KMeans
+                            from sklearn.preprocessing import StandardScaler
+                            # Select the columns 'Population' and 'Value' as the X values
+                            X = df_withpop[['Population', 'Value']].dropna()
+                            # Create an instance of StandardScaler
+                            scaler = StandardScaler()
+                            # Fit the scaler to the X values
+                            scaler.fit(X)
+                            # Scale the X values
+                            X_scaled = scaler.transform(X)
+                            # Create an instance of KMeans with the number of clusters desired
+                            kmeans = KMeans(n_clusters)
+                            # Fit the model to the scaled data
                             kmeans.fit(X_scaled)
-                            wcss.append(kmeans.inertia_)
+                            # Get the cluster labels for each row
+                            labels = kmeans.labels_
+                            # Add the labels to the dataframe as a new column
+                            df_withpop_Kmeans = df_withpop.dropna()
+                            df_withpop_Kmeans['Cluster'] = labels
+                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'] +1
+                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'].astype(str)
+                            fig = px.scatter(df_withpop_Kmeans, x="Population", y="Value", hover_data=(df_withpop_Kmeans), log_x=True,log_y=True,
+                                             color="Cluster", color_discrete_map=c,title= "{} ({}) clustered with K-means".format(selected_indicator, year_selected2))
+                            fig.update_layout(
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    x=0.5,
+                                    font=dict(size=20, color='white')
+                                ),
+                                legend=dict(
+                                    font=dict(size=15, color='white')
+                                ),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1,
+                                ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1
+                                ),
+                                height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0})
+                            if axis == "Logarithmic":
+                                fig.update_xaxes(type="log")
+                                fig.update_yaxes(type="log")
+                            if axis == "Linear":
+                                fig.update_xaxes(type="linear")
+                                fig.update_yaxes(type="linear")
+                            fig.update_traces(marker=dict(size=15,
+                                                          line=dict(width=1.5,
+                                                                    color='black')),
+                                              selector=dict(mode='markers'))
+                            col2.plotly_chart(fig, use_container_width=True)
 
-                        # Create a Plotly line plot of the WCSS vs the number of clusters
-                        fig = go.Figure()
-                        fig = px.line(x=list(range(1, 10)), y=wcss)
-                        fig.update_layout(
-                            title=go.layout.Title(
-                                text="Elbow Method",
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=20, color='white')),
-                            xaxis_title="Number of clusters",
-                            yaxis_title='WCSS',
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            legend=dict(
-                                font=dict(size=15, color='white')
-                            ),
-                            xaxis=go.layout.XAxis(
-                                title = "Number of clusters",
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1,
-                            ),
-                            yaxis=go.layout.YAxis(
-                                title='Within-cluster Sum of Squares (WCSS)',
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
-                            ),
-                            height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0}
-                            )
-                        fig.update_traces(line_color='#04AA6D')
-                        col1, col2 = st.columns([1,3], gap="medium")
-                        col1.plotly_chart(fig, use_container_width=True)
+                            with st.expander("Learn about the elbow method"):
+                                st.info("The elbow method is a way to figure out how many clusters to use when doing "
+                                          "a k-means analysis. It's done by trying different numbers of clusters and "
+                                          "seeing how good the clusters are. Then, we plot the results and look for a 'bend'"
+                                          " in the graph called the 'elbow'. The number of clusters we chose at that "
+                                          "bend is the best number of clusters to use.")
 
-                        # Import necessary libraries
-                        from sklearn.cluster import KMeans
-                        from sklearn.preprocessing import StandardScaler
-                        # Select the columns 'Population' and 'Value' as the X values
-                        X = df_withpop[['Population', 'Value']].dropna()
-                        # Create an instance of StandardScaler
-                        scaler = StandardScaler()
-                        # Fit the scaler to the X values
-                        scaler.fit(X)
-                        # Scale the X values
-                        X_scaled = scaler.transform(X)
-                        # Create an instance of KMeans with the number of clusters desired
-                        kmeans = KMeans(n_clusters)
-                        # Fit the model to the scaled data
-                        kmeans.fit(X_scaled)
-                        # Get the cluster labels for each row
-                        labels = kmeans.labels_
-                        # Add the labels to the dataframe as a new column
-                        df_withpop_Kmeans = df_withpop.dropna()
-                        df_withpop_Kmeans['Cluster'] = labels
-                        df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'] +1
-                        df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'].astype(str)
-                        fig = px.scatter(df_withpop_Kmeans, x="Population", y="Value", hover_data=(df_withpop_Kmeans), log_x=True,log_y=True,
-                                         color="Cluster", color_discrete_map=c,title= "{} ({}) clustered with K-means".format(selected_indicator, year_selected2))
-                        fig.update_layout(
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                x=0.5,
-                                font=dict(size=20, color='white')
-                            ),
-                            legend=dict(
-                                font=dict(size=15, color='white')
-                            ),
-                            xaxis=go.layout.XAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1,
-                            ),
-                            yaxis=go.layout.YAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1
-                            ),
-                            height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0})
-                        if axis == "Logarithmic":
-                            fig.update_xaxes(type="log")
-                            fig.update_yaxes(type="log")
-                        if axis == "Linear":
-                            fig.update_xaxes(type="linear")
-                            fig.update_yaxes(type="linear")
-                        fig.update_traces(marker=dict(size=15,
-                                                      line=dict(width=1.5,
-                                                                color='black')),
-                                          selector=dict(mode='markers'))
-                        col2.plotly_chart(fig, use_container_width=True)
-
-                        with st.expander("Learn about the elbow method"):
-                            st.info("The elbow method is a way to figure out how many clusters to use when doing "
-                                      "a k-means analysis. It's done by trying different numbers of clusters and "
-                                      "seeing how good the clusters are. Then, we plot the results and look for a 'bend'"
-                                      " in the graph called the 'elbow'. The number of clusters we chose at that "
-                                      "bend is the best number of clusters to use.")
-
-                    except NameError:
-                        st.info("An error was found while using k-mean")
+                        except NameError:
+                            st.info("An error was found while using k-mean")
 
 
 
