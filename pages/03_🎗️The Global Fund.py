@@ -373,7 +373,7 @@ if st.session_state.count >= 1:
 
             col2.markdown(
                 "<span style='text-align: justify; font-size: 280%; color:#04AA6D'> **Implementation Periods** </span> <br>"
-                "A country’s funding request to the Global Fund is turned into one or more grants through a process called grant-making.  "
+                "A country’s funding request to the Global Fund is turned into one or more grants through a process called Grant-making.  "
                 "The Country Coordinating Mechanism and the Global Fund work with the partner implementing a grant, the Principal Recipient, to prepare the grant. </span> "
                 "<span style='color:grey'>Loading takes a few seconds the first time.</span> </p>",
                 unsafe_allow_html=True)
