@@ -22,20 +22,10 @@ local_css("style/style.css")
 # Remove whitespace from the top of the page and sidebar
 st.markdown("""
         <style>
-               .css-18e3th9 {
-                    padding-top: 0rem;
-                    padding-bottom: 0rem;
-                    padding-left: 3rem;
-                    padding-right: 3rem}
-               .css-1d391kg {
-                    padding-top: 3.5rem;
-                    padding-right: 1rem;
-                    padding-bottom: 3.5rem;
-                    padding-left: 1rem}
-               .streamlit-expanderHeader {
-                    font-size: medium;
-                    color:#05c37d}
-                .st-bd {border-style: none;}
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem
+                }
         </style>
         """, unsafe_allow_html=True)
 
