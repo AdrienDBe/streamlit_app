@@ -174,7 +174,7 @@ if st.session_state.count == 0:
 
 if st.session_state.count >= 1:
 
-    @st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
+    @st.cache_data(show_spinner=False)
     def Loading_country_list():
 
         service_url0 = "https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues"
@@ -288,7 +288,7 @@ if st.session_state.count >= 1:
             gif_runner = st.empty()
 
 
-            @st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
+
             def Loading_API():
                 # check if first load, if so it will take a few sec to load so we want to display a nice svg
                 global count
@@ -434,7 +434,7 @@ if st.session_state.count >= 1:
                 region_filter = st.multiselect(
                     'Select region',
                     options=list(df_group_pr.Region.sort_values(ascending=True).unique()),
-                    key="pr_multiselect")
+                    key="Region_multiselect")
                 if len(region_filter) == 0:
                     df2_group_region = df_group_pr
                 else:
@@ -444,7 +444,7 @@ if st.session_state.count >= 1:
                 country_filter = st.multiselect(
                     'Select country',
                     options=list(df2_group_region.geographicAreaName.sort_values(ascending=True).unique()),
-                    key="pr_multiselect")
+                    key="Country_multiselect")
                 if len(country_filter) == 0:
                     df2_group_country = df2_group_region
                 else:
@@ -564,7 +564,6 @@ if st.session_state.count >= 1:
                                               fillcolor="green",
                                               opacity=0.25,
                                               line_width=0)
-
                                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                                 fig.update_layout(autosize=False,
                                                   margin=dict(
@@ -671,7 +670,7 @@ if st.session_state.count >= 1:
                                     col1.dataframe(df_temp2)
 
 
-                                    @st.cache
+                                    @st.cache_data
                                     def convert_df(df1_filtered_dates2):
                                         # IMPORTANT: Cache the conversion to prevent computation on every rerun
                                         return df_temp.to_csv().encode('utf-8')
@@ -877,7 +876,7 @@ if st.session_state.count >= 1:
                                 col1.dataframe(df_temp2)
 
 
-                                @st.cache
+                                @st.cache_data
                                 def convert_df(df1_filtered_dates2):
                                     # IMPORTANT: Cache the conversion to prevent computation on every rerun
                                     return df_temp.to_csv().encode('utf-8')
@@ -1086,7 +1085,7 @@ if st.session_state.count >= 1:
                                 col1.dataframe(df_temp2)
 
 
-                                @st.cache
+                                @st.cache_data
                                 def convert_df(df1_filtered_dates2):
                                     # IMPORTANT: Cache the conversion to prevent computation on every rerun
                                     return df_temp.to_csv().encode('utf-8')
@@ -1234,7 +1233,7 @@ if st.session_state.count >= 1:
             count = 0
 
 
-            @st.cache(show_spinner=False, suppress_st_warning=True, allow_output_mutation=True)
+            @st.cache_data(show_spinner=False)
             def Loading_API_disbursements():
                 # check if first load, if so it will take a few sec to load so we want to display a nice svg
                 global count
@@ -1911,7 +1910,7 @@ if st.session_state.count >= 1:
                     col2.dataframe(dl_file.reset_index(drop=True))
 
 
-                    @st.cache
+                    @st.cache_data
                     def convert_df(dl_file):
                         # IMPORTANT: Cache the conversion to prevent computation on every rerun
                         return dl_file.to_csv().encode('utf-8')
@@ -1955,4 +1954,3 @@ if st.session_state.count >= 1:
                             "<a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a>"
                             " from the World Bank API through the Python wbgapi library and merged it with the country list from the WHO and Global Fund datasets."
                             "</p>", unsafe_allow_html=True)
-
