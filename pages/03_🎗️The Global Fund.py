@@ -364,7 +364,7 @@ if st.session_state.count >= 1:
                                                                                        "Financially Closed"],
                                                                            ordered=True)
                 df2.sort_values('implementationPeriodStatusTypeName', inplace=True)
-                df2 = df2[df2['programStartDate'].dt.year >= 2018]
+                #df2 = df2[df2['programStartDate'].dt.year >= 2018]
                 return country_list, df2
 
 
