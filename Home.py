@@ -50,25 +50,32 @@ with st.container():
         st.image(img,width = 300)
 
 # ---- Work experience ----
-path = "Images/Lottie_work.json"
-with open(path, "r") as file:
-    url = json.load(file)
-
-st.title("Adding Lottie Animation in Streamlit WebApp")
-
-st_lottie(url,
-          reverse=True,
-          height=400,
-          width=400,
-          speed=1,
-          loop=True,
-          quality='high',
-          key='Car'
-          )
 work_container = st.container()
 with work_container:
     st.write("---")
-    st.header('Work Experience')
+    col1, col2 = st.columns([5, 8])
+    col2.header('Work Experience')
+
+    #Web app path
+    path = "Images/Home_work.json"
+    #Local path
+    #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Home_work.json"
+    with col1:
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        with open(path, "r") as file:
+            url = json.load(file)
+        st_lottie(url,
+                  reverse=True,
+                  height=300,
+                  speed=0.75,
+                  loop=True,
+                  quality='high',
+                  key='Car'
+                  )
+
 
     st.markdown("""
     <style>
@@ -78,7 +85,7 @@ with work_container:
     </style>
     """, unsafe_allow_html=True)
 
-    with st.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
+    with col2.expander("2022 – today | The Global Fund : Business Process Reporting Officer"):
         st.markdown('''
         **INFORMATION & PROCESS MANAGEMENT** `Operational efficiency within the Grant Management Division`
         \n- Business Process Monitoring & Analytics
@@ -88,7 +95,7 @@ with work_container:
         \n- Business Process Enhancement
         \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
         ''')
-    with st.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
+    with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
         **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
         \n- Created program control and reports to MoHs & global funders
@@ -98,7 +105,7 @@ with work_container:
         \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
         \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
         ''')
-    with st.expander("2020 | United Nations : Information Management Specialist"):
+    with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown('''
         **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
         \nWith the Resident Coordinator Office (RCO):
@@ -107,56 +114,144 @@ with work_container:
             \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
             \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
         ''')
-    with st.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
+    with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
         st.markdown('''
         **PROJECT MANAGEMENT**  `Projects of €8M+`
         \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
         \n- Managed customer relationship (Govt. and private)
         \n- Created project capability in the local team
-        
+
         \n**BUSINESS INTELLIGENCE**
         \nTracked and mapped company footprint in India; carried out business simulations  \n
-        
+
         \n**NGO VOLUNTEERING**
         \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
         \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
         ''')
-    with st.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
+    with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
         st.markdown('''
         **PROJECT MANAGEMENT** `Project of €3M`
         \nCoordinated several departments to oversee the implementation of a project in India:
         \n- Defined support scheme to respect the contractual system availability commitment
         \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
         ''')
-    with st.expander("2016 | Airbus : Analyst trainee"):
+    with col2.expander("2016 | Airbus : Analyst trainee"):
         st.markdown('''
         **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
         \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
         ''')
 
+
+# ---- Portfolio ----
+portfolio_container = st.container()
+with portfolio_container:
+    st.write("---")
+    col1, col2 = st.columns([5, 8])
+    col2.header('Portfolio')
+
+    #Web app path
+    path = "./Images/Dataviz.json"
+    #Local path
+    #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Dataviz.json"
+    with col1:
+        with open(path, "r") as file:
+            url = json.load(file)
+        st_lottie(url,
+                  reverse=True,
+                  height=400,
+                  speed=0.6,
+                  loop=True,
+                  quality='high',
+                  key='Car2')
+
+    col2.subheader('API explorer')
+    with col2:
+        with st.expander("World Health Organization: Indicators"):
+            st.markdown('''
+            This app is powered by data from the World Health Organization (WHO) API. 
+            Users can explore indicators or enter relevant keywords, and upon selecting a topic such as Tuberculosis, 
+            Malaria, or HIV, a list of related indicators is presented for visualization. 
+            The app also allows users to group the data by Region, Income level, or Country based on their selection, 
+            using the World Bank API.
+            ''')
+            # picture
+            from PIL import Image
+
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
+            #online
+            img = "./Images/WHO_app.jpg"
+
+            st.image(img, width=650)
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/WHO_API_explorer)"
+            )
+        with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
+            st.markdown('''
+            This app imports data from the Global Fund API and presents it for exploration and visualization. 
+            Users can navigate between different dimensions of information, such as region, country, component (disease), 
+            or partner involved, and represent it visually with varying levels of granularity. 
+            The app also provides options to group the data by Region, Income level, or Country based on the user's selection, 
+            using the World Bank API.''')
+            # picture
+            from PIL import Image
+            # local
+            #online
+            img = "./Images/GF_app.jpg"
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
+            st.image(img, width=650)
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
+            )
+
 st.write("---")
 
 # ---- IT Skills ----
+# Custom function for printing text
+def txt3(a, b):
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.markdown(a)
+    with col2:
+        st.markdown(b)
+
 skills_container = st.container()
 with skills_container:
-    st.header('IT Skills')
-    txt3('Programming', '`Python`, `DAX`, `VBA`')
-    txt3('Data processing/wrangling', '`pandas`, `numpy`, `PowerQuery`')
-    txt3('Data visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
-    txt3('Machine Learning', '`scikit-learn`')
-    txt3('Model deployment', '`streamlit`')
-
+    col1, col2 = st.columns([5, 8])
+    with col1:
+        # Web app path
+        path = "./Images/Computer.json"
+        # Local path
+        # By Downloading and importing path
+        #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Computer.json"
+        with col1:
+            with open(path, "r") as file:
+                url = json.load(file)
+            st_lottie(url,
+                      reverse=True,
+                      height=350,
+                      speed=1,
+                      loop=True,
+                      quality='high',
+                      key='Car3')
+    with col2:
+        col2.header('IT Skills')
+        txt3('Programming', '`Python`, `DAX`, `VBA`')
+        txt3('Data processing/wrangling', '`pandas`, `numpy`, `PowerQuery`')
+        txt3('Data visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
+        txt3('Machine Learning', '`scikit-learn`')
+        txt3('Model deployment', '`streamlit`')
 
 # ---- CONTACT FORM ----
 
 contact_form_container = st.container()
 with contact_form_container:
-        st.write("---")
-        st.header("Get in touch with me!")
-        st.write("##")
+    st.write("---")
+    st.header("Get in touch with me!")
+    st.write("##")
 
-        # Documention: https://formsubmit.co/
-        contact_form = """
+    # Documention: https://formsubmit.co/
+    contact_form = """
         <form action="https://formsubmit.co/b5839c863db066636bf7d8e36d51e283" method="POST">
             <input type="hidden" name="_captcha" value="false">
             <input type="text" name="name" placeholder="Your name" required>
@@ -165,8 +260,8 @@ with contact_form_container:
             <button type="submit">Send</button>
         </form>
         """
-        left_column, right_column = st.columns(2)
-        with left_column:
-            st.markdown(contact_form, unsafe_allow_html=True)
-        with right_column:
-            st.empty()
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.markdown(contact_form, unsafe_allow_html=True)
+    with right_column:
+        st.empty()
