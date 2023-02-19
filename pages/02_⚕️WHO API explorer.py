@@ -18,25 +18,7 @@ def local_css(file_name):
 local_css("style/style.css")
 
 # Remove whitespace from the top of the page and sidebar
-# st.markdown("""
-#         <style>
-#                .css-18e3th9 {
-#                     padding-top: 0rem;
-#                     padding-bottom: 0rem;
-#                     padding-left: 3rem;
-#                     padding-right: 3rem}
-#                .css-1d391kg {
-#                     padding-top: 3.5rem;
-#                     padding-right: 1rem;
-#                     padding-bottom: 3.5rem;
-#                     padding-left: 1rem}
-#                .streamlit-expanderHeader {
-#                     font: calibri;
-#                     font-size: medium;
-#                     color:#05c37d}
-#                 .st-bd {border-style: none;}
-#         </style>
-#         """, unsafe_allow_html=True)
+
 st.markdown("""
         <style>
                .block-container {
@@ -92,7 +74,7 @@ if st.session_state.count == 0:
     with arrival_message.container():
 
         st.title("World Health Organization API explorer")
-        col1,col_mid, col2 = st.columns([4,0.2,1], gap='small')
+        col1,col_mid, col2 = st.columns([4,0.1,1], gap='small')
         col1.subheader("Indicators exploration tool")
         col1.write("<p style='text-align: justify;'>"
                    "This Streamlit web app, powered by data imported from the World Health Organization (WHO) API,"
@@ -100,18 +82,11 @@ if st.session_state.count == 0:
                    " Upon selecting a topic (such as Tuberculosis, Malaria, or HIV) a list of related indicators is presented for the user to visualize."
                    "<br>The data can be grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection.",
                    unsafe_allow_html=True)
-
-        col2.subheader("API status")
-        url = "https://ghoapi.azureedge.net/api/Indicator"
-        response = requests.get(url)
-        if response.status_code != 200:
-            col2.warning(
-                "There seems to be an error with the WHO API (status code: {})".format(response.status_code))
-        else:
-            col2.success("Connection established successfully")
-        if response.status_code != 200:
-            col2.info("This app will be accessible once the connection is back")
-
+        lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
+        lottie_json = load_lottieurl(lottie_url)
+        with col2:
+            st.write('')
+            st_lottie(lottie_json, height=150, key="loading_gif2")
 
         with st.expander("Read more about the World Health Organization, what is an API and how to access WHO API"):
 
@@ -143,12 +118,22 @@ if st.session_state.count == 0:
                             "<br>To offer more visualization options, we also imported the <a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a> from the World Bank API and merged them with the country list from the WHO.",
                             unsafe_allow_html=True)
 
+        col1, col2 = st.columns([10, 35], gap='small')
+
+        col1.subheader(":beige[API status]")
+        url = "https://ghoapi.azureedge.net/api/Indicator"
+        response = requests.get(url)
+        if response.status_code != 200:
+            col2.warning(
+                "There seems to be an error with the WHO API (status code: {})".format(response.status_code))
+        else:
+            col2.success("Connection established successfully")
+        if response.status_code != 200:
+            col2.info("This app will be accessible once the connection is back")
 
         col1, col2 = st.columns([10, 35], gap='small')
+        col1.subheader("Disclaimer")
         with col2:
-            st.markdown("<br>",
-                        unsafe_allow_html=True)
-            st.subheader("Disclaimer")
             st.write("<p style='text-align: justify;'>"
                 "Please note that the information provided in this page is created and shared by me as an individual and "
                 "should not be taken as an official representation of the World Health Organization (WHO). "
@@ -159,12 +144,6 @@ if st.session_state.count == 0:
                 if disclaimer_confirmation:
                     st.session_state.count = 1
                     st.experimental_rerun()
-
-        lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
-        lottie_json = load_lottieurl(lottie_url)
-        with col1:
-            st.empty()
-            st_lottie(lottie_json, height=200, key="loading_gif2")
 
 if st.session_state.count >= 1:
 
