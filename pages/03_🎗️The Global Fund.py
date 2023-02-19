@@ -73,43 +73,21 @@ if 'count' not in st.session_state:
 if st.session_state.count == 0:
     arrival_message = st.empty()
     with arrival_message.container():
-
         st.title("Global Fund API explorer")
         st.subheader("Implementation periods, Grants, Disbursements")
-        st.write("<p style='text-align: justify;'>"
+        col1,col_mid, col2 = st.columns([4,0.1,1], gap='small')
+        col1.write("<p style='text-align: justify;'>"
                    "This app imports data from the Global Fund API and displays it in a Streamlit web app."
                    "<br/>It allows the user to navigate between several information dimension and represent it visually with "
                  "different level of granularity (region, country, component (disease), partner involved etc."
                    " The data is also grouped by Region, Income level, or Country (using the World Bank API) depending "
-                 "on the user's selection. ",
-                   unsafe_allow_html=True)
-
-        st.subheader("API status")
-
-        url1 = "https://ghoapi.azureedge.net/api/Indicator"
-        response1 = requests.get(url1)
-        if response1.status_code != 200:
-            st.warning( "There seems to be an error with the WHO API (status code: {})".format(response1.status_code))
-            st.markdown("<p style='text-align: justify;'>"
-                        "The API is currently unavailable (see <a href='https://ghoapi.azureedge.net/api/Indicator'> this link </a> )",unsafe_allow_html=True)
-        else:
-            st.success("Connection to WHO API established successfully")
-
-        url2 = "https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods"
-        response2 = requests.get(url2)
-        if response2.status_code != 200:
-            st.warning( "There seems to be an error with the Global Fund API (status code: {})".format(response2.status_code))
-            st.markdown("<p style='text-align: justify;'>"
-                        "The API is currently unavailable (see <a href='https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods'> this link </a> )".format(response1.status_code)
-                        ,unsafe_allow_html=True)
-        else:
-            st.success("Connection to the Global Fund API established successfully")
-
-        if response1.status_code != 200 or response2.status_code != 200:
-            st.info("This app will be accessible once the connection is back")
+                 "on the user's selection.",unsafe_allow_html=True)
+        lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
+        lottie_json = load_lottieurl(lottie_url)
+        with col2:
+            st_lottie(lottie_json, height=150, key="loading_gif2")
 
         with st.expander("Read more about the Global Fund (TGF), what is an API and how to access TGF API"):
-
             col1, col2, col3 = st.columns([1, 1, 1], gap='small')
             with col1:
                 # GF details
@@ -140,27 +118,43 @@ if st.session_state.count == 0:
                             "<br>To offer more visualization options, we also imported the <a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a> from the World Bank API and merged them with the country list from the WHO.",
                             unsafe_allow_html=True)
 
+        col1, col2 = st.columns([10, 35], gap='small')
+        col1.subheader("API status")
+
+        url1 = "https://ghoapi.azureedge.net/api/Indicator"
+        response1 = requests.get(url1)
+        if response1.status_code != 200:
+            col2.warning( "There seems to be an error with the WHO API (status code: {})".format(response1.status_code))
+            col2.markdown("<p style='text-align: justify;'>"
+                        "The API is currently unavailable (see <a href='https://ghoapi.azureedge.net/api/Indicator'> this link </a> )",unsafe_allow_html=True)
+        else:
+            col2.success("Connection to WHO API established successfully")
+
+        url2 = "https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods"
+        response2 = requests.get(url2)
+        if response2.status_code != 200:
+            col2.warning( "There seems to be an error with the Global Fund API (status code: {})".format(response2.status_code))
+            col2.markdown("<p style='text-align: justify;'>"
+                        "The API is currently unavailable (see <a href='https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods'> this link </a> )".format(response1.status_code)
+                        ,unsafe_allow_html=True)
+        else:
+            col2.success("Connection to the Global Fund API established successfully")
+
+        if response1.status_code != 200 or response2.status_code != 200:
+            col2.info("This app will be accessible once the connection is back")
 
         col1, col2 = st.columns([10, 35], gap='small')
-        with col2:
-            st.markdown("<br><br>",
-                        unsafe_allow_html=True)
-            st.subheader("Disclaimer")
-            st.write("<p style='text-align: justify;'>"
-                "Please note that the information provided in this page is created and shared by me as an individual and "
-                "should not be taken as an official representation of the Global Fund."
-                "For accurate and up-to-date information, please consult the Global Fund official data explorer.",
-                unsafe_allow_html=True)
-            if response1.status_code == 200 and response2.status_code == 200:
-                disclaimer_confirmation = col2.button('I understand')
-                if disclaimer_confirmation:
-                    st.session_state.count = 1
-                    st.experimental_rerun()
-
-        lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
-        lottie_json = load_lottieurl(lottie_url)
-        with col1:
-            st_lottie(lottie_json, height=250, key="loading_gif2")
+        col1.subheader("Disclaimer")
+        col2.write("<p style='text-align: justify;'>"
+            "Please note that the information provided in this page is created and shared by me as an individual and "
+            "should not be taken as an official representation of the Global Fund."
+            "For accurate and up-to-date information, please consult the Global Fund official data explorer.",
+            unsafe_allow_html=True)
+        if response1.status_code == 200 and response2.status_code == 200:
+            disclaimer_confirmation = col2.button('I understand')
+            if disclaimer_confirmation:
+                st.session_state.count = 1
+                st.experimental_rerun()
 
 if st.session_state.count >= 1:
 
