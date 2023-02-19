@@ -322,7 +322,8 @@ if st.session_state.count >= 1:
         st.info("Please select another indicator")
 
     if Indicator_select == "Single indicator":
-
+        tab1, tab2 = st.tabs(["📈 Visualize", "📥 Export data"])
+        with tab1:
                 hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
                 col1, col2 = st.columns([1, 1])
                 with col1:
@@ -494,6 +495,19 @@ if st.session_state.count >= 1:
                             return fig
                         fig = generate_chloropeth_dimension2(df)
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        with tab2:
+            st.subheader('{} data points for {}'.format(len(df), selected_indicator))
+            df.reset_index(drop=True,inplace=True)
+            @st.cache_data
+            def convert_df(df):
+                # IMPORTANT: Cache the conversion to prevent computation on every rerun
+                return df.to_csv().encode('utf-8')
+            csv = convert_df(df)
+            st.download_button(
+                label="📥 Download CSV file",
+                data=csv,
+                file_name='WHO_data_explorer.csv')
+            st.dataframe(df)
 
 
     # if view == "Population":
@@ -723,140 +737,149 @@ if st.session_state.count >= 1:
     #                         st.info("An error was found while using k-mean")
 
     if Indicator_select == "Two indicators":
-
-        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
-
-        col1, col2, col3 = st.columns([5, 30, 20], gap='small')
-        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
-        textbox_keyword2 = col1.text_input('Keyword search', '', key="indicator2keyword22",label_visibility="collapsed")
-        data0a = import_api_WHO_indicators(
-            "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
-                textbox_keyword2))
-        if data0a.empty == True:
-            st.warning("No indicator found, try another keyword (e.g. 'HIV')")
-        else:
-            selected_indicator2 = col2.selectbox(
-                "Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())),
-                data0a.IndicatorName.unique().tolist(),label_visibility="collapsed",key="selected_indicator2")
-
-            selection_indicator_code = data0a[data0a['IndicatorName'] == selected_indicator2][['IndicatorCode']].iloc[0][
-                0]
-
-            data0j = import_api_WHO_indicator_name(
-                "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
-            data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
-            data0a = pd.DataFrame(data0j["value"])
-            # if data0a['Dim1'].str.contains('BTSX').any() == True:
-            #     data0a = data0a[data0a['Dim1'] == "BTSX"]
-
-            if data0a.NumericValue.dtype != np.number:
-                isCategorical = True
+            data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+            col1, col2, col3 = st.columns([5, 30, 20], gap='small')
+            data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+            textbox_keyword2 = col1.text_input('Keyword search', '', key="indicator2keyword22",label_visibility="collapsed")
+            data0a = import_api_WHO_indicators(
+                "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                    textbox_keyword2))
+            if data0a.empty == True:
+                st.warning("No indicator found, try another keyword (e.g. 'HIV')")
             else:
-                isCategorical = False
+                selected_indicator2 = col2.selectbox(
+                    "Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())),
+                    data0a.IndicatorName.unique().tolist(),label_visibility="collapsed",key="selected_indicator2")
 
-            data0a = data0a[(data0a['SpatialDimType'] == 'COUNTRY') | (data0a['SpatialDimType'] == 'COUNTRY')][
-                ['SpatialDim', 'Dim1', 'Dim2', 'TimeDim', 'Value', 'NumericValue']]
-            data0a.rename(columns={"Value": "Category", "TimeDim": "Year", "NumericValue": selected_indicator2},
-                          inplace=True)
-            if data0a['Dim1'].str.contains('BTSX').any() == True:
-                data0a['Dim1'] = data0a['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
+                selection_indicator_code = data0a[data0a['IndicatorName'] == selected_indicator2][['IndicatorCode']].iloc[0][
+                    0]
 
-            data0a.sort_values(by=['Year', 'SpatialDim'], ascending=True, inplace=True)
+                data0j = import_api_WHO_indicator_name(
+                    "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+                data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
+                data0a = pd.DataFrame(data0j["value"])
+                # if data0a['Dim1'].str.contains('BTSX').any() == True:
+                #     data0a = data0a[data0a['Dim1'] == "BTSX"]
 
-            # merge with country info
-            df = pd.merge(data0a,
-                          df,
-                          on=['SpatialDim', 'Year'],
-                          how='inner')
+                if data0a.NumericValue.dtype != np.number:
+                    isCategorical = True
+                else:
+                    isCategorical = False
 
-        if df.Year.isnull().all():
-            st.error("This indicator is not dated, please select another")
-        elif df.empty == True:
-            st.info("No data found, please enter a new keyword or select another metric")
-        if df.empty != True:
+                data0a = data0a[(data0a['SpatialDimType'] == 'COUNTRY') | (data0a['SpatialDimType'] == 'COUNTRY')][
+                    ['SpatialDim', 'Dim1', 'Dim2', 'TimeDim', 'Value', 'NumericValue']]
+                data0a.rename(columns={"Value": "Category", "TimeDim": "Year", "NumericValue": selected_indicator2},
+                              inplace=True)
+                if data0a['Dim1'].str.contains('BTSX').any() == True:
+                    data0a['Dim1'] = data0a['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
 
-            if len(df.Dim1_x.unique()) > 1 == True:
-                Dim1_x = col2.radio("Select dimension:", (df.Dim1_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.1")
-                df = df[(df['Dim1_x'] == Dim1_x)]
-            if len(df.Dim2_x.unique()) > 1 == True:
-                Dim2_x = col2.radio("Select dimension:", (df.Dim2_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.2")
-                df = df[(df['Dim2_x'] == Dim2_x)]
+                data0a.sort_values(by=['Year', 'SpatialDim'], ascending=True, inplace=True)
 
-            if len(df.Dim1_y.unique()) > 1 == True:
-                Dim1_y = col2.radio("Select dimension:", (df.Dim1_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.3")
-                df = df[(df['Dim1_y'] == Dim1_y)]
-            if len(df.Dim2_y.unique()) > 1 == True:
-                Dim2_y = col2.radio("Select dimension:", (df.Dim2_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.4")
-                df = df[(df['Dim2_y'] == Dim2_y)]
+                # merge with country info
+                df = pd.merge(data0a,
+                              df,
+                              on=['SpatialDim', 'Year'],
+                              how='inner')
 
+            if df.Year.isnull().all():
+                st.error("This indicator is not dated, please select another")
+            elif df.empty == True:
+                st.info("No data found, please enter a new keyword or select another metric")
+            if df.empty != True:
 
+                if len(df.Dim1_x.unique()) > 1 == True:
+                    Dim1_x = col2.radio("Select dimension:", (df.Dim1_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.1")
+                    df = df[(df['Dim1_x'] == Dim1_x)]
+                if len(df.Dim2_x.unique()) > 1 == True:
+                    Dim2_x = col2.radio("Select dimension:", (df.Dim2_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.2")
+                    df = df[(df['Dim2_x'] == Dim2_x)]
 
-            col1, col2 = st.columns([7, 1], gap="medium")
+                if len(df.Dim1_y.unique()) > 1 == True:
+                    Dim1_y = col2.radio("Select dimension:", (df.Dim1_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.3")
+                    df = df[(df['Dim1_y'] == Dim1_y)]
+                if len(df.Dim2_y.unique()) > 1 == True:
+                    Dim2_y = col2.radio("Select dimension:", (df.Dim2_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.4")
+                    df = df[(df['Dim2_y'] == Dim2_y)]
 
-            hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,
-                             key="radio_tab3")
-            axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
-            def generate_color_map():
-                return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
+            tab1, tab2 = st.tabs(["📈 Visualize", "📥 Export data"])
+            with tab1:
 
-            c = generate_color_map()
+                col1, col2 = st.columns([7, 1], gap="medium")
 
-            if hue != "Cluster":
-                if isCategorical == False:
-                    @st.cache_data(show_spinner=False)
+                hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,
+                                 key="radio_tab3")
+                axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
+                def generate_color_map():
+                    return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
 
-                    def generate_grouped_data(hue):
-                        return df.groupby(['Year', hue], as_index=False).mean()
+                c = generate_color_map()
 
-                    grouped_data = generate_grouped_data(hue)
+                if hue != "Cluster":
+                    if isCategorical == False:
+                        @st.cache_data(show_spinner=False)
 
-                    def generate_scatter(data, hue):
-                        fig = px.scatter(data, animation_frame="Year", animation_group="Country",
-                                         x=selected_indicator, y=selected_indicator2, hover_data=(df),
-                                         log_x=True, log_y=True, color=hue, color_discrete_map=c,
-                                         title="{}".format(selected_indicator))
-                        fig.update_layout(
-                            font=dict(family="calibri"),
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            title=go.layout.Title(
-                                text=fig.layout.title.text,
-                                xref='paper',
-                                font=dict(size=25, color='white')),
-                            legend=dict(font=dict(size=15, color='white')),
-                            xaxis=go.layout.XAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1, ),
-                            yaxis=go.layout.YAxis(
-                                tickfont=dict(size=15),
-                                titlefont=dict(size=15),
-                                showgrid=True,
-                                gridcolor='#252323',
-                                gridwidth=1),
-                            height=500,
-                            margin={"r": 0, "t": 50, "l": 0, "b": 0})
-                        fig.update_traces(marker=dict(size=15,
-                                                      line=dict(width=1.5,
-                                                                color='black')),
-                                          selector=dict(mode='markers'))
-                        if axis == "Logarithmic":
-                            fig.update_xaxes(autorange=True, type="log", title_text=selected_indicator,
-                                             title_font_size=18)
-                            fig.update_yaxes(autorange=True, type="log", title_text=selected_indicator2,
-                                             title_font_size=18)
-                        if axis == "Linear":
-                            fig.update_xaxes(autorange=True, type="linear", title_text=selected_indicator,
-                                             title_font_size=18)
-                            fig.update_yaxes(autorange=True, type="linear", title_text=selected_indicator2,
-                                             title_font_size=18)
-                        col1.plotly_chart(fig, use_container_width=True)
+                        def generate_grouped_data(hue):
+                            return df.groupby(['Year', hue], as_index=False).mean()
 
+                        grouped_data = generate_grouped_data(hue)
 
-                    generate_scatter(df, hue)
-
+                        def generate_scatter(data, hue):
+                            fig = px.scatter(data, animation_frame="Year", animation_group="Country",
+                                             x=selected_indicator, y=selected_indicator2, hover_data=(df),
+                                             log_x=True, log_y=True, color=hue, color_discrete_map=c,
+                                             title="{}".format(selected_indicator))
+                            fig.update_layout(
+                                font=dict(family="calibri"),
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                title=go.layout.Title(
+                                    text=fig.layout.title.text,
+                                    xref='paper',
+                                    font=dict(size=25, color='white')),
+                                legend=dict(font=dict(size=15, color='white')),
+                                xaxis=go.layout.XAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1, ),
+                                yaxis=go.layout.YAxis(
+                                    tickfont=dict(size=15),
+                                    titlefont=dict(size=15),
+                                    showgrid=True,
+                                    gridcolor='#252323',
+                                    gridwidth=1),
+                                height=500,
+                                margin={"r": 0, "t": 50, "l": 0, "b": 0})
+                            fig.update_traces(marker=dict(size=15,
+                                                          line=dict(width=1.5,
+                                                                    color='black')),
+                                              selector=dict(mode='markers'))
+                            if axis == "Logarithmic":
+                                fig.update_xaxes(autorange=True, type="log", title_text=selected_indicator,
+                                                 title_font_size=18)
+                                fig.update_yaxes(autorange=True, type="log", title_text=selected_indicator2,
+                                                 title_font_size=18)
+                            if axis == "Linear":
+                                fig.update_xaxes(autorange=True, type="linear", title_text=selected_indicator,
+                                                 title_font_size=18)
+                                fig.update_yaxes(autorange=True, type="linear", title_text=selected_indicator2,
+                                                 title_font_size=18)
+                            col1.plotly_chart(fig, use_container_width=True)
+                        generate_scatter(df, hue)
+            with tab2:
+                st.subheader('{} data points for {}'.format(len(df), selected_indicator))
+                df.reset_index(drop=True,inplace=True)
+                @st.cache_data
+                def convert_df(df):
+                    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+                    return df.to_csv().encode('utf-8')
+                csv = convert_df(df)
+                st.download_button(
+                    label="📥 Download CSV file",
+                    data=csv,
+                    file_name='WHO_data_explorer.csv')
+                st.dataframe(df)
 
     if Indicator_select == "Two indicators & population data":
 
@@ -941,64 +964,80 @@ if st.session_state.count >= 1:
                               on=['SpatialDim', 'Year'],
                               how='inner')
 
-                col1, col2 = st.columns([7,1], gap="medium")
+                tab1, tab2 = st.tabs(["📈 Visualize", "📥 Export data"])
+                with tab1:
+                    col1, col2 = st.columns([7,1], gap="medium")
+                    hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,key = "radio_tab3")
+                    axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
+                    #st.table(df_withpop)
+                    # map hue category to a color
+                    @st.cache_data(show_spinner=False)
+                    def generate_color_map():
+                        return dict(zip(df_withpop[hue].unique(), px.colors.qualitative.Plotly))
+                    c = generate_color_map()
 
-                hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,key = "radio_tab3")
-                axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
-                #st.table(df_withpop)
-                # map hue category to a color
-                @st.cache_data(show_spinner=False)
-                def generate_color_map():
-                    return dict(zip(df_withpop[hue].unique(), px.colors.qualitative.Plotly))
-                c = generate_color_map()
-                
-                if hue != "Cluster":
-                    if isCategorical == False:
-                        @st.cache_data(show_spinner=False)
-                        def generate_grouped_data(hue):
-                            return df_withpop.groupby(['Year', hue], as_index=False).mean()
-                        grouped_data = generate_grouped_data(hue)
-                        def generate_scatter(data,hue):
-                            fig = px.scatter(data,animation_frame="Year", animation_group= "Country", size="Population", x=selected_indicator, y=selected_indicator2,hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
-                                             title= "{}".format(selected_indicator))
-                            fig.update_layout(
-                                font=dict(family="calibri"),
-                                paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)',
-                                title=go.layout.Title(
-                                    text=fig.layout.title.text,
-                                    xref='paper',
-                                    font=dict(size=25, color='white')),
-                                legend=dict(font=dict(size=15, color='white')),
-                                xaxis=go.layout.XAxis(
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1,),
-                                yaxis=go.layout.YAxis(
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1),
-                                height=500,
-                                margin={"r": 0, "t": 50, "l": 0, "b": 0})
-                            fig.update_traces(marker=dict(size=15,
-                                                          line=dict(width=1.5,
-                                                                    color='black')),
-                                              selector=dict(mode='markers'))
-                            if axis == "Logarithmic":
-                                fig.update_xaxes(autorange= True,type="log", title_text=selected_indicator, title_font_size = 18)
-                                fig.update_yaxes(autorange= True,type="log", title_text=selected_indicator2, title_font_size = 18)
-                            if axis == "Linear":
-                                fig.update_xaxes(autorange= True,type="linear", title_text=selected_indicator, title_font_size = 18)
-                                fig.update_yaxes(autorange= True,type="linear", title_text=selected_indicator2, title_font_size = 18)
-                            col1.plotly_chart(fig,use_container_width=True)
+                    if hue != "Cluster":
+                        if isCategorical == False:
+                            @st.cache_data(show_spinner=False)
+                            def generate_grouped_data(hue):
+                                return df_withpop.groupby(['Year', hue], as_index=False).mean()
+                            grouped_data = generate_grouped_data(hue)
+                            def generate_scatter(data,hue):
+                                fig = px.scatter(data,animation_frame="Year", animation_group= "Country", size="Population", x=selected_indicator, y=selected_indicator2,hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
+                                                 title= "{}".format(selected_indicator))
+                                fig.update_layout(
+                                    font=dict(family="calibri"),
+                                    paper_bgcolor='rgba(0,0,0,0)',
+                                    plot_bgcolor='rgba(0,0,0,0)',
+                                    title=go.layout.Title(
+                                        text=fig.layout.title.text,
+                                        xref='paper',
+                                        font=dict(size=25, color='white')),
+                                    legend=dict(font=dict(size=15, color='white')),
+                                    xaxis=go.layout.XAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1,),
+                                    yaxis=go.layout.YAxis(
+                                        tickfont=dict(size=15),
+                                        titlefont=dict(size=15),
+                                        showgrid=True,
+                                        gridcolor='#252323',
+                                        gridwidth=1),
+                                    height=500,
+                                    margin={"r": 0, "t": 50, "l": 0, "b": 0})
+                                fig.update_traces(marker=dict(size=15,
+                                                              line=dict(width=1.5,
+                                                                        color='black')),
+                                                  selector=dict(mode='markers'))
+                                if axis == "Logarithmic":
+                                    fig.update_xaxes(autorange= True,type="log", title_text=selected_indicator, title_font_size = 18)
+                                    fig.update_yaxes(autorange= True,type="log", title_text=selected_indicator2, title_font_size = 18)
+                                if axis == "Linear":
+                                    fig.update_xaxes(autorange= True,type="linear", title_text=selected_indicator, title_font_size = 18)
+                                    fig.update_yaxes(autorange= True,type="linear", title_text=selected_indicator2, title_font_size = 18)
+                                col1.plotly_chart(fig,use_container_width=True)
+                            generate_scatter(df_withpop, hue)
+
+                with tab2:
+                    st.subheader('{} data points for {}'.format(len(df), selected_indicator))
+                    df.reset_index(drop=True, inplace=True)
 
 
-                        generate_scatter(df_withpop, hue)
+                    @st.cache_data
+                    def convert_df(df):
+                        # IMPORTANT: Cache the conversion to prevent computation on every rerun
+                        return df.to_csv().encode('utf-8')
 
+
+                    csv = convert_df(df)
+                    st.download_button(
+                        label="📥 Download CSV file",
+                        data=csv,
+                        file_name='WHO_data_explorer.csv')
+                    st.dataframe(df)
 
 
 
