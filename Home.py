@@ -36,7 +36,7 @@ with st.container():
     with col1:
         st.subheader("Welcome:wave:")
         st.markdown("<p style='text-align: justify;'>"
-                    "I am enthusiastic about the intersection of International Development and Technology,"
+                    "I am enthusiastic about the intersection of Development and Technology,"
                     " and constantly searching for new and innovative ways to present and display strategic insights."
                     "<br><br>This web application contains my profile information and a collection of personal projects using Python for data visualization and machine learning."
                     "<br><br>If you have any inquiries or feedback, please reach out to me through the form on this page. <br>I hope you find my work engaging."
