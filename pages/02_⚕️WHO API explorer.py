@@ -11,30 +11,38 @@ import wbgapi as wb
 st.set_page_config(page_title="WHO API", page_icon="⚕", layout="wide")
 
 # Use local CSS
-@st.cache(show_spinner=False,suppress_st_warning=True)
+@st.cache_data(show_spinner=False)
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 local_css("style/style.css")
 
 # Remove whitespace from the top of the page and sidebar
+# st.markdown("""
+#         <style>
+#                .css-18e3th9 {
+#                     padding-top: 0rem;
+#                     padding-bottom: 0rem;
+#                     padding-left: 3rem;
+#                     padding-right: 3rem}
+#                .css-1d391kg {
+#                     padding-top: 3.5rem;
+#                     padding-right: 1rem;
+#                     padding-bottom: 3.5rem;
+#                     padding-left: 1rem}
+#                .streamlit-expanderHeader {
+#                     font: calibri;
+#                     font-size: medium;
+#                     color:#05c37d}
+#                 .st-bd {border-style: none;}
+#         </style>
+#         """, unsafe_allow_html=True)
 st.markdown("""
         <style>
-               .css-18e3th9 {
-                    padding-top: 0rem;
-                    padding-bottom: 0rem;
-                    padding-left: 3rem;
-                    padding-right: 3rem}
-               .css-1d391kg {
-                    padding-top: 3.5rem;
-                    padding-right: 1rem;
-                    padding-bottom: 3.5rem;
-                    padding-left: 1rem}
-               .streamlit-expanderHeader {
-                    font: calibri;
-                    font-size: medium;
-                    color:#05c37d}
-                .st-bd {border-style: none;}
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem
+                }
         </style>
         """, unsafe_allow_html=True)
 
@@ -69,7 +77,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache(show_spinner=False,suppress_st_warning=True)
+@st.cache_data(show_spinner=False)
 def load_lottieurl(url: str):
     r = requests.get(url)
     if r.status_code != 200:
@@ -83,14 +91,14 @@ if st.session_state.count == 0:
     arrival_message = st.empty()
     with arrival_message.container():
 
-        st.title("WHO API explorer")
-        col1, col2 = st.columns([4, 1], gap='small')
+        st.title("World Health Organization API explorer")
+        col1,col_mid, col2 = st.columns([4,0.2,1], gap='small')
         col1.subheader("Indicators exploration tool")
         col1.write("<p style='text-align: justify;'>"
-                   "This app imports data from the World Health Organization (WHO) API and displays it in a Streamlit web app."
-                   "<br/>It allows the user to select a disease (Tuberculosis, Malaria, or HIV) and then displays a list of indicators"
-                   " related to the chosen disease. The user can then select a specific indicator and view data for that indicator."
-                   " The data is also grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection. ",
+                   "This Streamlit web app, powered by data imported from the World Health Organization (WHO) API,"
+                   " enables users to explore indicators or enter relevant keywords. "
+                   " Upon selecting a topic (such as Tuberculosis, Malaria, or HIV) a list of related indicators is presented for the user to visualize."
+                   "<br>The data can be grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection.",
                    unsafe_allow_html=True)
 
         col2.subheader("API status")
@@ -138,7 +146,7 @@ if st.session_state.count == 0:
 
         col1, col2 = st.columns([10, 35], gap='small')
         with col2:
-            st.markdown("<br><br>",
+            st.markdown("<br>",
                         unsafe_allow_html=True)
             st.subheader("Disclaimer")
             st.write("<p style='text-align: justify;'>"
@@ -155,13 +163,14 @@ if st.session_state.count == 0:
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
         lottie_json = load_lottieurl(lottie_url)
         with col1:
-            st_lottie(lottie_json, height=250, key="loading_gif2")
+            st.empty()
+            st_lottie(lottie_json, height=200, key="loading_gif2")
 
 if st.session_state.count >= 1:
 
     ## List of WHO countries
     # Define a function to import the data from the WHO API
-    @st.cache(allow_output_mutation=True, show_spinner=False)
+    @st.cache_data(show_spinner=False)
     def import_api_WHO_countries(url):
         # Make a request to the API
         service_url0 = url
@@ -211,7 +220,7 @@ if st.session_state.count >= 1:
     country_list = country_list.merge(WorldBank_countries, how='inner', on='SpatialDim')
 
     # Import API data ------------------------------------
-    @st.cache(suppress_st_warning=True, show_spinner=False)
+    @st.cache_data(show_spinner=False)
     def import_api_WHO_indicators(url):
         service_url0 = url
         response0 = requests.get(service_url0)
@@ -222,7 +231,7 @@ if st.session_state.count >= 1:
         return data0a
 
 
-    @st.cache(suppress_st_warning=True, show_spinner=False)
+    @st.cache_data(show_spinner=False)
     def import_api_WHO_indicator_name(url):
         service_url0 = url
         response0 = requests.get(service_url0)
@@ -248,6 +257,8 @@ if st.session_state.count >= 1:
                 st.caption("Connection to WHO API established successfully!")
 
     # ---- HEADER ----
+
+    st.title("World Health Organization API explorer")
     col1, col2, col3 = st.columns([5, 30, 20], gap='small')
     data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
     textbox_keyword = col1.text_input('Keyword search', '', key="indicator2keyword2")
@@ -257,7 +268,7 @@ if st.session_state.count >= 1:
     if data0a.empty == True:
         st.warning("No indicator found, try another keyword (e.g. 'HIV')")
     else:
-        selected_indicator = col2.selectbox("Select metric", data0a.IndicatorName.unique().tolist())
+        selected_indicator = col2.selectbox("Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())), data0a.IndicatorName.unique().tolist())
 
         selection_indicator_code = data0a[data0a['IndicatorName'] == selected_indicator][['IndicatorCode']].iloc[0][
             0]
@@ -285,37 +296,35 @@ if st.session_state.count >= 1:
 
         df.sort_values(by=['SpatialDim', 'TimeDim'], ascending=True, inplace=True)
 
-        df.rename(columns={"Value": "Category","TimeDim": "Year", "NumericValue": "Value"}, inplace=True)
+        df.rename(columns={"Value": "Category","TimeDim": "Year", "NumericValue": selected_indicator}, inplace=True)
 
         if df['Dim1'].str.contains('BTSX').any() == True:
             df['Dim1'] = df['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
 
-    view = col3.radio("Combine with",
-                        ('Single metric','Population', 'Other indicator(s)'),
-                        horizontal=True, key= "view")
-    #st.markdown("""---""")
+    Indicator_select = col3.radio(
+        "",
+        ('Single indicator', 'Two indicators', "Two indicators & population data"),
+        label_visibility = "hidden")
 
-    # CONTENT ------------------------------------
-    if view == "Single metric":
-        try:
-            if df.Year.isnull().all():
-                st.error("This indicator is not dated, please select another")
-            elif df.empty == True:
-                st.info("No data found, please enter a new keyword or select another metric")
-            else:
-                #st.table(df)
-                if len(df.Dim1.unique()) > 1 == True:
-                    Dim1 = st.radio("Select dimension:", (df.Dim1.unique()), horizontal=True)
-                    df = df[(df['Dim1'] == Dim1)]
-                if len(df.Dim2.unique()) > 1 == True:
-                    Dim2 = st.radio("Select dimension:", (df.Dim2.unique()), horizontal=True)
-                    df = df[(df['Dim2'] == Dim2)]
+    try:
+        if df.Year.isnull().all():
+            st.error("This indicator is not dated, please select another")
+        elif df.empty == True:
+            st.info("No data found, please enter a new keyword or select another metric")
+        else:
+            if len(df.Dim1.unique()) > 1 == True:
+                Dim1 = col2.radio("Select dimension:", (df.Dim1.unique()), horizontal=True,label_visibility ="collapsed")
+                df = df[(df['Dim1'] == Dim1)]
+            if len(df.Dim2.unique()) > 1 == True:
+                Dim2 = st.radio("Select dimension:", (df.Dim2.unique()), horizontal=True,label_visibility ="collapsed")
+                df = df[(df['Dim2'] == Dim2)]
+    except NameError:
+        st.info("Please select another indicator")
 
+    if Indicator_select == "Single indicator":
 
                 hue = st.radio("Display data per:", ('Region', 'Income level', 'Country'), horizontal=True)
-
                 col1, col2 = st.columns([1, 1])
-
                 with col1:
                     if isCategorical == True:
                         dfg = df.groupby(["Category",hue]).count().reset_index()
@@ -341,7 +350,7 @@ if st.session_state.count >= 1:
 
                     if isCategorical == False:
                         # map hue category to a color
-                        @st.cache(show_spinner=False)
+                        @st.cache_data(show_spinner=False)
                         def generate_color_map():
                             return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
                         c = generate_color_map()
@@ -349,7 +358,7 @@ if st.session_state.count >= 1:
                         grouped_data = df.groupby(['Year', hue], as_index=False).mean()
 
                         def generate_stripplot(data, hue):
-                            fig = px.strip(data, y="Value", color = hue, hover_data = data[['Country','Year','Value']],title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig = px.strip(data, y=selected_indicator, color = hue, hover_data = data[['Country','Year',selected_indicator]],title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
                             fig.update_layout(
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
@@ -371,7 +380,7 @@ if st.session_state.count >= 1:
                             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
                         def generate_plot(data, hue):
-                            fig = px.line(data, x="Year", y="Value", color=hue, color_discrete_map=c,title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig = px.line(data, x="Year", y=selected_indicator, color=hue, color_discrete_map=c,title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
                             fig.update_layout(
                                 paper_bgcolor='rgba(0,0,0,0)',
                                 plot_bgcolor='rgba(0,0,0,0)',
@@ -395,7 +404,7 @@ if st.session_state.count >= 1:
                                     gridcolor='#252323',
                                     gridwidth=1
                                 ),
-                                height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0},
+                                height=500, margin={"r": 0, "t": 30, "l": 0, "b": 0},
                             )
                             for trace in fig.data:
                                 trace.line.width = 2
@@ -422,7 +431,7 @@ if st.session_state.count >= 1:
                                 selected_options = container.multiselect("Select one or more countries:", df.sort_values('Country').Country.unique())
                                 df_country = df[df["Country"].isin(selected_options)]
                                 if len(selected_options) > 0:
-                                    fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y="Value",color ="Country",color_discrete_map=c, title="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                                    fig = px.line(df_country.groupby(['Year','Country'], as_index=False).mean(), x="Year", y=selected_indicator,color ="Country",color_discrete_map=c, title="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
                                     fig.update_layout(
                                         paper_bgcolor='rgba(0,0,0,0)',
                                         plot_bgcolor='rgba(0,0,0,0)',
@@ -449,7 +458,7 @@ if st.session_state.count >= 1:
                                             gridcolor='#252323',
                                             gridwidth=1
                                         ),
-                                        height=400, margin={"r": 0, "t": 30, "l": 0, "b": 0}
+                                        height=500, margin={"r": 0, "t": 30, "l": 0, "b": 0}
                                     )
                                     for trace in fig.data:
                                         trace.line.width = 2
@@ -469,38 +478,457 @@ if st.session_state.count >= 1:
 
                 with col2:
                     if isCategorical == False:
-                        #@st.cache()
+                        #@st.cache_data()
                         def generate_chloropeth_dimension2(data):
-                            fig = px.choropleth(data, animation_frame="Year",locations='Country', color="Value", locationmode='country names',color_continuous_scale='Viridis', title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
+                            fig = px.choropleth(data, animation_frame="Year",locations='Country', color=selected_indicator, locationmode='country names',color_continuous_scale='Viridis')
                             fig.update_layout(
-                                title=go.layout.Title(
-                                    text=fig.layout.title.text,
-                                    xref='paper',
-                                    x=0.5,
-                                    font=dict(size=20, color='white')
-                                ),
                                 geo=dict(visible=False, bgcolor='rgba(0,0,0,0)', lakecolor='rgba(0,0,0,0)', landcolor='white',
                                          subunitcolor='rgba(0,0,0,0)', showcountries=True, projection_type='natural earth',
                                          fitbounds="locations"),
+
                                 autosize=False,
-                                height=400,
-                                margin={"r": 0, "t": 30, "l": 0, "b": 0})
+                                height=500,
+                            )
+                            fig.update_coloraxes(showscale=False)
                             fig.update_traces(marker_line_width=1)
                             return fig
-                        #df['col'].ffill()
                         fig = generate_chloropeth_dimension2(df)
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-        except NameError:
-            st.info("Please enter a new keyword")
 
-    if view == "Population":
+
+    # if view == "Population":
+    #     if df.Year.isnull().all():
+    #         st.error("This indicator is not dated, please select another")
+    #     elif df.empty == True:
+    #         st.info("No data found, please enter a new keyword or select another metric")
+    #     if df.empty != True:
+    #             @st.cache_data(show_spinner="Fetching data from World Bank API...")
+    #             def load_WB_pop_data(datemax):
+    #                 df_pop = wb.data.DataFrame(['SP.POP.TOTL'], time=range(2000, datemax), skipBlanks=True, columns='series').reset_index()
+    #                 df_pop.rename(columns={"economy": "SpatialDim","time": "Year", "SP.POP.TOTL": "Population"}, inplace=True)
+    #                 df_pop["Year"] = df_pop["Year"].str.replace('YR', '')
+    #                 df_pop["Year"] = df_pop['Year'].astype('int')
+    #                 return df_pop
+    #             df_pop = load_WB_pop_data(2030)
+    #             df_withpop = pd.merge(df,
+    #                           df_pop,
+    #                           on=['SpatialDim', 'Year'],
+    #                           how='inner')
+    #             if df_withpop['Year'].max() == df_withpop['Year'].min():
+    #                 year_selected2 = df_withpop['Year'].max()
+    #
+    #             col1, col2, col3, col4 = st.columns([1,1.7,1,1], gap="medium")
+    #
+    #             hue = col3.radio("Display data per", ('Region', 'Income level', 'Country',"Cluster"), horizontal=True,key = "radio_tab2")
+    #             axis = col4.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=True, key="scale")
+    #
+    #             # map hue category to a color
+    #             @st.cache_data(show_spinner=False)
+    #             def generate_color_map():
+    #                 return dict(zip(df_withpop[hue].unique(), px.colors.qualitative.Plotly))
+    #             c = generate_color_map()
+    #
+    #             if len(df.Dim1.unique()) > 1 == True:
+    #                 Dim1 = col1.radio("Select dimension:", (df.Dim1.unique()), horizontal=True)
+    #                 df_withpop = df_withpop[(df_withpop['Dim1'] == Dim1)]
+    #             if len(df.Dim2.unique()) > 1 == True:
+    #                 Dim2 = col2.radio("Select dimension:", (df.Dim2.unique()), horizontal=True)
+    #                 df_withpop = df_withpop[(df_withpop['Dim2'] == Dim2)]
+    #
+    #             if hue != "Cluster":
+    #                 if isCategorical == False:
+    #                     @st.cache_data(show_spinner=False)
+    #                     def generate_grouped_data(hue):
+    #                         return df_withpop.groupby(['Year', hue], as_index=False).mean()
+    #                     grouped_data = generate_grouped_data(hue)
+    #
+    #                     def generate_scatter(data,hue):
+    #                         fig = px.scatter(data,animation_frame="Year", size="Population", x=selected_indicator,hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
+    #                                          title= "{}".format(selected_indicator))
+    #                         fig.update_layout(
+    #                             font=dict(family="calibri"),
+    #                             paper_bgcolor='rgba(0,0,0,0)',
+    #                             plot_bgcolor='rgba(0,0,0,0)',
+    #                             title=go.layout.Title(
+    #                                 text=fig.layout.title.text,
+    #                                 xref='paper',
+    #                                 x=0.5,
+    #                                 font=dict(size=25, color='white')),
+    #                             legend=dict(font=dict(size=15, color='white')),
+    #                             xaxis=go.layout.XAxis(
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1,),
+    #                             yaxis=go.layout.YAxis(
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1),
+    #                             height=500,
+    #                             margin={"r": 0, "t": 50, "l": 0, "b": 0})
+    #                         fig.update_traces(marker=dict(size=15,
+    #                                                       line=dict(width=1.5,
+    #                                                                 color='black')),
+    #                                           selector=dict(mode='markers'))
+    #                         fig.update_xaxes(type="log")
+    #                         if axis == "Logarithmic":
+    #                             fig.update_xaxes(type="log")
+    #                             fig.update_yaxes(type="log")
+    #                         if axis == "Linear":
+    #                             fig.update_xaxes(type="linear")
+    #                             fig.update_yaxes(type="linear")
+    #                         st.plotly_chart(fig,use_container_width=True)
+    #
+    #                     generate_scatter(df_withpop, hue)
+    #
+    #
+    #             if hue == "Cluster":
+    #                 if isCategorical == False:
+    #                     try:
+    #                         from sklearn.cluster import KMeans
+    #                         import plotly.graph_objects as go
+    #                         from sklearn.preprocessing import StandardScaler
+    #
+    #                         n_clusters = col4.slider("Adjust number of clusters", min_value=1, max_value=10, value=5)
+    #
+    #                         # Select the columns 'Population' and 'Value' as the X values
+    #                         X = df_withpop[['Population', selected_indicator]].dropna()
+    #
+    #                         # Scale the data using StandardScaler
+    #                         scaler = StandardScaler()
+    #                         scaler.fit(X)
+    #                         X_scaled = scaler.transform(X)
+    #
+    #                         # Create an empty list to store the within-cluster sum of squares (WCSS) for each number of clusters
+    #                         wcss = []
+    #
+    #                         # Loop through a range of number of clusters
+    #                         for i in range(1, 10):
+    #                             kmeans = KMeans(n_clusters=i)
+    #                             kmeans.fit(X_scaled)
+    #                             wcss.append(kmeans.inertia_)
+    #
+    #                         # Create a Plotly line plot of the WCSS vs the number of clusters
+    #                         fig = go.Figure()
+    #                         fig = px.line(x=list(range(1, 10)), y=wcss)
+    #                         fig.update_layout(
+    #                             title=go.layout.Title(
+    #                                 text="Elbow Method",
+    #                                 xref='paper',
+    #                                 x=0.5,
+    #                                 font=dict(size=20, color='white')),
+    #                             xaxis_title="Number of clusters",
+    #                             yaxis_title='WCSS',
+    #                             paper_bgcolor='rgba(0,0,0,0)',
+    #                             plot_bgcolor='rgba(0,0,0,0)',
+    #                             legend=dict(
+    #                                 font=dict(size=15, color='white')
+    #                             ),
+    #                             xaxis=go.layout.XAxis(
+    #                                 title = "Number of clusters",
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1,
+    #                             ),
+    #                             yaxis=go.layout.YAxis(
+    #                                 title='Within-cluster Sum of Squares (WCSS)',
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1
+    #                             ),
+    #                             height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0}
+    #                             )
+    #                         fig.update_traces(line_color='#04AA6D')
+    #                         col1, col2 = st.columns([1,3], gap="medium")
+    #                         col1.plotly_chart(fig, use_container_width=True)
+    #
+    #                         # Import necessary libraries
+    #                         from sklearn.cluster import KMeans
+    #                         from sklearn.preprocessing import StandardScaler
+    #                         # Select the columns 'Population' and 'Value' as the X values
+    #                         X = df_withpop[['Population', 'Value']].dropna()
+    #                         # Create an instance of StandardScaler
+    #                         scaler = StandardScaler()
+    #                         # Fit the scaler to the X values
+    #                         scaler.fit(X)
+    #                         # Scale the X values
+    #                         X_scaled = scaler.transform(X)
+    #                         # Create an instance of KMeans with the number of clusters desired
+    #                         kmeans = KMeans(n_clusters)
+    #                         # Fit the model to the scaled data
+    #                         kmeans.fit(X_scaled)
+    #                         # Get the cluster labels for each row
+    #                         labels = kmeans.labels_
+    #                         # Add the labels to the dataframe as a new column
+    #                         df_withpop_Kmeans = df_withpop.dropna()
+    #                         df_withpop_Kmeans['Cluster'] = labels
+    #                         df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'] +1
+    #                         df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'].astype(str)
+    #                         fig = px.scatter(df_withpop_Kmeans, x="Population", y=selected_indicator, hover_data=(df_withpop_Kmeans), log_x=True,log_y=True,
+    #                                          color="Cluster", color_discrete_map=c,title= "{} ({}) clustered with K-means".format(selected_indicator, year_selected2))
+    #                         fig.update_layout(
+    #                             paper_bgcolor='rgba(0,0,0,0)',
+    #                             plot_bgcolor='rgba(0,0,0,0)',
+    #                             title=go.layout.Title(
+    #                                 text=fig.layout.title.text,
+    #                                 xref='paper',
+    #                                 x=0.5,
+    #                                 font=dict(size=20, color='white')
+    #                             ),
+    #                             legend=dict(
+    #                                 font=dict(size=15, color='white')
+    #                             ),
+    #                             xaxis=go.layout.XAxis(
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1,
+    #                             ),
+    #                             yaxis=go.layout.YAxis(
+    #                                 tickfont=dict(size=15),
+    #                                 titlefont=dict(size=15),
+    #                                 showgrid=True,
+    #                                 gridcolor='#252323',
+    #                                 gridwidth=1
+    #                             ),
+    #                             height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0})
+    #                         if axis == "Logarithmic":
+    #                             fig.update_xaxes(type="log")
+    #                             fig.update_yaxes(type="log")
+    #                         if axis == "Linear":
+    #                             fig.update_xaxes(type="linear")
+    #                             fig.update_yaxes(type="linear")
+    #                         fig.update_traces(marker=dict(size=15,
+    #                                                       line=dict(width=1.5,
+    #                                                                 color='black')),
+    #                                           selector=dict(mode='markers'))
+    #                         col2.plotly_chart(fig, use_container_width=True)
+    #
+    #                         with st.expander("Learn about the elbow method"):
+    #                             st.info("The elbow method is a way to figure out how many clusters to use when doing "
+    #                                       "a k-means analysis. It's done by trying different numbers of clusters and "
+    #                                       "seeing how good the clusters are. Then, we plot the results and look for a 'bend'"
+    #                                       " in the graph called the 'elbow'. The number of clusters we chose at that "
+    #                                       "bend is the best number of clusters to use.")
+    #
+    #                     except NameError:
+    #                         st.info("An error was found while using k-mean")
+
+    if Indicator_select == "Two indicators":
+
+        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+
+        col1, col2, col3 = st.columns([5, 30, 20], gap='small')
+        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+        textbox_keyword2 = col1.text_input('Keyword search', '', key="indicator2keyword22",label_visibility="collapsed")
+        data0a = import_api_WHO_indicators(
+            "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                textbox_keyword2))
+        if data0a.empty == True:
+            st.warning("No indicator found, try another keyword (e.g. 'HIV')")
+        else:
+            selected_indicator2 = col2.selectbox(
+                "Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())),
+                data0a.IndicatorName.unique().tolist(),label_visibility="collapsed",key="selected_indicator2")
+
+            selection_indicator_code = data0a[data0a['IndicatorName'] == selected_indicator2][['IndicatorCode']].iloc[0][
+                0]
+
+            data0j = import_api_WHO_indicator_name(
+                "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+            data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
+            data0a = pd.DataFrame(data0j["value"])
+            # if data0a['Dim1'].str.contains('BTSX').any() == True:
+            #     data0a = data0a[data0a['Dim1'] == "BTSX"]
+
+            if data0a.NumericValue.dtype != np.number:
+                isCategorical = True
+            else:
+                isCategorical = False
+
+            data0a = data0a[(data0a['SpatialDimType'] == 'COUNTRY') | (data0a['SpatialDimType'] == 'COUNTRY')][
+                ['SpatialDim', 'Dim1', 'Dim2', 'TimeDim', 'Value', 'NumericValue']]
+            data0a.rename(columns={"Value": "Category", "TimeDim": "Year", "NumericValue": selected_indicator2},
+                          inplace=True)
+            if data0a['Dim1'].str.contains('BTSX').any() == True:
+                data0a['Dim1'] = data0a['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
+
+            data0a.sort_values(by=['Year', 'SpatialDim'], ascending=True, inplace=True)
+
+            # merge with country info
+            df = pd.merge(data0a,
+                          df,
+                          on=['SpatialDim', 'Year'],
+                          how='inner')
+
         if df.Year.isnull().all():
             st.error("This indicator is not dated, please select another")
         elif df.empty == True:
             st.info("No data found, please enter a new keyword or select another metric")
         if df.empty != True:
-            with st.spinner("Loading data..."):
-                @st.cache(show_spinner=(False),allow_output_mutation=True)
+
+            if len(df.Dim1_x.unique()) > 1 == True:
+                Dim1_x = col2.radio("Select dimension:", (df.Dim1_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.1")
+                df = df[(df['Dim1_x'] == Dim1_x)]
+            if len(df.Dim2_x.unique()) > 1 == True:
+                Dim2_x = col2.radio("Select dimension:", (df.Dim2_x.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.2")
+                df = df[(df['Dim2_x'] == Dim2_x)]
+
+            if len(df.Dim1_y.unique()) > 1 == True:
+                Dim1_y = col2.radio("Select dimension:", (df.Dim1_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.3")
+                df = df[(df['Dim1_y'] == Dim1_y)]
+            if len(df.Dim2_y.unique()) > 1 == True:
+                Dim2_y = col2.radio("Select dimension:", (df.Dim2_y.unique()), horizontal=True,label_visibility ="collapsed",key="radio2.4")
+                df = df[(df['Dim2_y'] == Dim2_y)]
+
+
+
+            col1, col2 = st.columns([7, 1], gap="medium")
+
+            hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,
+                             key="radio_tab3")
+            axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
+            def generate_color_map():
+                return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
+
+            c = generate_color_map()
+
+            if hue != "Cluster":
+                if isCategorical == False:
+                    @st.cache_data(show_spinner=False)
+
+                    def generate_grouped_data(hue):
+                        return df.groupby(['Year', hue], as_index=False).mean()
+
+                    grouped_data = generate_grouped_data(hue)
+
+                    def generate_scatter(data, hue):
+                        fig = px.scatter(data, animation_frame="Year", animation_group="Country",
+                                         x=selected_indicator, y=selected_indicator2, hover_data=(df),
+                                         log_x=True, log_y=True, color=hue, color_discrete_map=c,
+                                         title="{}".format(selected_indicator))
+                        fig.update_layout(
+                            font=dict(family="calibri"),
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            title=go.layout.Title(
+                                text=fig.layout.title.text,
+                                xref='paper',
+                                font=dict(size=25, color='white')),
+                            legend=dict(font=dict(size=15, color='white')),
+                            xaxis=go.layout.XAxis(
+                                tickfont=dict(size=15),
+                                titlefont=dict(size=15),
+                                showgrid=True,
+                                gridcolor='#252323',
+                                gridwidth=1, ),
+                            yaxis=go.layout.YAxis(
+                                tickfont=dict(size=15),
+                                titlefont=dict(size=15),
+                                showgrid=True,
+                                gridcolor='#252323',
+                                gridwidth=1),
+                            height=500,
+                            margin={"r": 0, "t": 50, "l": 0, "b": 0})
+                        fig.update_traces(marker=dict(size=15,
+                                                      line=dict(width=1.5,
+                                                                color='black')),
+                                          selector=dict(mode='markers'))
+                        if axis == "Logarithmic":
+                            fig.update_xaxes(autorange=True, type="log", title_text=selected_indicator,
+                                             title_font_size=18)
+                            fig.update_yaxes(autorange=True, type="log", title_text=selected_indicator2,
+                                             title_font_size=18)
+                        if axis == "Linear":
+                            fig.update_xaxes(autorange=True, type="linear", title_text=selected_indicator,
+                                             title_font_size=18)
+                            fig.update_yaxes(autorange=True, type="linear", title_text=selected_indicator2,
+                                             title_font_size=18)
+                        col1.plotly_chart(fig, use_container_width=True)
+
+
+                    generate_scatter(df, hue)
+
+
+    if Indicator_select == "Two indicators & population data":
+
+        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+
+        col1, col2, col3 = st.columns([5, 30, 20], gap='small')
+        data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
+        textbox_keyword2 = col1.text_input('Keyword search', '', key="indicator2keyword23",
+                                           label_visibility="collapsed")
+        data0a = import_api_WHO_indicators(
+            "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
+                textbox_keyword2))
+        if data0a.empty == True:
+            st.warning("No indicator found, try another keyword (e.g. 'HIV')")
+        else:
+            selected_indicator2 = col2.selectbox(
+                "Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())),
+                data0a.IndicatorName.unique().tolist(), label_visibility="collapsed", key="selected_indicator3")
+
+            selection_indicator_code = \
+            data0a[data0a['IndicatorName'] == selected_indicator2][['IndicatorCode']].iloc[0][
+                0]
+            if selected_indicator2 == selected_indicator:
+                st.warning("select a different indicator or set the search option on single indicator")
+            else:
+                data0j = import_api_WHO_indicator_name(
+                    "https://ghoapi.azureedge.net/api/{}".format(selection_indicator_code))
+                data0a[data0a['IndicatorName'] == selection_indicator_code]['IndicatorCode'].reset_index(drop=True)
+                data0a = pd.DataFrame(data0j["value"])
+                # if data0a['Dim1'].str.contains('BTSX').any() == True:
+                #     data0a = data0a[data0a['Dim1'] == "BTSX"]
+
+                if data0a.NumericValue.dtype != np.number:
+                    isCategorical = True
+                else:
+                    isCategorical = False
+
+                data0a = data0a[(data0a['SpatialDimType'] == 'COUNTRY') | (data0a['SpatialDimType'] == 'COUNTRY')][
+                    ['SpatialDim', 'Dim1', 'Dim2', 'TimeDim', 'Value', 'NumericValue']]
+                data0a.rename(columns={"Value": "Category", "TimeDim": "Year", "NumericValue": selected_indicator2},
+                              inplace=True)
+                if data0a['Dim1'].str.contains('BTSX').any() == True:
+                    data0a['Dim1'] = data0a['Dim1'].map({'BTSX': 'Both sex', 'MLE': 'Male', 'FMLE': 'Female'})
+
+                data0a.sort_values(by=['Year', 'SpatialDim'], ascending=True, inplace=True)
+
+                # merge with country info
+                df = pd.merge(data0a,
+                              df,
+                              on=['SpatialDim','Year'],
+                              how='inner')
+
+                if df.Year.isnull().all():
+                    st.error("This indicator is not dated, please select another")
+                elif df.empty == True:
+                    st.info("No data found, please enter a new keyword or select another metric")
+                if df.empty != True:
+                    if len(df.Dim1_x.unique()) > 1 == True:
+                        Dim1_x = col2.radio("Select dimension:", (df.Dim1_x.unique()), horizontal=True,label_visibility ="collapsed",key="radiodiml12")
+                        df = df[(df['Dim1_x'] == Dim1_x)]
+                    if len(df.Dim2_x.unique()) > 1 == True:
+                        Dim2_x = col2.radio("Select dimension:", (df.Dim2_x.unique()), horizontal=True,label_visibility ="collapsed",key="radiodiml13")
+                        df = df[(df['Dim2_x'] == Dim2_x)]
+
+                    if len(df.Dim1_y.unique()) > 1 == True:
+                        Dim1_y = col2.radio("Select dimension:", (df.Dim1_y.unique()), horizontal=True,label_visibility ="collapsed",key="radiodiml14")
+                        df = df[(df['Dim1_y'] == Dim1_y)]
+                    if len(df.Dim2_y.unique()) > 1 == True:
+                        Dim2_y = col2.radio("Select dimension:", (df.Dim2_y.unique()), horizontal=True,label_visibility ="collapsed",key="radiodiml15")
+                        df = df[(df['Dim2_y'] == Dim2_y)]
+
+                @st.cache_data(show_spinner="Fetching data from World Bank API...")
                 def load_WB_pop_data(datemax):
                     df_pop = wb.data.DataFrame(['SP.POP.TOTL'], time=range(2000, datemax), skipBlanks=True, columns='series').reset_index()
                     df_pop.rename(columns={"economy": "SpatialDim","time": "Year", "SP.POP.TOTL": "Population"}, inplace=True)
@@ -512,36 +940,27 @@ if st.session_state.count >= 1:
                               df_pop,
                               on=['SpatialDim', 'Year'],
                               how='inner')
-                if df_withpop['Year'].max() == df_withpop['Year'].min():
-                    year_selected2 = df_withpop['Year'].max()
-                else:
-                    col1, col2, col3, col4 = st.columns([1,1.7,1,1], gap="medium")
-                    year_selected2 = col1.slider('Select year',
-                                                 int(df_withpop['Year'].min()), int(df_withpop['Year'].max()),
-                                                 int(df_withpop['Year'].max()), key="yearslider_pop")
-                    df_withpop = df_withpop[df_withpop['Year']==year_selected2]
 
-                hue = col2.radio("Display data per", ('Region', 'Income level', 'Country',"Cluster"), horizontal=True,key = "radio_tab2")
-                axis = col3.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=True, key="scale")
+                col1, col2 = st.columns([7,1], gap="medium")
 
+                hue = col2.radio("Display data per", ('Region', 'Income level', 'Country'), horizontal=False,key = "radio_tab3")
+                axis = col2.radio("Axis scale", ('Logarithmic', 'Linear'), horizontal=False, key="scale2")
+                #st.table(df_withpop)
                 # map hue category to a color
-                @st.cache(show_spinner=False)
+                @st.cache_data(show_spinner=False)
                 def generate_color_map():
                     return dict(zip(df_withpop[hue].unique(), px.colors.qualitative.Plotly))
                 c = generate_color_map()
-
+                
                 if hue != "Cluster":
                     if isCategorical == False:
-                        @st.cache(show_spinner=False)
+                        @st.cache_data(show_spinner=False)
                         def generate_grouped_data(hue):
                             return df_withpop.groupby(['Year', hue], as_index=False).mean()
                         grouped_data = generate_grouped_data(hue)
-
-                        df_withpop = df_withpop[df_withpop['Year'] == year_selected2]
-
                         def generate_scatter(data,hue):
-                            fig = px.scatter(data, x="Population", y="Value",hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
-                                             title= "{} ({})".format(selected_indicator, year_selected2))
+                            fig = px.scatter(data,animation_frame="Year", animation_group= "Country", size="Population", x=selected_indicator, y=selected_indicator2,hover_data=(df_withpop),log_x=True,log_y=True, color=hue, color_discrete_map=c,
+                                             title= "{}".format(selected_indicator))
                             fig.update_layout(
                                 font=dict(family="calibri"),
                                 paper_bgcolor='rgba(0,0,0,0)',
@@ -549,7 +968,6 @@ if st.session_state.count >= 1:
                                 title=go.layout.Title(
                                     text=fig.layout.title.text,
                                     xref='paper',
-                                    x=0.5,
                                     font=dict(size=25, color='white')),
                                 legend=dict(font=dict(size=15, color='white')),
                                 xaxis=go.layout.XAxis(
@@ -570,192 +988,40 @@ if st.session_state.count >= 1:
                                                           line=dict(width=1.5,
                                                                     color='black')),
                                               selector=dict(mode='markers'))
-                            fig.update_xaxes(type="log")
                             if axis == "Logarithmic":
-                                fig.update_xaxes(type="log")
-                                fig.update_yaxes(type="log")
+                                fig.update_xaxes(autorange= True,type="log", title_text=selected_indicator, title_font_size = 18)
+                                fig.update_yaxes(autorange= True,type="log", title_text=selected_indicator2, title_font_size = 18)
                             if axis == "Linear":
-                                fig.update_xaxes(type="linear")
-                                fig.update_yaxes(type="linear")
-                            st.plotly_chart(fig,use_container_width=True)
+                                fig.update_xaxes(autorange= True,type="linear", title_text=selected_indicator, title_font_size = 18)
+                                fig.update_yaxes(autorange= True,type="linear", title_text=selected_indicator2, title_font_size = 18)
+                            col1.plotly_chart(fig,use_container_width=True)
+
 
                         generate_scatter(df_withpop, hue)
 
 
-                if hue == "Cluster":
-                    if isCategorical == False:
-                        try:
-                            from sklearn.cluster import KMeans
-                            import plotly.graph_objects as go
-                            from sklearn.preprocessing import StandardScaler
-
-                            n_clusters = col4.slider("Adjust number of clusters", min_value=1, max_value=10, value=5)
-
-                            # Select the columns 'Population' and 'Value' as the X values
-                            X = df_withpop[['Population', 'Value']].dropna()
-
-                            # Scale the data using StandardScaler
-                            scaler = StandardScaler()
-                            scaler.fit(X)
-                            X_scaled = scaler.transform(X)
-
-                            # Create an empty list to store the within-cluster sum of squares (WCSS) for each number of clusters
-                            wcss = []
-
-                            # Loop through a range of number of clusters
-                            for i in range(1, 10):
-                                kmeans = KMeans(n_clusters=i)
-                                kmeans.fit(X_scaled)
-                                wcss.append(kmeans.inertia_)
-
-                            # Create a Plotly line plot of the WCSS vs the number of clusters
-                            fig = go.Figure()
-                            fig = px.line(x=list(range(1, 10)), y=wcss)
-                            fig.update_layout(
-                                title=go.layout.Title(
-                                    text="Elbow Method",
-                                    xref='paper',
-                                    x=0.5,
-                                    font=dict(size=20, color='white')),
-                                xaxis_title="Number of clusters",
-                                yaxis_title='WCSS',
-                                paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)',
-                                legend=dict(
-                                    font=dict(size=15, color='white')
-                                ),
-                                xaxis=go.layout.XAxis(
-                                    title = "Number of clusters",
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1,
-                                ),
-                                yaxis=go.layout.YAxis(
-                                    title='Within-cluster Sum of Squares (WCSS)',
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1
-                                ),
-                                height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0}
-                                )
-                            fig.update_traces(line_color='#04AA6D')
-                            col1, col2 = st.columns([1,3], gap="medium")
-                            col1.plotly_chart(fig, use_container_width=True)
-
-                            # Import necessary libraries
-                            from sklearn.cluster import KMeans
-                            from sklearn.preprocessing import StandardScaler
-                            # Select the columns 'Population' and 'Value' as the X values
-                            X = df_withpop[['Population', 'Value']].dropna()
-                            # Create an instance of StandardScaler
-                            scaler = StandardScaler()
-                            # Fit the scaler to the X values
-                            scaler.fit(X)
-                            # Scale the X values
-                            X_scaled = scaler.transform(X)
-                            # Create an instance of KMeans with the number of clusters desired
-                            kmeans = KMeans(n_clusters)
-                            # Fit the model to the scaled data
-                            kmeans.fit(X_scaled)
-                            # Get the cluster labels for each row
-                            labels = kmeans.labels_
-                            # Add the labels to the dataframe as a new column
-                            df_withpop_Kmeans = df_withpop.dropna()
-                            df_withpop_Kmeans['Cluster'] = labels
-                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'] +1
-                            df_withpop_Kmeans['Cluster'] = df_withpop_Kmeans['Cluster'].astype(str)
-                            fig = px.scatter(df_withpop_Kmeans, x="Population", y="Value", hover_data=(df_withpop_Kmeans), log_x=True,log_y=True,
-                                             color="Cluster", color_discrete_map=c,title= "{} ({}) clustered with K-means".format(selected_indicator, year_selected2))
-                            fig.update_layout(
-                                paper_bgcolor='rgba(0,0,0,0)',
-                                plot_bgcolor='rgba(0,0,0,0)',
-                                title=go.layout.Title(
-                                    text=fig.layout.title.text,
-                                    xref='paper',
-                                    x=0.5,
-                                    font=dict(size=20, color='white')
-                                ),
-                                legend=dict(
-                                    font=dict(size=15, color='white')
-                                ),
-                                xaxis=go.layout.XAxis(
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1,
-                                ),
-                                yaxis=go.layout.YAxis(
-                                    tickfont=dict(size=15),
-                                    titlefont=dict(size=15),
-                                    showgrid=True,
-                                    gridcolor='#252323',
-                                    gridwidth=1
-                                ),
-                                height=500, margin={"r": 0, "t": 50, "l": 0, "b": 0})
-                            if axis == "Logarithmic":
-                                fig.update_xaxes(type="log")
-                                fig.update_yaxes(type="log")
-                            if axis == "Linear":
-                                fig.update_xaxes(type="linear")
-                                fig.update_yaxes(type="linear")
-                            fig.update_traces(marker=dict(size=15,
-                                                          line=dict(width=1.5,
-                                                                    color='black')),
-                                              selector=dict(mode='markers'))
-                            col2.plotly_chart(fig, use_container_width=True)
-
-                            with st.expander("Learn about the elbow method"):
-                                st.info("The elbow method is a way to figure out how many clusters to use when doing "
-                                          "a k-means analysis. It's done by trying different numbers of clusters and "
-                                          "seeing how good the clusters are. Then, we plot the results and look for a 'bend'"
-                                          " in the graph called the 'elbow'. The number of clusters we chose at that "
-                                          "bend is the best number of clusters to use.")
-
-                        except NameError:
-                            st.info("An error was found while using k-mean")
 
 
 
-            # if metric == '2nd WHO indicator':
-            #     with st.spinner("Loading data..."):
-            #         data0a = import_api_WHO_indicators("https://ghoapi.azureedge.net/api/Indicator")
-            #         col1, col2 = st.columns([1, 5])
-            #         with col1:
-            #             textbox_keyword = st.text_input('Keyword search', '',key="indicator2keyword")
-            #             if textbox_keyword == "":
-            #                 col2.selectbox("Select 2nd metric",data0a.IndicatorName.unique().tolist())
-            #             else:
-            #                 data0a = import_api_WHO_indicators(
-            #                     "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
-            #                         textbox_keyword))
-            #                 if data0a.empty == True:
-            #                     col2.warning("No indicator found, try another keyword (e.g. 'HIV')")
-            #                 else:
-            #                     metric2 = col2.selectbox("Select 2nd metric", data0a.IndicatorName.unique().tolist())
-            #
-            # if metric == '3rd or more WHO indicator(s)':
-            #     if metric2 !="":
-            #         metric3_1 = metric2
-            #         col1, col2 = st.columns([1, 5])
-            #         with col1:
-            #             textbox_keyword = st.text_input('Keyword search', '')
-            #             if textbox_keyword == "":
-            #                 col2.selectbox("Select another metric",data0a.IndicatorName.unique().tolist())
-            #             else:
-            #                 data0a = import_api_WHO_indicators(
-            #                     "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'{}')".format(
-            #                         textbox_keyword))
-            #                 metric2 = col2.selectbox("Select 2nd metric", data0a.IndicatorName.unique().tolist())
-            #
-            #
-            # if metric == '3rd or more WHO indicator(s)':
-            #     with st.spinner("Loading data..."):
-            #         st.caption("let's go")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
