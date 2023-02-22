@@ -174,7 +174,7 @@ with portfolio_container:
 
             st.image(img, width=650)
             st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/WHO_API_explorer)"
+                "###### [💻 link](https://adrien.streamlit.app/~/+/World_Health_Organization_API)"
             )
         with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
             st.markdown('''
