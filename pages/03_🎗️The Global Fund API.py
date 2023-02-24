@@ -148,7 +148,7 @@ if st.session_state.count == 0:
         col2.write("<p style='text-align: justify;'>"
             "Please note that the information provided in this page is created and shared by me as an individual and "
             "should not be taken as an official representation of the Global Fund."
-            "For accurate and up-to-date information, please consult the Global Fund official data explorer.",
+            "<br>For accurate and up-to-date information, please consult the Global Fund official data explorer.",
             unsafe_allow_html=True)
         if response1.status_code == 200 and response2.status_code == 200:
             disclaimer_confirmation = col2.button('I understand')
