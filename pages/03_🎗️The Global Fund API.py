@@ -79,7 +79,7 @@ if st.session_state.count == 0:
         col1.write("<p style='text-align: justify;'>"
                    "This app imports data from the Global Fund API and displays it in a Streamlit web app."
                    "<br/>It allows the user to navigate between several information dimensions and represent it visually with "
-                 "different level of granularity (region, country, disease, stakeholder etc."
+                 "different level of granularity (region, country, disease, stakeholder etc.)"
                    " The data is also grouped by Region, Income level, or Country (using the World Bank API) depending "
                  "on the user's selection.",unsafe_allow_html=True)
         lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
