@@ -195,7 +195,7 @@ with portfolio_container:
         with col2.expander("Process analysis"):
             st.markdown("<p style='text-align: justify'>"
             "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
-            "compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
+            " compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
             "process steps and provides an initial framework to approach process steps pre-processing and visualization."
             , unsafe_allow_html=True)
             st.markdown(
