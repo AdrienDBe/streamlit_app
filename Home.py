@@ -191,6 +191,7 @@ with portfolio_container:
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)
 
+        col2.subheader('Business application')
         with col2.expander("Process analysis"):
             st.markdown("<p style='text-align: justify'>"
             "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
