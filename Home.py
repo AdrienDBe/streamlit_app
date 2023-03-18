@@ -204,7 +204,7 @@ with portfolio_container:
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
             #online
-            img = "./Images/Process_picture.jpg"
+            img = "./Images/Process_picture.png"
             st.image(img, width=650)
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
