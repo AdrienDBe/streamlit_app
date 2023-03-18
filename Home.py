@@ -164,17 +164,16 @@ with portfolio_container:
             "<br> The app also provides the option to group the data by region, income level, or country "
             "based on user selection, using the World Bank API.", unsafe_allow_html=True)
             # picture
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/~/+/World_Health_Organization_API)"
+            )
             from PIL import Image
-
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
             #online
             img = "./Images/WHO_app.jpg"
-
             st.image(img, width=650)
-            st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/~/+/World_Health_Organization_API)"
-            )
+            
         with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
@@ -182,15 +181,15 @@ with portfolio_container:
             "(disease), or partner involved, and represent it visually with varying levels of granularity. "
             "The app also provides options for grouping the data by Region, Income level, or Country based"
             " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
+            )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             #online
             img = "./Images/GF_app.jpg"
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)
-            st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
-            )
 
         with col2.expander("Process analysis"):
             st.markdown("<p style='text-align: justify'>"
@@ -198,15 +197,14 @@ with portfolio_container:
             "compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
             "process steps and provides an initial framework to approach process steps pre-processing and visualization."
             , unsafe_allow_html=True)
-
+            st.markdown(
+            "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
+            )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
             #online
             img = "./Images/Process_picture.png"
             st.image(img, width=650)
-            st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
-            )
 
 st.write('---')
 
