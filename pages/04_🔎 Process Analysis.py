@@ -23,7 +23,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 st.title('Process analysis')
 st.write('Python can be used to conduct process analysis and visualize business process outcome in comparison to theoretical process.'
-         ' In this page we are going to go through a few steps required to perform such analysis. The main objective being to '
+         ' In this page we are going through a few steps required to perform such analysis, the main objective being to '
          'generate high-level insights on process performance and identify categories impacting our process.')
 
 # Web app path
