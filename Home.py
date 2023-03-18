@@ -157,61 +157,58 @@ with portfolio_container:
     col2.subheader('API explorer')
     with col2:
         with st.expander("World Health Organization: Indicators"):
-            st.markdown('''
-            This app is powered by data from the World Health Organization (WHO) API. 
-            Users can explore indicators or enter relevant keywords, and upon selecting a topic such as Tuberculosis, 
-            Malaria, or HIV, a list of related indicators is presented for visualization. 
-            The app also allows users to group the data by Region, Income level, or Country based on their selection, 
-            using the World Bank API.
-            ''')
+            st.markdown("<p style='text-align: justify'>"
+            "Powered by data from the World Health Organization (WHO) API, users of the app can explore indicators or"
+            " enter relevant keywords. Upon selecting a topic such as Tuberculosis, Malaria, or HIV, "
+            "a list of related indicators is presented for visualization. "
+            "<br> The app also provides the option to group the data by region, income level, or country "
+            "based on user selection, using the World Bank API.", unsafe_allow_html=True)
             # picture
             from PIL import Image
 
             #local
-            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
+            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
             #online
-            img = "./Images/WHO_app.jpg"
+            #img = "./Images/WHO_app.jpg"
 
             st.image(img, width=650)
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/~/+/World_Health_Organization_API)"
             )
         with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
-            st.markdown('''
-            This app imports data from the Global Fund API and presents it for exploration and visualization. 
-            Users can navigate between different dimensions of information, such as region, country, component (disease), 
-            or partner involved, and represent it visually with varying levels of granularity. 
-            The app also provides options to group the data by Region, Income level, or Country based on the user's selection, 
-            using the World Bank API.''')
-            # picture
-            from PIL import Image
-            # local
+            st.markdown("<p style='text-align: justify'>"
+            "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
+            " Users can navigate between different dimensions of data, such as region, country, component "
+            "(disease), or partner involved, and represent it visually with varying levels of granularity. "
+            "The app also provides options for grouping the data by Region, Income level, or Country based"
+            " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
+            #local
+            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             #online
-            img = "./Images/GF_app.jpg"
+            #img = "./Images/GF_app.jpg"
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
             )
-         
+
         with col2.expander("Process analysis"):
-            st.markdown('''
-            This app imports data from the Global Fund API and presents it for exploration and visualization. 
-            Users can navigate between different dimensions of information, such as region, country, component (disease), 
-            or partner involved, and represent it visually with varying levels of granularity. 
-            The app also provides options to group the data by Region, Income level, or Country based on the user's selection, 
-            using the World Bank API.''')
+            st.markdown("<p style='text-align: justify'>"
+            "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
+            "compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
+            "process steps and provides an initial framework to approach process steps pre-processing and visualization."
+            , unsafe_allow_html=True)
+
             #local
-            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
+            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
             #online
-            img = "./Images/Process_picture.png"
+            #img = "./Images/Process_picture.png"
             st.image(img, width=650)
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
             )
 
-
-st.write("---")
+st.write('---')
 
 # ---- IT Skills ----
 # Custom function for printing text
