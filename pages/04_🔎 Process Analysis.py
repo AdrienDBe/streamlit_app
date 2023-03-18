@@ -12,6 +12,14 @@ import json
 import requests
 
 st.set_page_config(page_title="Process analysis", page_icon="🔎", layout="centered")
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 st.title('Process analysis')
 st.write('Python can be used to conduct process analysis and visualize business process outcome in comparison to theoretical process.'
