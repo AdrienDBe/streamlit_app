@@ -28,9 +28,9 @@ button[type=submit]:hover {
 }
 
 Hide Streamlit Branding
-/* #MainMenu {visibility: hidden;} */
+#MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-#header {visibility: hidden;}
+header {visibility: hidden;}
 
 div[data-testid="stExpander"] div[role="button"] p {
     font-size: 1.2rem;
