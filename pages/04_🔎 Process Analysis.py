@@ -107,6 +107,7 @@ def missingno(df):
     fig = msno.matrix(df, labels=True)
     plt.setp(fig.get_yticklabels(), color='white')
     plt.setp(fig.get_xticklabels(), color='white')
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     return st.pyplot(fig.figure)
 missingno(df)
 
