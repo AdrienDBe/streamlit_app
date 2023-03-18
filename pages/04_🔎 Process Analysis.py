@@ -66,7 +66,8 @@ with st.expander('Generating dummy data'):
     if new_num_cols != num_cols:
         num_cols = new_num_cols
 
-
+    np.random.seed(12345)
+         
     # Create a dictionary of columns with random data
     #data = {f"Step {i}": np.random.randint(-50, 51, num_rows) for i in range(1, num_cols + 1)}
     data = {f"Step {i}": np.random.normal(loc=2.5, scale=1.1, size=num_rows) for i in range(1, num_cols + 1)}
