@@ -167,9 +167,9 @@ with portfolio_container:
             from PIL import Image
 
             #local
-            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\WHO_app.jpg")
             #online
-            #img = "./Images/WHO_app.jpg"
+            img = "./Images/WHO_app.jpg"
 
             st.image(img, width=650)
             st.markdown(
@@ -183,9 +183,9 @@ with portfolio_container:
             "The app also provides options for grouping the data by Region, Income level, or Country based"
             " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
             #local
-            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             #online
-            #img = "./Images/GF_app.jpg"
+            img = "./Images/GF_app.jpg"
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)
             st.markdown(
@@ -200,9 +200,9 @@ with portfolio_container:
             , unsafe_allow_html=True)
 
             #local
-            img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
             #online
-            #img = "./Images/Process_picture.png"
+            img = "./Images/Process_picture.png"
             st.image(img, width=650)
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
