@@ -193,6 +193,23 @@ with portfolio_container:
             st.markdown(
                 "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
             )
+         
+        with col2.expander("Process analysis"):
+            st.markdown('''
+            This app imports data from the Global Fund API and presents it for exploration and visualization. 
+            Users can navigate between different dimensions of information, such as region, country, component (disease), 
+            or partner involved, and represent it visually with varying levels of granularity. 
+            The app also provides options to group the data by Region, Income level, or Country based on the user's selection, 
+            using the World Bank API.''')
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
+            #online
+            img = "./Images/GF_app.jpg"
+            st.image(img, width=650)
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
+            )
+
 
 st.write("---")
 
