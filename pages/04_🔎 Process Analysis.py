@@ -485,7 +485,7 @@ st.markdown("<p style='text-align: justify'>"
 
 col1, col2 = st.columns([2, 1], gap='small')
 
-col1.info("Generate a number of categorical values to analyze:")
+col1.info("Generate a number of categorical values to compare:")
 # Add a Streamlit slider for number of categorical values
 num_cat = 3
 categorical_num = col2.slider('', min_value=1, max_value=5, value=num_cat, label_visibility="collapsed")
