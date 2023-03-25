@@ -454,23 +454,23 @@ col1, col2 = st.columns([1, 1], gap='small')
 col1.markdown("<p style='text-align: justify'>"
         "The visualizaiton is helpful to get an overall idea of how our process unfolded in real life, "
         "but it is also good to have high-level average values to share:", unsafe_allow_html=True)
-
 df2_duration = df2.copy()
 # create a new dataframe to display the results
 results = pd.DataFrame(columns=['Step', 'Theoretical duration'])
 df2_duration.reset_index(drop=True,inplace=True)
 df_gantt.reset_index(drop=True,inplace=True)
 
-for col_idx, col in enumerate(df2_duration.iloc[:, :-1].columns):
+for col_idx, col in enumerate(df2_duration.iloc[:,:].columns):
     # get the corresponding row from df_gantt
     row = df_gantt.iloc[col_idx]
     # remove the value of start_num to the column
     actual_duration = round(df2_duration[col].mean(), 1)
-    theoretical_duration = row['days_start_to_end']
+    theoretical_duration = row['end_num']
     # add the result to the new dataframe
     results = results.append({'Step': col, 'Theoretical duration': theoretical_duration,
                               'Actual average duration': actual_duration}, ignore_index=True)
 results.set_index(results.columns[0], inplace=True)
+results['Actual average duration'] = results['Actual average duration']
 # display the results in a table
 col2.dataframe(results)
 
@@ -562,9 +562,9 @@ df_gantt = df_gantt.rename(columns={'Milestone': 'Step'})
 df_gantt['Step'] = df_gantt['Step'].apply(lambda x: 'Step ' + str(x))
 pivot_table = results.pivot_table(index='Step', columns='Category', values='Actual duration').reset_index()
 # merge with the 'days_start_to_end' column
-pivot_table = pivot_table.merge(df_gantt[['Step', 'days_start_to_end']], on='Step')
+pivot_table = pivot_table.merge(df_gantt[['Step', 'end_num']], on='Step')
 # rename the 'days_start_to_end' column to 'Theoretical duration'
-pivot_table = pivot_table.rename(columns={'days_start_to_end': 'Theoretical duration'})
+pivot_table = pivot_table.rename(columns={'end_num': 'Theoretical duration'})
 # move the 'Theoretical duration' column to the first position
 theo_dur = pivot_table.pop('Theoretical duration')
 pivot_table.insert(1, 'Theoretical duration', theo_dur)
