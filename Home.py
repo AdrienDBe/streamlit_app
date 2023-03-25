@@ -4,7 +4,7 @@ import requests
 import json
 
 
-st.set_page_config(page_title="Home", page_icon="🏚️", layout="wide")
+st.set_page_config(page_title="Home", page_icon="🏚️", layout="wide", scrolling=False)
 
 # Custom function for printing text
 def txt3(a, b):
