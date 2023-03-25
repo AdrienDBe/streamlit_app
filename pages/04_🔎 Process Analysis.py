@@ -28,9 +28,9 @@ st.markdown("<p style='text-align: justify'>"'Python can be used to conduct proc
          'generate high-level insights on process performance and identify categories impacting our process.', unsafe_allow_html=True)
 
 # Web app path
-#path = "Images/Home_work.json"
+path = "Images/Home_work.json"
 # Local path
-path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_header.json"
+#path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_header.json"
 with open(path, "r") as file:
     url = json.load(file)
 st_lottie(url,
