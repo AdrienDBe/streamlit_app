@@ -206,6 +206,21 @@ with portfolio_container:
             #online
             img = "./Images/Process_picture.png"
             st.image(img, width=650)
+            
+        with col2.expander("Clustering"):
+            st.markdown("<p style='text-align: justify'>"
+            "This clustering tool enables you to import a CSV file for K-means clustering on one or more columns."
+            " It encodes categorical values, scales the dataset, and uses Principal Component Analysis (PCA) for multivariate clustering. "
+            "A sample dataset is also available as an option."
+            , unsafe_allow_html=True)
+            st.markdown(
+            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering)"
+            )
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering_picture.png")
+            #online
+            img = "./Images/Clustering_picture.png"
+            st.image(img, width=650)
 
 st.write('---')
 
