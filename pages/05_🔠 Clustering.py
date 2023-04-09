@@ -17,6 +17,7 @@ st.set_page_config(layout="centered", page_icon="🔠")
 st.title("Clustering tool")
 
 # Define function to load data
+@st.cache_data
 def load_data(file):
     # Load data from file
     data = pd.read_csv(file)
@@ -31,15 +32,18 @@ def load_data(file):
     num_cols = list(data.select_dtypes(include=['int64', 'float64']))
     return data, categorical_cols, num_cols, data_HasEmpty,lenght_data_HasEmpty
 
+@st.cache_data
 def has_categorical_data(data):
     categorical_cols = data.select_dtypes(include=['object', 'category']).columns
     return len(categorical_cols) > 0
 
+@st.cache_data
 def has_morethan1_categorical_data(data):
     categorical_cols = data.select_dtypes(include=['object', 'category']).columns
     return len(categorical_cols) > 1
 
 # Define function to run clustering algorithm
+@st.cache_data
 def run_clustering(data, num_clusters):
     # Scale the data
     scaler = StandardScaler()
