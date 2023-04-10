@@ -7,6 +7,7 @@ import plotly.express as px
 from streamlit_lottie import st_lottie
 import plotly.graph_objects as go
 import wbgapi as wb
+import json
 
 st.set_page_config(page_title="WHO API", page_icon="⚕", layout="wide")
 
@@ -82,11 +83,21 @@ if st.session_state.count == 0:
                    " Upon selecting a topic (such as Tuberculosis, Malaria, or HIV) a list of related indicators is presented for the user to visualize."
                    "<br>The data can be grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection.",
                    unsafe_allow_html=True)
-        lottie_url = "https://lottie.host/285a7a0c-1d81-4a8f-9df5-c5bebaae5663/UDqNAwwYUo.json"
-        lottie_json = load_lottieurl(lottie_url)
-        with col2:
+       with col2:
+            # Web app path
+             path = "./Images/Information.json"
+            # Local path
+            #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Information.json"
             st.write('')
-            st_lottie(lottie_json, height=150, key="loading_gif2")
+            with open(path, "r") as file:
+                url = json.load(file)
+            st_lottie(url,
+                      reverse=False,
+                      height=150,
+                      speed=0.6,
+                      loop=True,
+                      quality='high',
+                      key='loading_gif')
 
         with st.expander("Read more about the World Health Organization, what is an API and how to access WHO API"):
 
