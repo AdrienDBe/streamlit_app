@@ -85,7 +85,7 @@ if st.session_state.count == 0:
                    unsafe_allow_html=True)
        with col2:
             # Web app path
-             path = "./Images/Information.json"
+            path = "./Images/Information.json"
             # Local path
             #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Information.json"
             st.write('')
