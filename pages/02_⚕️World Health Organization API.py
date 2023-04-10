@@ -83,7 +83,7 @@ if st.session_state.count == 0:
                    " Upon selecting a topic (such as Tuberculosis, Malaria, or HIV) a list of related indicators is presented for the user to visualize."
                    "<br>The data can be grouped by Region, Income level, or Country (using the World Bank API) depending on the user's selection.",
                    unsafe_allow_html=True)
-       with col2:
+        with col2:
             # Web app path
             path = "./Images/Information.json"
             # Local path
