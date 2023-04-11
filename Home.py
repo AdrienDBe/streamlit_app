@@ -207,7 +207,23 @@ with portfolio_container:
             img = "./Images/Process_picture.png"
             st.image(img, width=650)
             
-        with col2.expander("Clustering"):
+        with col2.expander("Clustering overview"):
+            st.markdown("<p style='text-align: justify'>"
+            "This article provides an overview of clustering analysis in Python, including key concepts such as encoding categorical data, "
+            "scaling data, dimensionality reduction, and choosing the right algorithm. This post is designed to help you understand the basics"
+            "of clustering analysis in Python and provide you with a solid foundation to build upon as you delve deeper into this topic."
+            , unsafe_allow_html=True)
+            st.markdown(
+            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering)"
+            )
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering_picture.png")
+            #online
+            img = "./Images/Clustering.png"
+            st.image(img, width=650)
+            
+            
+        with col2.expander("Clustering tool"):
             st.markdown("<p style='text-align: justify'>"
             "This clustering tool enables you to import a CSV file for K-means clustering on one or more columns."
             " It encodes categorical values, scales the dataset, and uses Principal Component Analysis (PCA) for multivariate clustering. "
