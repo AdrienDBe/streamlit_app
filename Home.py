@@ -230,7 +230,7 @@ with portfolio_container:
             "A sample dataset is also available as an option."
             , unsafe_allow_html=True)
             st.markdown(
-            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering)"
+            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering_tool)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering_picture.png")
