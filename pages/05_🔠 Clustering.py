@@ -260,7 +260,7 @@ col2.plotly_chart(fig, config={'displayModeBar': False})
 st.subheader(":blue[Try it yourself with the clustering tool:] ")
 
 st.markdown(
-    "<h6>Use a sample dataset or import your own here: <a href='https://adrien.streamlit.app/05_🧰 Clustering tool' target='_blank' style='font-size: 20x;'>https://adrien.streamlit.app/05_🧰 Clustering tool</a></h6>",
+    "<h6>Use a sample dataset or import your own here: <a href='https://adrien.streamlit.app/Clustering_tool' target='_blank' style='font-size: 20x;'>https://adrien.streamlit.app/05_🧰 Clustering tool</a></h6>",
     unsafe_allow_html=True
 )
 
