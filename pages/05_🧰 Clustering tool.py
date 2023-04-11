@@ -66,7 +66,7 @@ if use_sample == 'No' and data_file is None:
 
 if use_sample == 'Yes':
     # Load sample data
-    data_file = "C:/Users/adrie/Downloads/Customers.csv"
+    data_file = "Customers.csv"
 
 
 if data_file is not None:
