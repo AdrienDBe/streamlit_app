@@ -207,7 +207,7 @@ with portfolio_container:
             img = "./Images/Process_picture.png"
             st.image(img, width=650)
             
-        with col2.expander("Clustering overview"):
+        with col2.expander("Clustering, what's that about?"):
             st.markdown("<p style='text-align: justify'>"
             "This article provides an overview of clustering analysis in Python, including key concepts such as encoding categorical data, "
             "scaling data, dimensionality reduction, and choosing the right algorithm. This post is designed to help you understand the basics"
