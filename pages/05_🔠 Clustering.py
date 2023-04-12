@@ -1,4 +1,6 @@
 import streamlit as st
+from streamlit_lottie import st_lottie
+import json
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import OneHotEncoder
@@ -13,20 +15,40 @@ st.set_page_config(layout="centered", page_icon="🔠")
 # Set initial title
 title = st.title("Clustering, what's that about?")
 
+col1, col2 = st.columns([1, 3], gap='small')
+
+# Web app path
+#path = "Images/Process_header.json"
+# Local path
+path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering.json"
+with open(path, "r") as file:
+    url = json.load(file)
+with col1:
+    st_lottie(url,
+              reverse=True,
+              height=200,
+              speed=0.4,
+              loop=True,
+              quality='high',
+              key='Car'
+              )
+
 with st.sidebar:
     # Add radio button to sidebar
     option = st.sidebar.radio("", ("What's clustering?", "Using the clustering tool"))
 
-
-st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+col2.markdown("<p style='text-align: justify; font-size: 18px;'>"
              "Clustering is an unsupervised machine learning algorithm that is used to group similar data points "
             "together based on their features or characteristics. <br>Unlike supervised learning algorithms, clustering "
             "does not rely on predefined labels or outcomes, making it useful in cases where the structure of the "
             "data is not well-defined or when we want to discover patterns in the data without any prior knowledge. "
-            "<br><br>Clustering is also relatively easy to implement and can be applied to a wide range of problems, "
+            , unsafe_allow_html=True)
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+            "Clustering is also relatively easy to implement and can be applied to a wide range of problems, "
             "from image segmentation to customer segmentation in marketing. <br><br>"
             "There are various types of clustering algorithms, such as k-means, hierarchical clustering, DBSCAN, "
-            "and more. Each algorithm has its strengths and weaknesses, and is suitable for different types of data and applications.", unsafe_allow_html=True)
+            "and more. Each algorithm has its strengths and weaknesses, and is suitable for different types of data and "
+          "applications.", unsafe_allow_html=True)
 
 st.subheader(':blue[Starting with clustering: Data preprocessing]')
 st.markdown("<p style='text-align: justify; font-size: 18px;'>"
