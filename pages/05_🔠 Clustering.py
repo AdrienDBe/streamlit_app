@@ -18,9 +18,9 @@ title = st.title("Clustering, what's that about?")
 col1, col2 = st.columns([1, 3], gap='small')
 
 # Web app path
-#path = "Images/Process_header.json"
+path = "Images/Clustering.json"
 # Local path
-path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering.json"
+#path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering.json"
 with open(path, "r") as file:
     url = json.load(file)
 with col1:
