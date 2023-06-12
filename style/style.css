@@ -29,7 +29,7 @@ button[type=submit]:hover {
 
 Hide Streamlit Branding
 #MainMenu {visibility: visible;} 
-footer {visibility: hidden;}
+footer {visibility: visible;}
 header {visibility: visible;} 
 
 div[data-testid="stExpander"] div[role="button"] p {
