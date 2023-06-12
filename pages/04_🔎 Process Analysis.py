@@ -14,9 +14,9 @@ import requests
 st.set_page_config(page_title="Process analysis", page_icon="🔎", layout="centered")
 hide_st_style = """
              <style>
-             #MainMenu {visibility: hidden;}
+             #MainMenu {visibility: visible;}
              footer {visibility: hidden;}
-             header {visibility: hidden;}
+             header {visibility: visible;}
              </style>
              """
 st.markdown(hide_st_style, unsafe_allow_html=True)
