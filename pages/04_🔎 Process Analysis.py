@@ -15,7 +15,7 @@ st.set_page_config(page_title="Process analysis", page_icon="🔎", layout="cent
 hide_st_style = """
              <style>
              #MainMenu {visibility: visible;}
-             footer {visibility: hidden;}
+             footer {visibility: visible;}
              header {visibility: visible;}
              </style>
              """
