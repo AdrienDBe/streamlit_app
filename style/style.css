@@ -12,7 +12,7 @@ input[type=message], input[type=email], input[type=text], textarea {
   resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 
-/* Style the submit button with a specific background color etc */
+ Style the submit button with a specific background color etc */
 button[type=submit] {
   background-color: #04AA6D;
   color: white;
@@ -28,9 +28,9 @@ button[type=submit]:hover {
 }
 
 Hide Streamlit Branding
-#MainMenu {visibility: visible;} #hidden
+#MainMenu {visibility: visible;} 
 footer {visibility: hidden;}
-header {visibility: visible;} #hidden
+header {visibility: visible;} 
 
 div[data-testid="stExpander"] div[role="button"] p {
     font-size: 1.2rem;
