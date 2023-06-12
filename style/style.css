@@ -27,11 +27,3 @@ button[type=submit]:hover {
   background-color: #45a049;
 }
 
-Hide Streamlit Branding
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-
-div[data-testid="stExpander"] div[role="button"] p {
-    font-size: 1.2rem;
-}
