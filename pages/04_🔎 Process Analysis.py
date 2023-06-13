@@ -329,8 +329,8 @@ for i in range(1, num_steps + 1):
     start = 0 if i == 1 else df_gantt.loc[i - 2, 'End']
     duration = np.random.randint(low=5, high=21)
     end = start + duration
-    df_gantt = df_gantt.append({'Step': i, 'Start': start, 'End': end, 'Duration': duration}, ignore_index=True)
-
+    new_row = {'Step': i, 'Start': start, 'End': end, 'Duration': duration}
+    df_gantt = pd.concat([df_gantt, pd.DataFrame([new_row])], ignore_index=True)
 
 df_gantt.columns = ['Milestone','start_num','end_num','days_start_to_end']
 df_gantt.reset_index(inplace=True,drop=True)
@@ -467,8 +467,9 @@ for col_idx, col in enumerate(df2_duration.iloc[:,:].columns):
     actual_duration = round(df2_duration[col].mean(), 1)
     theoretical_duration = row['end_num']
     # add the result to the new dataframe
-    results = results.append({'Step': col, 'Theoretical duration': theoretical_duration,
-                              'Actual average duration': actual_duration}, ignore_index=True)
+    new_row = {'Step': col, 'Theoretical duration': theoretical_duration, 'Actual average duration': actual_duration}
+    results = pd.concat([results, pd.DataFrame([new_row])], ignore_index=True)
+
 results.set_index(results.columns[0], inplace=True)
 results['Actual average duration'] = results['Actual average duration']
 # display the results in a table
@@ -485,7 +486,7 @@ st.markdown("<p style='text-align: justify'>"
 
 col1, col2 = st.columns([2, 1], gap='small')
 
-col1.info("Generate a number of categorical values to compare:")
+col1.info("Generate a number of categorical values to analyze:")
 # Add a Streamlit slider for number of categorical values
 num_cat = 3
 categorical_num = col2.slider('', min_value=1, max_value=5, value=num_cat, label_visibility="collapsed")
@@ -556,7 +557,8 @@ for i in df2_duration.iloc[:, -1].unique():
         # remove the value of start_num to the column
         actual_duration = round(df2_duration_cate[col].mean(), 1)
         # add the result to the new dataframe
-        results = results.append({'Step': col, 'Category': i,  'Actual duration':actual_duration}, ignore_index=True)
+        new_row = {'Step': col, 'Category': i, 'Actual duration': actual_duration}
+        results = pd.concat([results, pd.DataFrame([new_row])], ignore_index=True)
 
 df_gantt = df_gantt.rename(columns={'Milestone': 'Step'})
 df_gantt['Step'] = df_gantt['Step'].apply(lambda x: 'Step ' + str(x))
@@ -583,14 +585,3 @@ st.markdown("<p style='text-align: justify'>"
             "This could provide insights into why certain groups are consistently late or performing better "
             "in our process, and allow us to implement best practices to improve the overall timeliness."
             , unsafe_allow_html=True)
-
-# st.markdown("<span style='text-align: justify; font-size: 150%; color:#04AA6D'> Section in development </span> </p>",
-#                 unsafe_allow_html=True)
-# lottie_url = "https://assets5.lottiefiles.com/packages/lf20_s8nnfakd.json"
-# def load_lottieurl(url: str):
-#     r = requests.get(url)
-#     if r.status_code != 200:
-#         return None
-#     return r.json()
-# lottie_json = load_lottieurl(lottie_url)
-# st_lottie(lottie_json, height=500, key="loading_gif2")
