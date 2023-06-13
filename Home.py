@@ -87,7 +87,7 @@ with work_container:
         ''')
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown('''
-        **PROGRAM MANAGEMENT** `10 High-Burden Diseases Countries`
+        **PROGRAM MANAGEMENT** `9 High-Burden Diseases Countries`
         \n- Created program control and reports to MoHs & global funders
         \n- Coordinated cross-functional teams in EMEA and APAC on program activities
         \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
