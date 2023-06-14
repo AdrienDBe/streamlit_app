@@ -201,7 +201,9 @@ with portfolio_container:
             #online
             img = "./Images/Clustering_picture.png"
             st.image(img, width=650)
-            
+         
+       
+        col2.subheader(':green[API explorer (work in progress)]')
         with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
@@ -219,7 +221,6 @@ with portfolio_container:
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)       
         
-        col2.subheader(':green[API explorer (work in progress)]')
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the World Health Organization (WHO) API, users of the app can explore indicators or"
