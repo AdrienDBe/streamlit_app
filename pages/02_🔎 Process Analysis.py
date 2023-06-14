@@ -153,7 +153,7 @@ st.subheader('Dealing with outliers')
 st.markdown("<p style='text-align: justify'>"
         "Real life data is full of surprise, and outliers. It is usually recommended to retain them in your dataset. "
         "Similarly to dealing with missing values, you can implement a strategy to replace them too."
-        "<br><br> in this example we are going to target the values which are falling outstide of the standard deviation for each step, "
+        "<br><br> In this example we are going to target the values which are falling outstide of the standard deviation for each step, "
         "meaning the values which are either below 87% or above 87% of each specific mean.", unsafe_allow_html=True)
 
 with st.expander('See sample code to detect outliers'):
