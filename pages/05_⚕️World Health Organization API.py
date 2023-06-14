@@ -258,7 +258,20 @@ if st.session_state.count >= 1:
     if data0a.empty == True:
         st.warning("No indicator found, try another keyword (e.g. 'HIV')")
     else:
-        selected_indicator = col2.selectbox("Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())), data0a.IndicatorName.unique().tolist())
+        # Find index of first row with partial match for "notified tb"
+        mask = data0a['IndicatorName'].str.contains('notified tb', case=False)
+        matching_indices = data0a[mask].index[0] if any(mask) else 0
+
+        # Filter data0a based on matching_indices
+        filtered_data = data0a.loc[[matching_indices]]
+
+        # Convert matching_indices to integer
+        matching_indices = int(matching_indices)
+
+        # Selectbox with starting value "notified tb" or default value
+        selected_indicator = col2.selectbox("Select metric - {} option(s)".format(len(data0a.IndicatorName.unique())),
+                                          data0a.IndicatorName.unique().tolist(),
+                                          index=matching_indices)
 
         selection_indicator_code = data0a[data0a['IndicatorName'] == selected_indicator][['IndicatorCode']].iloc[0][
             0]
