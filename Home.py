@@ -203,7 +203,7 @@ with portfolio_container:
             st.image(img, width=650)
         
         
-        col2.subheader(':green[API explorer- work in progress]')
+        col2.subheader(':green[API explorer (work in progress)]')
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the World Health Organization (WHO) API, users of the app can explore indicators or"
