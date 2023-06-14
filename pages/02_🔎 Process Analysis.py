@@ -452,7 +452,7 @@ plt.show()
 col1, col2 = st.columns([1, 1], gap='small')
 
 col1.markdown("<p style='text-align: justify'>"
-        "The visualizaiton is helpful to get an overall idea of how our process unfolded in real life, "
+        "The visualization is helpful to get an overall idea of how our process unfolded in real life, "
         "but it is also good to have high-level average values to share:", unsafe_allow_html=True)
 df2_duration = df2.copy()
 # create a new dataframe to display the results
