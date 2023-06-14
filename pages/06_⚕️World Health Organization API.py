@@ -346,7 +346,7 @@ if st.session_state.count >= 1:
                             return dict(zip(df[hue].unique(), px.colors.qualitative.Plotly))
                         c = generate_color_map()
 
-                        grouped_data = df.groupby(['Year', hue], as_index=False).mean()
+                        grouped_data = df[['Year', hue,selected_indicator]].groupby(['Year', hue], as_index=False).mean()
 
                         def generate_stripplot(data, hue):
                             fig = px.strip(data, y=selected_indicator, color = hue, hover_data = data[['Country','Year',selected_indicator]],title ="{} ({} - {})".format(selected_indicator, df["Year"].min(), df["Year"].max()))
