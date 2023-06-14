@@ -201,7 +201,23 @@ with portfolio_container:
             #online
             img = "./Images/Clustering_picture.png"
             st.image(img, width=650)
-        
+            
+        with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
+            st.markdown("<p style='text-align: justify'>"
+            "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
+            " Users can navigate between different dimensions of data, such as region, country, component "
+            "(disease), or partner involved, and represent it visually with varying levels of granularity. "
+            "The app also provides options for grouping the data by Region, Income level, or Country based"
+            " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
+            st.markdown(
+                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
+            )
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
+            #online
+            img = "./Images/GF_app.jpg"
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
+            st.image(img, width=650)       
         
         col2.subheader(':green[API explorer (work in progress)]')
         with st.expander("World Health Organization: Indicators"):
@@ -221,25 +237,7 @@ with portfolio_container:
             #online
             img = "./Images/WHO_app.jpg"
             st.image(img, width=650)
-            
-        with col2.expander("The Global Fund: Implementation periods, Grants, Disbursements"):
-            st.markdown("<p style='text-align: justify'>"
-            "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
-            " Users can navigate between different dimensions of data, such as region, country, component "
-            "(disease), or partner involved, and represent it visually with varying levels of granularity. "
-            "The app also provides options for grouping the data by Region, Income level, or Country based"
-            " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
-            st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
-            )
-            #local
-            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
-            #online
-            img = "./Images/GF_app.jpg"
-            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
-            st.image(img, width=650)
-
-
+           
 
 st.write('---')
 
