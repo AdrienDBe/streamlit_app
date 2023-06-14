@@ -153,8 +153,7 @@ with portfolio_container:
                   loop=True,
                   quality='high',
                   key='Car2')
-
-    col2.subheader(':green[API explorer]')
+        
     with col2:
         col2.subheader(':green[Business application]')
         with col2.expander("Process analysis"):
@@ -204,7 +203,7 @@ with portfolio_container:
             st.image(img, width=650)
         
         
-        
+        col2.subheader(':green[API explorer] - WIP')
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the World Health Organization (WHO) API, users of the app can explore indicators or"
