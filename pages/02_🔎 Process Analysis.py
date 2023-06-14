@@ -384,7 +384,7 @@ st.pyplot(fig)
 
 st.markdown("<p style='text-align: justify'>"
         "Now that we have a clean dataset we can start visualizing our process data "
-        "by overlaying our process timeliness data onto a Gantt chart."
+        "by overlaying our process timeliness data onto a Gantt chart. "
             "The idea being to easily also identify any bottlenecks or delays in the process and optimize our workflow accordingly."
         "<br>In the graph below, each dot represents a step completion timeliness. "
             "The big triangle represents the average timeliness for each step.", unsafe_allow_html=True)
