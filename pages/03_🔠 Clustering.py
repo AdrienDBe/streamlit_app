@@ -156,7 +156,7 @@ st.write('Scaled Dataframe')
 st.table(df)
 ''')
 
-st.subheader('3. :green[Dimensionality reduction]')
+st.subheader('3. :green[Applying dimensionality reduction]')
 st.markdown("<p style='text-align: justify; font-size: 18px;'>"
              "Clustering can also be challenging when working with high-dimensional data, where the number of features "
             "is very large. In these cases, it may be helpful to perform dimensionality reduction to reduce the number "
