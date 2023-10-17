@@ -75,9 +75,9 @@ with work_container:
     </style>
     """, unsafe_allow_html=True)
 
-    with col2.expander("2022 – Today | The Global Fund : Business Process Reporting Officer"):
+    with col2.expander("2022 – Today | The Global Fund : Officer, Operational Efficiency"):
         st.markdown('''
-        `Operational efficiency within the Grant Management Division`
+        **GRANT MANAGEMENT DIVISION**
         \n- Business Process Monitoring & Analytics
         \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
         \n- Business Process Management
