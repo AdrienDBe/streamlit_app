@@ -281,24 +281,24 @@ with skills_container:
 
 # ---- CONTACT FORM ----
 
-contact_form_container = st.container()
-with contact_form_container:
-    st.write("---")
-    st.header("Get in touch with me!")
-    st.write("##")
-
-    # Documention: https://formsubmit.co/
-    contact_form = """
-        <form action="https://formsubmit.co/b5839c863db066636bf7d8e36d51e283" method="POST">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="text" name="name" placeholder="Your name" required>
-            <input type="email" name="email" placeholder="Your email" required>
-            <textarea name="message" placeholder="Your message here" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-        """
-    left_column, right_column = st.columns(2)
-    with left_column:
-        st.markdown(contact_form, unsafe_allow_html=True)
-    with right_column:
-        st.empty()
+# contact_form_container = st.container()
+# with contact_form_container:
+#     st.write("---")
+#     st.header("Get in touch with me!")
+#     st.write("##")
+# 
+#     # Documention: https://formsubmit.co/
+#     contact_form = """
+#         <form action="https://formsubmit.co/b5839c863db066636bf7d8e36d51e283" method="POST">
+#             <input type="hidden" name="_captcha" value="false">
+#             <input type="text" name="name" placeholder="Your name" required>
+#             <input type="email" name="email" placeholder="Your email" required>
+#             <textarea name="message" placeholder="Your message here" required></textarea>
+#             <button type="submit">Send</button>
+#         </form>
+#         """
+#     left_column, right_column = st.columns(2)
+#     with left_column:
+#         st.markdown(contact_form, unsafe_allow_html=True)
+#     with right_column:
+#         st.empty()
