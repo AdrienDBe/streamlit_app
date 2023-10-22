@@ -463,10 +463,11 @@ if st.session_state.count >= 1:
                                                            how='left').reset_index()
                                 df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
                                 df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                                col4.metric("Average IP overall duration", "{:,} year(s)".format(
+                                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
                                     round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
-                                                                                                              'Y')).mean(),
-                                          1)))
+                                                                                                              'D') / 365).mean(),
+                                          1)
+                                ))
 
                                 col1, col2 = st.columns([15, 15], gap='large')
 
@@ -671,10 +672,11 @@ if st.session_state.count >= 1:
                                                            how='left').reset_index()
                                 df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
                                 df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                                col4.metric("Average IP overall duration", "{:,} year(s)".format(
-                                    round(
-                                        ((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'Y')).mean(),
-                                        1)))
+                                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
+                                    round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
+                                                                                                              'D') / 365).mean(),
+                                          1)
+                                ))
 
                                 col1, col2 = st.columns([15, 15], gap='large')
 
@@ -869,10 +871,11 @@ if st.session_state.count >= 1:
                                                        how='left').reset_index()
                             df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
                             df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                            col4.metric("Average IP overall duration", "{:,} year(s)".format(
-                                round(
-                                    ((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'Y')).mean(),
-                                    1)))
+                            col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
+                                round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
+                                                                                                          'D') / 365).mean(),
+                                      1)
+                            ))
 
                             col1, col2 = st.columns([15, 15], gap='large')
                             if len(df_temp.Region.unique()) == 1:
@@ -1063,8 +1066,9 @@ if st.session_state.count >= 1:
                                       how='left').reset_index()
                 df_min_max['min'] = df_min_max['min'].apply(pd.Timestamp)
                 df_min_max['max'] = df_min_max['max'].apply(pd.Timestamp)
-                col4.metric("Average IP overall duration", "{:,} year(s)".format(
-                    round(((df_min_max['max'] - df_min_max['min']) / np.timedelta64(1, 'Y')).mean(), 1)))
+                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
+                    round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'D') / 365).mean(), 1)
+                ))
 
                 df_temp2 = df2_group_region
                 df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
