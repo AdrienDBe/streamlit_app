@@ -455,19 +455,8 @@ if st.session_state.count >= 1:
                                 Number_renewed = Number_renewed[Number_renewed > 1].count()
                                 col3.metric("Principal Recipient(s)",
                                             "{:,}".format(len(df_temp["principalRecipientName"].unique())))
-                                min = df_temp.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-                                max = df_temp.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-                                df_temp_min_max = pd.merge(min,
-                                                           max,
-                                                           on='grantAgreementId',
-                                                           how='left').reset_index()
-                                df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
-                                df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
-                                    round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
-                                                                                                              'D') / 365).mean(),
-                                          1)
-                                ))
+                                col4.metric("Total Disbursed Amount ($)",
+                                            "{:,.2f}".format(df_temp["totalDisbursedAmount"].sum()))
 
                                 col1, col2 = st.columns([15, 15], gap='large')
 
@@ -676,19 +665,8 @@ if st.session_state.count >= 1:
                                 Number_renewed = Number_renewed[Number_renewed > 1].count()
                                 col3.metric("Principal Recipient(s)",
                                             "{:,}".format(len(df_temp["principalRecipientName"].unique())))
-                                min = df_temp.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-                                max = df_temp.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-                                df_temp_min_max = pd.merge(min,
-                                                           max,
-                                                           on='grantAgreementId',
-                                                           how='left').reset_index()
-                                df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
-                                df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
-                                    round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
-                                                                                                              'D') / 365).mean(),
-                                          1)
-                                ))
+                                col4.metric("Total Disbursed Amount ($)",
+                                            "{:,.2f}".format(df_temp["totalDisbursedAmount"].sum()))
 
                                 col1, col2 = st.columns([15, 15], gap='large')
 
@@ -881,19 +859,8 @@ if st.session_state.count >= 1:
                                     len(df_temp['grantAgreementImplementationPeriodId'].unique())))
                             col3.metric("Principal Recipient(s)",
                                         "{:,}".format(len(df_temp["principalRecipientName"].unique())))
-                            min = df_temp.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-                            max = df_temp.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-                            df_temp_min_max = pd.merge(min,
-                                                       max,
-                                                       on='grantAgreementId',
-                                                       how='left').reset_index()
-                            df_temp_min_max['min'] = df_temp_min_max['min'].apply(pd.Timestamp)
-                            df_temp_min_max['max'] = df_temp_min_max['max'].apply(pd.Timestamp)
-                            col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
-                                round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1,
-                                                                                                          'D') / 365).mean(),
-                                      1)
-                            ))
+                            col4.metric("Total Disbursed Amount ($)",
+                                        "{:,.2f}".format(df_temp["totalDisbursedAmount"].sum()))
 
                             col1, col2 = st.columns([15, 15], gap='large')
                             if len(df_temp.Region.unique()) == 1:
@@ -1082,17 +1049,8 @@ if st.session_state.count >= 1:
                                 "{:,}".format(len(df2_group_region['grantAgreementImplementationPeriodId'].unique())))
                 col3.metric("Principal Recipient(s)",
                             "{:,}".format(len(df2_group_region["principalRecipientName"].unique())))
-                min = df2_group_region.groupby('grantAgreementId')['implementationPeriodStartDate'].agg(['min'])
-                max = df2_group_region.groupby('grantAgreementId')['implementationPeriodEndDate'].agg(['max'])
-                df_min_max = pd.merge(min,
-                                      max,
-                                      on='grantAgreementId',
-                                      how='left').reset_index()
-                df_min_max['min'] = df_min_max['min'].apply(pd.Timestamp)
-                df_min_max['max'] = df_min_max['max'].apply(pd.Timestamp)
-                col4.metric("Average IP overall duration", "{:.1f} year(s)".format(
-                    round(((df_temp_min_max['max'] - df_temp_min_max['min']) / np.timedelta64(1, 'D') / 365).mean(), 1)
-                ))
+                col4.metric("Total Disbursed Amount ($)",
+                            "{:,.2f}".format(df_temp["totalDisbursedAmount"].sum()))
 
                 df_temp2 = df2_group_region
                 df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
