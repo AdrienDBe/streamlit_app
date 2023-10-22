@@ -203,7 +203,7 @@ with portfolio_container:
             st.image(img, width=650)
          
        
-        col2.subheader(':green[API explorer (work in progress)]')
+        col2.subheader(':green[API explorer]')
                 
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify'>"
