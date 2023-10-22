@@ -1050,7 +1050,7 @@ if st.session_state.count >= 1:
                 col3.metric("Principal Recipient(s)",
                             "{:,}".format(len(df2_group_region["principalRecipientName"].unique())))
                 col4.metric("Total Disbursed Amount ($)",
-                            "{:,.2f}".format(df_temp["totalDisbursedAmount"].sum()))
+                            "{:,.2f}".format(df2_group_region["totalDisbursedAmount"].sum()))
 
                 df_temp2 = df2_group_region
                 df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
