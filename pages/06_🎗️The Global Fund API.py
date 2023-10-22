@@ -495,34 +495,43 @@ if st.session_state.count >= 1:
                                     df_temp['implementationPeriodStartDate'])
                                 df_temp['implementationPeriodEndDate'] = pd.to_datetime(
                                     df_temp['implementationPeriodEndDate'])
+                                df_temp['programStartDate'] = pd.to_datetime(
+                                    df_temp['programStartDate'])
+                                df_temp['programEndDate'] = pd.to_datetime(
+                                    df_temp['programEndDate'])
 
-                                fig = px.timeline(df_temp.sort_values('implementationPeriodStartDate'),
+                                fig = px.timeline(df_temp.sort_values('programStartDate'),
                                                   x_start="implementationPeriodStartDate",
                                                   x_end="implementationPeriodEndDate",
                                                   y="grantAgreementNumber",
                                                   color="implementationPeriodStatusTypeName",
                                                   color_discrete_map=color_discrete_map_ip_status,
-                                                  hover_data={"grantAgreementStatusTypeName": False,
-                                                              "geographicAreaName": True,
-                                                              "principalRecipientName": True,
-                                                              "programStartDate": True,
-                                                              "programEndDate": True,
-                                                              "grantAgreementTitle": True},
-                                                  labels={'geographicAreaName': 'Country',
-                                                          'implementationPeriodStartDate': 'Program start date',
-                                                          'principalRecipientName': 'Principal Recipient',
-                                                          'implementationPeriodEndDate': 'Program end date',
-                                                          'grantAgreementNumber': 'Grant agreement number',
-                                                          'grantAgreementTitle': 'Grant agreement title'})
+                                                  hover_data={
+                                                      "grantAgreementNumber": True,
+                                                      "grantAgreementTitle": True,
+                                                      "implementationPeriodStatusTypeName": True,
+                                                      "geographicAreaName": True,
+                                                      "principalRecipientName": True,
+                                                      "programStartDate": True,
+                                                      "implementationPeriodStartDate": True,
+                                                      "implementationPeriodEndDate": True,
+                                                  },
+                                                  labels={
+                                                      'grantAgreementNumber': 'Grant reference',
+                                                      'grantAgreementTitle': 'Grant agreement title',
+                                                      'implementationPeriodStatusTypeName': 'Implementation Period status',
+                                                      'geographicAreaName': 'Portfolio',
+                                                      'principalRecipientName': 'Principal Recipient',
+                                                      'programStartDate': 'Grant start',
+                                                      'implementationPeriodStartDate': 'Implementation Period start',
+                                                      'implementationPeriodEndDate': 'Program end date'}
+                                                  )
+
 
                                 fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                                 fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()),
                                                    xshift=50)
                                 fig.update_annotations(font_color="white", font_size=15)
-                                #fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
-                                #              fillcolor="green",
-                                #              opacity=0.25,
-                                #              line_width=0)
                                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                                 fig.update_layout(autosize=False,
                                                   margin=dict(
@@ -537,7 +546,9 @@ if st.session_state.count >= 1:
                                                   plot_bgcolor='rgba(0,0,0,0)',
                                                   legend_title='',
                                                   font=dict(
-                                                      size=15))
+                                                      size=15),
+
+                                                  title="Grants Implementation Timeline")
                                 col1.plotly_chart(fig, use_container_width=True, config=config)
 
                                 df_temp2 = df_temp.sort_values('implementationPeriodStartDate')
@@ -584,7 +595,8 @@ if st.session_state.count >= 1:
                                                         plot_bgcolor='rgba(0,0,0,0)',
                                                         legend_title='',
                                                         font=dict(
-                                                            size=15))
+                                                            size=15),
+                                                        title = "Grants Disbursement Status")
                                 }
 
                                 col2.plotly_chart(fig, use_container_width=True, config=config)
@@ -705,27 +717,30 @@ if st.session_state.count >= 1:
                                                   color="implementationPeriodStatusTypeName",
                                                   color_discrete_map=color_discrete_map_ip_status,
                                                   hover_data={
-                                                      "implementationPeriodStatusTypeName": False,
+                                                      "grantAgreementNumber": True,
+                                                      "grantAgreementTitle": True,
+                                                      "implementationPeriodStatusTypeName": True,
                                                       "geographicAreaName": True,
                                                       "principalRecipientName": True,
-                                                      "programStartDate": False,
-                                                      "programEndDate": False,
-                                                      "grantAgreementTitle": True},
-                                                  labels={'geographicAreaName': 'Country',
-                                                          'implementationPeriodStartDate': 'Program start date',
-                                                          'principalRecipientName': 'Principal Recipient',
-                                                          'implementationPeriodEndDate': 'Program end date',
-                                                          'grantAgreementNumber': 'Grant agreement number',
-                                                          'grantAgreementTitle': 'Grant agreement title'})
+                                                      "programStartDate": True,
+                                                      "implementationPeriodStartDate": True,
+                                                      "implementationPeriodEndDate": True,
+                                                  },
+                                                  labels={
+                                                      'grantAgreementNumber': 'Grant reference',
+                                                      'grantAgreementTitle': 'Grant agreement title',
+                                                      'implementationPeriodStatusTypeName': 'Implementation Period status',
+                                                      'geographicAreaName': 'Portfolio',
+                                                      'principalRecipientName': 'Principal Recipient',
+                                                      'programStartDate': 'Grant start',
+                                                      'implementationPeriodStartDate': 'Implementation Period start',
+                                                      'implementationPeriodEndDate': 'Program end date'}
+                                                  )
 
                                 fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                                 fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()),
                                                    xshift=50)
                                 fig.update_annotations(font_color="white", font_size=15)
-                                fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
-                                              fillcolor="green",
-                                              opacity=0.25,
-                                              line_width=0)
                                 fig.update_layout(autosize=False,
                                                   margin=dict(
                                                       l=0,
@@ -739,7 +754,9 @@ if st.session_state.count >= 1:
                                                   plot_bgcolor='rgba(0,0,0,0)',
                                                   legend_title='',
                                                   font=dict(
-                                                      size=15))
+                                                      size=15),
+                                                  title = "Grants Implementation Timeline"
+                                                  )
                                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                                 col1.plotly_chart(fig, use_container_width=True, config=config)
 
@@ -786,7 +803,8 @@ if st.session_state.count >= 1:
                                                         plot_bgcolor='rgba(0,0,0,0)',
                                                         legend_title='',
                                                         font=dict(
-                                                            size=15))
+                                                            size=15),
+                                                        title = "Grants Disbursement Status")
                                 }
 
                                 col2.plotly_chart(fig, use_container_width=True, config=config)
@@ -906,28 +924,32 @@ if st.session_state.count >= 1:
                                               y="grantAgreementNumber",
                                               color="implementationPeriodStatusTypeName",
                                               color_discrete_map=color_discrete_map_ip_status,
-                                              hover_data={"grantAgreementStatusTypeName": False,
+                                              hover_data={
+                                                          "grantAgreementNumber": True,
+                                                          "grantAgreementTitle": True,
+                                                          "implementationPeriodStatusTypeName": True,
                                                           "geographicAreaName": True,
                                                           "principalRecipientName": True,
                                                           "programStartDate": True,
-                                                          "programEndDate": True,
-                                                          "grantAgreementTitle": True},
-                                              labels={'geographicAreaName': 'Country',
-                                                      'implementationPeriodStartDate': 'Program start date',
+                                                          "implementationPeriodStartDate": True,
+                                                          "implementationPeriodEndDate": True,
+                                              },
+                                              labels={
+                                                      'grantAgreementNumber': 'Grant reference',
+                                                      'grantAgreementTitle': 'Grant agreement title',
+                                                      'implementationPeriodStatusTypeName': 'Implementation Period status',
+                                                      'geographicAreaName': 'Portfolio',
                                                       'principalRecipientName': 'Principal Recipient',
-                                                      'implementationPeriodEndDate': 'Program end date',
-                                                      'grantAgreementNumber': 'Grant agreement number',
-                                                      'grantAgreementTitle': 'Grant agreement title'})
+                                                      'programStartDate': 'Grant start',
+                                                      'implementationPeriodStartDate': 'Implementation Period start',
+                                                      'implementationPeriodEndDate': 'Program end date'}
+                                              )
                             fig.update_traces(marker_line_color='white', line_width=10, opacity=1,
                                               selector=dict(fill='toself'))
                             fig.add_vline(x=date.today(), line_width=2, line_color="white", line_dash="dot")
                             fig.add_annotation(x=date.today(), y=1, showarrow=False, text="{}".format(date.today()),
                                                xshift=50)
                             fig.update_annotations(font_color="white", font_size=15)
-                            fig.add_vrect(x0="2020-01-01", x1="2022-12-24",
-                                          fillcolor="green",
-                                          opacity=0.25,
-                                          line_width=0)
                             fig.update_layout(
                                 autosize=False,
                                 margin=dict(
@@ -942,7 +964,8 @@ if st.session_state.count >= 1:
                                 plot_bgcolor='rgba(0,0,0,0)',
                                 legend_title='',
                                 font=dict(
-                                    size=15)
+                                    size=15),
+                                title="Grants Implementation Timeline"
                             )
                             fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                             col1.plotly_chart(fig, use_container_width=True, config=config)
@@ -990,7 +1013,8 @@ if st.session_state.count >= 1:
                                                     paper_bgcolor='rgba(0,0,0,0)',
                                                     plot_bgcolor='rgba(0,0,0,0)',
                                                     font=dict(
-                                                        size=15))
+                                                        size=15),
+                                                    title = "Grants Disbursement Status")
                             }
 
                             col2.plotly_chart(fig, use_container_width=True, config=config)
@@ -1113,7 +1137,8 @@ if st.session_state.count >= 1:
                     height=600,
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    legend_title='Implementation Period Status')
+                    legend_title='Implementation Period Status',
+                    title="Grants Implementation Timeline")
                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                 col1.plotly_chart(fig, use_container_width=True, config=config)
 
@@ -1153,7 +1178,8 @@ if st.session_state.count >= 1:
                                         paper_bgcolor='rgba(0,0,0,0)',
                                         plot_bgcolor='rgba(0,0,0,0)',
                                         font=dict(
-                                            size=15))
+                                            size=15),
+                                        title = "Grants Disbursement Status")
                 }
                 col2.plotly_chart(fig, use_container_width=True, config=config)
 
