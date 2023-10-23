@@ -205,7 +205,7 @@ with portfolio_container:
        
         col2.subheader(':green[API explorer]')
 
-        with col2.expander("The Global Fund: Grants/Implementation periods, Disbursements"):
+        with col2.expander("The Global Fund: Grants/Implementation Periods, Disbursements"):
             st.markdown("<p style='text-align: justify'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
             " Users can navigate between different dimensions of data, such as region, country, component "
