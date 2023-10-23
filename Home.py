@@ -30,7 +30,7 @@ with st.container():
                     "I am enthusiastic about the intersection of Development and Analytics,"
                     " and constantly searching for new and innovative ways to present and display strategic insights."
                     "<br><br>This website contains my profile information and a collection of personal projects using Python for data visualization and machine learning."
-                    "<br><br>If you have any inquiries or feedback, please reach out to me at <a href="mailto:adrien.debruge@proton.me">adrien.debruge@proton.me</a>'"
+                    '<br><br>If you have any inquiries or feedback, please reach out to me at <a href="mailto:adrien.debruge@proton.me">adrien.debruge@proton.me</a>'
                     "<br>I hope you find my work engaging."
                     ,
                     unsafe_allow_html=True)
