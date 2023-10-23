@@ -274,10 +274,10 @@ with skills_container:
     with col2:
         col2.header('IT Skills')
         txt3('Programming', '`Python`, `DAX`, `VBA`')
-        txt3('Data processing/wrangling', '`pandas`, `numpy`, `PowerQuery`')
-        txt3('Data visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
+        txt3('Data Processing', '`pandas`, `numpy`, `PowerQuery`')
+        txt3('Data Visualization', '`matplotlib`, `seaborn`, `plotly`, `PowerBI`')
         txt3('Machine Learning', '`scikit-learn`')
-        txt3('Model deployment', '`streamlit`')
+        txt3('Model Deployment', '`streamlit`')
 
 # ---- CONTACT FORM ----
 
