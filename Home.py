@@ -40,98 +40,6 @@ with st.container():
         img = Image.open("./Images/Image1_black.png")
         st.image(img,width = 300)
 
-# ---- Work experience ----
-work_container = st.container()
-with work_container:
-    st.write("---")
-    col1, col2 = st.columns([5, 8])
-    col2.header('Work Experience')
-
-    #Web app path
-    path = "Images/Home_work.json"
-    #Local path
-    #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Home_work.json"
-    with col1:
-        st.write("")
-        st.write("")
-        st.write("")
-        st.write("")
-        with open(path, "r") as file:
-            url = json.load(file)
-        st_lottie(url,
-                  reverse=True,
-                  height=300,
-                  speed=0.75,
-                  loop=True,
-                  quality='high',
-                  key='Car'
-                  )
-
-
-    st.markdown("""
-    <style>
-    .streamlit-expanderHeader {
-        font-size: large;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
-        st.markdown('''
-        **OPERATIONAL EFFICIENCY** `280+ Grants`
-        \n- Business Process Monitoring & Analytics
-        \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
-        \n- Business Process Management
-        \nEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
-        \n- Business Process Enhancement
-        \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
-        ''')
-    with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
-        st.markdown('''
-        **PROGRAM MANAGEMENT** `9 High-Burden Diseases Countries`
-        \n- Created program control and reports to MoHs & global funders
-        \n- Coordinated cross-functional teams in EMEA and APAC on program activities
-        \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
-        \n**ANALYTICS: Reporting automation, dashboard development**
-        \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
-        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
-        ''')
-    with col2.expander("2020 | United Nations : Information Management Specialist"):
-        st.markdown('''
-        **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
-        \nWith the Resident Coordinator Office (RCO):
-        \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
-        \nIn the frame of the Common Country Analysis:
-            \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
-            \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
-        ''')
-    with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
-        st.markdown('''
-        **PROJECT MANAGEMENT**  `Projects of €8M+`
-        \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
-        \n- Managed customer relationship (Govt. and private)
-        \n- Created project capability in the local team
-
-        \n**BUSINESS INTELLIGENCE**
-        \nTracked and mapped company footprint in India; carried out business simulations  \n
-
-        \n**NGO VOLUNTEERING**
-        \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
-        \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
-        ''')
-    with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
-        st.markdown('''
-        **PROJECT MANAGEMENT** `Project of €3M`
-        \nCoordinated several departments to oversee the implementation of a project in India:
-        \n- Defined support scheme to respect the contractual system availability commitment
-        \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
-        ''')
-    with col2.expander("2016 | Airbus : Analyst trainee"):
-        st.markdown('''
-        **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
-        \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
-        ''')
-
 
 # ---- Portfolio ----
 portfolio_container = st.container()
@@ -240,9 +148,100 @@ with portfolio_container:
             #online
             img = "./Images/WHO_app.jpg"
             st.image(img, width=650)
-        
- 
-           
+
+# ---- Work experience ----
+work_container = st.container()
+with work_container:
+    st.write("---")
+    col1, col2 = st.columns([5, 8])
+    col2.header('Work Experience')
+
+    #Web app path
+    path = "Images/Home_work.json"
+    #Local path
+    #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Home_work.json"
+    with col1:
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        with open(path, "r") as file:
+            url = json.load(file)
+        st_lottie(url,
+                  reverse=True,
+                  height=300,
+                  speed=0.75,
+                  loop=True,
+                  quality='high',
+                  key='Car'
+                  )
+
+
+    st.markdown("""
+    <style>
+    .streamlit-expanderHeader {
+        font-size: large;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
+        st.markdown('''
+        **OPERATIONAL EFFICIENCY** `280+ Grants`
+        \n- Business Process Monitoring & Analytics
+        \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
+        \n- Business Process Management
+        \nEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
+        \n- Business Process Enhancement
+        \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
+        ''')
+    with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
+        st.markdown('''
+        **PROGRAM MANAGEMENT** `9 High-Burden Diseases Countries`
+        \n- Created program control and reports to MoHs & global funders
+        \n- Coordinated cross-functional teams in EMEA and APAC on program activities
+        \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
+        \n**ANALYTICS: Reporting automation, dashboard development**
+        \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
+        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
+        ''')
+    with col2.expander("2020 | United Nations : Information Management Specialist"):
+        st.markdown('''
+        **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
+        \nWith the Resident Coordinator Office (RCO):
+        \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
+        \nIn the frame of the Common Country Analysis:
+            \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
+            \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
+        ''')
+    with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
+        st.markdown('''
+        **PROJECT MANAGEMENT**  `Projects of €8M+`
+        \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
+        \n- Managed customer relationship (Govt. and private)
+        \n- Created project capability in the local team
+
+        \n**BUSINESS INTELLIGENCE**
+        \nTracked and mapped company footprint in India; carried out business simulations  \n
+
+        \n**NGO VOLUNTEERING**
+        \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
+        \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
+        ''')
+    with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
+        st.markdown('''
+        **PROJECT MANAGEMENT** `Project of €3M`
+        \nCoordinated several departments to oversee the implementation of a project in India:
+        \n- Defined support scheme to respect the contractual system availability commitment
+        \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
+        ''')
+    with col2.expander("2016 | Airbus : Analyst trainee"):
+        st.markdown('''
+        **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
+        \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
+        ''')
+
+
 
 st.write('---')
 
