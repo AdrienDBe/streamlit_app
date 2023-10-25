@@ -122,7 +122,7 @@ with portfolio_container:
             "The app also provides options for grouping the data by Region, Income level, or Country based"
             " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
             st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund)"
+                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund_API)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
