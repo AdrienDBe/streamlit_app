@@ -37,7 +37,7 @@ with st.container():
     with col2:
         # picture
         from PIL import Image
-        img = Image.open("./Images/Portrait-removebg.png")
+        img = Image.open("./Images/imageedit_7_7646611264.png")
         st.image(img,width = 200)
 
 
