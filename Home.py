@@ -38,7 +38,7 @@ with st.container():
         # picture
         from PIL import Image
         img = Image.open("./Images/Portrait-removebg.png")
-        st.image(img,width = 300)
+        st.image(img,width = 200)
 
 
 # ---- Portfolio ----
