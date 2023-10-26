@@ -547,23 +547,27 @@ if st.session_state.count >= 1:
                                 df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
                                 df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
 
+                                # Create a list of grant agreement numbers in the desired order
+                                grant_order = df_temp2['grantAgreementNumber']
+
+                                # Create the bar chart with the desired order of y-axis values
                                 fig = {
                                     'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.7,
                                                     orientation='h',
                                                     marker=dict(color="#023824"),
                                                     name="Signed amount"
                                                     ),
                                              go.Bar(x=df_temp2["totalCommittedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.7,
                                                     orientation='h',
                                                     marker=dict(color="#046944"),
                                                     name="Committed amount"
                                                     ),
                                              go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.4,
                                                     orientation='h',
                                                     marker=dict(color="#C1EADB"),
@@ -585,7 +589,7 @@ if st.session_state.count >= 1:
                                                         legend_title='',
                                                         font=dict(
                                                             size=15),
-                                                        title = "Grants Disbursement Status")
+                                                        title="Grants Disbursement Status")
                                 }
 
                                 col2.plotly_chart(fig, use_container_width=True, config=config)
@@ -744,23 +748,27 @@ if st.session_state.count >= 1:
                                 df_temp2['disbursedtocommited'].fillna(0, inplace=True)
                                 df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
                                 df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
+                                # Create a list of grant agreement numbers in the desired order
+                                grant_order = df_temp2['grantAgreementNumber']
+
+                                # Create the bar chart with the desired order of y-axis values
                                 fig = {
                                     'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.7,
                                                     orientation='h',
                                                     marker=dict(color="#023824"),
                                                     name="Signed amount"
                                                     ),
                                              go.Bar(x=df_temp2["totalCommittedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.7,
                                                     orientation='h',
                                                     marker=dict(color="#046944"),
                                                     name="Committed amount"
                                                     ),
                                              go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                                    y=df_temp2['grantAgreementNumber'],
+                                                    y=grant_order,
                                                     width=0.4,
                                                     orientation='h',
                                                     marker=dict(color="#C1EADB"),
@@ -782,7 +790,7 @@ if st.session_state.count >= 1:
                                                         legend_title='',
                                                         font=dict(
                                                             size=15),
-                                                        title = "Grants Disbursement Status")
+                                                        title="Grants Disbursement Status")
                                 }
 
                                 col2.plotly_chart(fig, use_container_width=True, config=config)
@@ -944,23 +952,27 @@ if st.session_state.count >= 1:
                             df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
                             df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
 
+                            # Create a list of grant agreement numbers in the desired order
+                            grant_order = df_temp2['grantAgreementNumber']
+
+                            # Create the bar chart with the desired order of y-axis values
                             fig = {
                                 'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                                y=df_temp2['grantAgreementNumber'],
+                                                y=grant_order,
                                                 width=0.7,
                                                 orientation='h',
                                                 marker=dict(color="#023824"),
                                                 name="Signed amount"
                                                 ),
                                          go.Bar(x=df_temp2["totalCommittedAmount"],
-                                                y=df_temp2['grantAgreementNumber'],
+                                                y=grant_order,
                                                 width=0.7,
                                                 orientation='h',
                                                 marker=dict(color="#046944"),
                                                 name="Committed amount"
                                                 ),
                                          go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                                y=df_temp2['grantAgreementNumber'],
+                                                y=grant_order,
                                                 width=0.4,
                                                 orientation='h',
                                                 marker=dict(color="#C1EADB"),
@@ -979,12 +991,14 @@ if st.session_state.count >= 1:
                                                     height=300,
                                                     paper_bgcolor='rgba(0,0,0,0)',
                                                     plot_bgcolor='rgba(0,0,0,0)',
+                                                    legend_title='',
                                                     font=dict(
                                                         size=15),
-                                                    title = "Grants Disbursement Status")
+                                                    title="Grants Disbursement Status")
                             }
 
                             col2.plotly_chart(fig, use_container_width=True, config=config)
+
                             with st.expander("See grant(s) detail"):
                                 col1, col2 = st.columns([90, 10])
                                 df_temp1 = df_temp[['geographicAreaName',
@@ -1100,23 +1114,34 @@ if st.session_state.count >= 1:
                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                 col1.plotly_chart(fig, use_container_width=True, config=config)
 
+                df_temp2 = df_temp.sort_values('programStartDate')
+                df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
+                    'totalCommittedAmount']
+                df_temp2['disbursedtocommited'].fillna(0, inplace=True)
+                df_temp2['disbursedtocommited'] = round(df_temp2['disbursedtocommited']).astype(int)
+                df_temp2['disbursedtocommited'] = df_temp2['disbursedtocommited'].astype(str) + '%'
+
+                # Create a list of grant agreement numbers in the desired order
+                grant_order = df_temp2['grantAgreementNumber']
+
+                # Create the bar chart with the desired order of y-axis values
                 fig = {
                     'data': [go.Bar(x=df_temp2["totalSignedAmount"],
-                                    y=df_temp2['grantAgreementNumber'],
+                                    y=grant_order,
                                     width=0.7,
                                     orientation='h',
                                     marker=dict(color="#023824"),
                                     name="Signed amount"
                                     ),
                              go.Bar(x=df_temp2["totalCommittedAmount"],
-                                    y=df_temp2['grantAgreementNumber'],
+                                    y=grant_order,
                                     width=0.7,
                                     orientation='h',
                                     marker=dict(color="#046944"),
                                     name="Committed amount"
                                     ),
                              go.Bar(x=df_temp2["totalDisbursedAmount"],
-                                    y=df_temp2['grantAgreementNumber'],
+                                    y=grant_order,
                                     width=0.4,
                                     orientation='h',
                                     marker=dict(color="#C1EADB"),
@@ -1135,10 +1160,12 @@ if st.session_state.count >= 1:
                                         height=600,
                                         paper_bgcolor='rgba(0,0,0,0)',
                                         plot_bgcolor='rgba(0,0,0,0)',
+                                        legend_title='',
                                         font=dict(
                                             size=15),
-                                        title = "Grants Disbursement Status")
+                                        title="Grants Disbursement Status")
                 }
+
                 col2.plotly_chart(fig, use_container_width=True, config=config)
 
         if dataset == "Disbursements":
