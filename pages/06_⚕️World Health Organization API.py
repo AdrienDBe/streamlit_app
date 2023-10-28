@@ -15,7 +15,7 @@ st.set_page_config(page_title="WHO API", page_icon="⚕", layout="wide")
 @st.cache_data(show_spinner=False)
 def local_css(file_name):
     with open(file_name) as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 local_css("style/style.css")
 
 # Use local CSS for background waves
