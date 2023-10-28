@@ -497,6 +497,8 @@ if st.session_state.count >= 1:
 
                                 autosize=False,
                                 height=500,
+                                paper_bgcolor='rgba(0,0,0,0)',  # Set the background of the plot to transparent
+                                plot_bgcolor='rgba(0,0,0,0)'   # Set the background of the plot area to transparent
                             )
                             fig.update_coloraxes(showscale=False)
                             fig.update_traces(marker_line_width=1)
