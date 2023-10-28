@@ -14,13 +14,13 @@ st.set_page_config(page_title="WHO API", page_icon="⚕", layout="wide")
 # Use local CSS
 @st.cache_data(show_spinner=False)
 def local_css(file_name):
-with open(file_name) as f:
+    with open(file_name) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 local_css("style/style.css")
 
 # Use local CSS for background waves
-    with open('./style/wave.css') as f:
-        css = f.read()
+with open('./style/wave.css') as f:
+    css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 # Remove whitespace from the top of the page and sidebar
