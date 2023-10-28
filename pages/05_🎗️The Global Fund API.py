@@ -148,7 +148,7 @@ if st.session_state.count == 0:
 if st.session_state.count >= 1:
 
     # Use local CSS for background waves
-    with open('./files/wave.css') as f:
+    with open('./style/wave.css') as f:
         css = f.read()
     st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
