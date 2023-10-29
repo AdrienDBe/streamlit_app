@@ -18,13 +18,7 @@ def local_css(file_name):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 local_css("style/style.css")
 
-# Use local CSS for background waves
-with open('./style/wave.css') as f:
-    css = f.read()
-st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
-
 # Remove whitespace from the top of the page and sidebar
-
 st.markdown("""
         <style>
                .block-container {
@@ -162,6 +156,11 @@ if st.session_state.count == 0:
                     st.experimental_rerun()
 
 if st.session_state.count >= 1:
+
+    # Use local CSS for background waves
+    with open('./style/wave.css') as f:
+        css = f.read()
+    st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
     ## List of WHO countries
     # Define a function to import the data from the WHO API
