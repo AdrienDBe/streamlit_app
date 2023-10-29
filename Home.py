@@ -194,7 +194,8 @@ with work_container:
 
     with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
         st.markdown(
-            "<p style='text-align: justify; font-size: 18px;'>"
+            "<p style='text-align: justify;'>"
+            "<span style='font-size: 18px;'>"
             "<b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>"
             "<ul>"
             "<li>Business Process Monitoring & Analytics</li>"
@@ -204,9 +205,11 @@ with work_container:
             "<li>Business Process Enhancement</li>"
             "<p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting</p>"
             "</ul>"
+            "</span>"
             "</p>",
             unsafe_allow_html=True
         )
+
 
 
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
