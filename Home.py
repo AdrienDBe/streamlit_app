@@ -204,7 +204,7 @@ with work_container:
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        **PROGRAM MANAGEMENT** `9 High-Burden Diseases Countries`
+        <b>PROGRAM MANAGEMENT</b> <code>9 High-Burden Diseases Countries</code>
         \n- Created program control and reports to MoHs & global funders
         \n- Coordinated cross-functional teams in EMEA and APAC on program activities
         \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
@@ -215,7 +215,7 @@ with work_container:
     with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
+        <b>INFORMATION MANAGEMENT</b> <code>Morocco Common Country Analysis (CCA)</code>
         \nWith the Resident Coordinator Office (RCO):
         \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
         \nIn the frame of the Common Country Analysis:
@@ -225,22 +225,22 @@ with work_container:
     with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        **PROJECT MANAGEMENT**  `Projects of €8M+`
+        <b>PROJECT MANAGEMENT</b> <code>Projects of €8M+</code>
         \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
         \n- Managed customer relationship (Govt. and private)
         \n- Created project capability in the local team
 
-        \n**BUSINESS INTELLIGENCE**
+        \n<b>BUSINESS INTELLIGENCE</b>
         \nTracked and mapped company footprint in India; carried out business simulations  \n
 
-        \n**NGO VOLUNTEERING**
+        \n<b>NGO VOLUNTEERING</b>
         \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
         \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
         ''', unsafe_allow_html=True)
     with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        **PROJECT MANAGEMENT** `Project of €3M`
+        <b>PROJECT MANAGEMENT</b> <code>Project of €3M</code>
         \nCoordinated several departments to oversee the implementation of a project in India:
         \n- Defined support scheme to respect the contractual system availability commitment
         \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
@@ -248,7 +248,7 @@ with work_container:
     with col2.expander("2016 | Airbus : Analyst trainee"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
+        <b>*BUSINESS ANALYSIS</b> <code>Simulation and Predictive Analytics</code>
         \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
         ''', unsafe_allow_html=True)
 
