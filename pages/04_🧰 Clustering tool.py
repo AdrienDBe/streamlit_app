@@ -12,6 +12,11 @@ from kneed import KneeLocator
 
 st.set_page_config(layout="centered", page_icon="🔠")
 
+# Use local CSS for background waves
+with open('./style/wave.css') as f:
+    css = f.read()
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
 # Set initial title
 title = st.title("Clustering tool")
 
