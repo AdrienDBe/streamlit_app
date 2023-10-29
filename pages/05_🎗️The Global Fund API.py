@@ -74,7 +74,7 @@ if st.session_state.count == 0:
         st.title("Global Fund API explorer")
         st.subheader("Implementation periods, Grants, Disbursements")
         col1,col_mid, col2 = st.columns([4,0.1,1], gap='small')
-        col1.write("<p style='text-align: justify;'>"
+        col1.write("<p style='text-align: justify;font-size: 18px;'>"
                    "This app imports data from the Global Fund API and displays it in a Streamlit web app."
                    "<br/>It allows the user to navigate between several information dimensions and represent it visually with "
                  "different level of granularity (region, country, disease, stakeholder etc.)"
@@ -90,7 +90,7 @@ if st.session_state.count == 0:
             with col1:
                 # GF details
                 st.subheader("The Global Fund")
-                st.markdown("<p style='text-align: justify'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                          "<a href='https://www.theglobalfund.org/en/'>The Global Fund </a> is a partnership designed to accelerate the end of AIDS, tuberculosis and "
                         "malaria as epidemics. <br> It prioritizes: results-based work, accountability, preparing countries"
                         " for graduation from aid, investing in people as assets for development and inclusive governance."
@@ -100,7 +100,7 @@ if st.session_state.count == 0:
                         " learn more about the organization Funding Model.</p>", unsafe_allow_html=True)
             with col2:
                 st.subheader("API")
-                st.markdown("<p style='text-align: justify;'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                             "An API, or Application Programming Interface, allows different applications to communicate and exchange data with one another. "
                             "In the case of the World Health Organization (WHO), The Global Fund, and the World Bank, these organizations have created APIs "
                             "to increase transparency and provide better access to information for stakeholders in their activities."
@@ -109,7 +109,7 @@ if st.session_state.count == 0:
             with col3:
                 st.subheader("The Global Fund API")
                 # GF details
-                st.markdown("<p style='text-align: justify;'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                             "The Global Fund API <a href='https://data-service.theglobalfund.org/api'> (link to documentation)</a>"
                             " is providing access to different data including: <br>Lookup Lists, Funding Allocations, Donors & Implementation Partners,"
                             " various Grants information, information on Resource Mobilization and several de-normalized views of all eligibility records."
@@ -123,7 +123,7 @@ if st.session_state.count == 0:
         response1 = requests.get(url2)
         if response1.status_code != 200:
             col2.warning( "There seems to be an error with the Global Fund API (status code: {})".format(response1.status_code))
-            col2.markdown("<p style='text-align: justify;'>"
+            col2.markdown("<p style='text-align: justify;font-size: 18px;'>"
                         "The API is currently unavailable (see <a href='https://data-service.theglobalfund.org/v3.3/odata/VGrantAgreementImplementationPeriods'> this link </a> )".format(response1.status_code)
                         ,unsafe_allow_html=True)
         else:
@@ -134,7 +134,7 @@ if st.session_state.count == 0:
 
         col1, col2 = st.columns([10, 35], gap='small')
         col1.subheader("Disclaimer")
-        col2.write("<p style='text-align: justify;'>"
+        col2.write("<p style='text-align: justify;font-size: 18px;'>"
             "Please note that the information provided in this page is created and shared by me as an individual and "
             "should not be taken as an official representation of the Global Fund."
             "<br>For accurate and up-to-date information, please consult the Global Fund official data explorer.",
