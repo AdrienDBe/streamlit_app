@@ -82,7 +82,7 @@ if st.session_state.count == 0:
         st.title("World Health Organization API explorer")
         col1,col_mid, col2 = st.columns([4,0.1,1], gap='small')
         col1.subheader("Indicators exploration tool")
-        col1.write("<p style='text-align: justify;'>"
+        col1.write("<p style='text-align: justify;font-size: 18px;'>"
                    "This Streamlit web app, powered by data imported from the World Health Organization (WHO) API,"
                    " enables users to explore indicators or enter relevant keywords. "
                    " Upon selecting a topic (such as Tuberculosis, Malaria, or HIV) a list of related indicators is presented for the user to visualize."
@@ -110,7 +110,7 @@ if st.session_state.count == 0:
             with col1:
                 # WHO details
                 st.subheader("WHO")
-                st.markdown("<p style='text-align: justify'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                             "The <a href='https://www.who.int/'>World Health Organization (WHO) </a> plays a crucial role in the global health sector by leading efforts "
                             "to expand universal health coverage and coordinating the world's response to health emergencies. Its focus is on promoting healthier lives, "
                             "from pregnancy care through old age. WHO has set ambitious targets known as the Triple Billion, which aim to achieve good health for all through science-based policies and programs."
@@ -119,7 +119,7 @@ if st.session_state.count == 0:
                             "alongside various partners to achieve its mission.</p>", unsafe_allow_html=True)
             with col2:
                 st.subheader("API")
-                st.markdown("<p style='text-align: justify;'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                             "An API, or Application Programming Interface, allows different applications to communicate and exchange data with one another. "
                             "In the case of the World Health Organization (WHO), The Global Fund, and the World Bank, these organizations have created APIs "
                             "to increase transparency and provide better access to information for stakeholders in their activities."
@@ -128,7 +128,7 @@ if st.session_state.count == 0:
             with col3:
                 st.subheader("WHO API")
                 # WHO details
-                st.markdown("<p style='text-align: justify;'>"
+                st.markdown("<p style='text-align: justify;font-size: 18px;'>"
                             "The WHO API <a href='https://www.who.int/data/gho/info/gho-odata-api#exe3'> (see documentation) </a> is providing access to 2,197 indicators at the time of writing"
                             ", but for simplicity we will only be displaying indicators related to the three epidemics targeted by the Global Fund (i.e. AIDS, tuberculosis and malaria)."
                             "<br>To offer more visualization options, we also imported the <a href='https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups'> World Bank regional groupings and Income group classifications </a> from the World Bank API and merged them with the country list from the WHO.",
@@ -150,7 +150,7 @@ if st.session_state.count == 0:
         col1, col2 = st.columns([10, 35], gap='small')
         col1.subheader("Disclaimer")
         with col2:
-            st.write("<p style='text-align: justify;'>"
+            st.write("<p style='text-align: justify;font-size: 18px;'>"
                 "Please note that the information provided in this page is created and shared by me as an individual and "
                 "should not be taken as an official representation of the World Health Organization (WHO). "
                 "For accurate and up-to-date information, please consult the WHO's official website.",
