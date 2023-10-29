@@ -21,6 +21,11 @@ hide_st_style = """
              """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
+# Use local CSS for background waves
+with open('./style/wave.css') as f:
+    css = f.read()
+st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
 
 st.title('Process analysis')
 st.markdown("<p style='text-align: justify; font-size: 18px;'>"'Python can be used to conduct process analysis and visualize business process outcome in comparison to the theoretical process duration.'
