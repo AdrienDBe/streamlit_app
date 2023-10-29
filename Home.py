@@ -169,7 +169,7 @@ with work_container:
     #Local path
     #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Home_work.json"
     with col1:
-        num_empty_lines = 4
+        num_empty_lines = 6
         for _ in range(num_empty_lines):
             st.text("")
         with open(path, "r") as file:
