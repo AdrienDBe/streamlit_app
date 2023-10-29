@@ -58,6 +58,7 @@ with portfolio_container:
     #Local path
     #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Dataviz.json"
     with col1:
+      st.text("\n\n\n\n")
         with open(path, "r") as file:
             url = json.load(file)
         st_lottie(url,
@@ -166,10 +167,7 @@ with work_container:
     #Local path
     #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Home_work.json"
     with col1:
-        st.write("")
-        st.write("")
-        st.write("")
-        st.write("")
+        st.text("\n\n\n\n")
         with open(path, "r") as file:
             url = json.load(file)
         st_lottie(url,
