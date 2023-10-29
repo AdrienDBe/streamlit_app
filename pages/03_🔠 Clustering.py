@@ -37,10 +37,6 @@ with col1:
               key='Car'
               )
 
-with st.sidebar:
-    # Add radio button to sidebar
-    option = st.sidebar.radio("", ("What's clustering?", "Using the clustering tool"))
-
 col2.markdown("<p style='text-align: justify; font-size: 18px;'>"
              "Clustering is an unsupervised machine learning algorithm that is used to group similar data points "
             "together based on their features or characteristics. <br>Unlike supervised learning algorithms, clustering "
