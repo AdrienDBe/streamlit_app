@@ -39,11 +39,11 @@ with st.container():
                     "<br>I hope you find my work engaging."
                     ,
                     unsafe_allow_html=True)
-    with col3:
+#    with col3:
         # picture
-        from PIL import Image
-        img = Image.open("./Images/Image1_black.png")
-        st.image(img,width = 300)
+#        from PIL import Image
+#        img = Image.open("./Images/Image1_black.png")
+#        st.image(img,width = 300)
 
 
 # ---- Portfolio ----
