@@ -284,6 +284,9 @@ with skills_container:
                       loop=True,
                       quality='high',
                       key='Car3')
+    def txt3(title, content):
+    st.markdown(f"<p style='font-size: 18px;'>{title}: {content}</p>", unsafe_allow_html=True)
+
     with col2:
         col2.header('IT Skills')
         txt3('Programming', '`Python`, `DAX`, `VBA`')
