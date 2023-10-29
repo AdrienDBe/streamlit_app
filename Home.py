@@ -28,7 +28,7 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 # ---- HEADER SECTION ----
 with st.container():
     st.title("Adrien Debruge")
-    col1, col2 = st.columns((2,1))
+    col1, col2 = st.columns((10,1,2,2))
     with col1:
         st.subheader("Welcome:wave:")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
@@ -39,7 +39,7 @@ with st.container():
                     "<br>I hope you find my work engaging."
                     ,
                     unsafe_allow_html=True)
-    with col2:
+    with col3:
         # picture
         from PIL import Image
         img = Image.open("./Images/Image1_black.png")
