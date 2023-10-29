@@ -200,7 +200,7 @@ with work_container:
         \nEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
         \n- Business Process Enhancement
         \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
-        ''')
+        ''', unsafe_allow_html=True)
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
@@ -211,7 +211,7 @@ with work_container:
         \n**ANALYTICS: Reporting automation, dashboard development**
         \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
         \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
-        ''')
+        ''', unsafe_allow_html=True)
     with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
@@ -221,7 +221,7 @@ with work_container:
         \nIn the frame of the Common Country Analysis:
             \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
             \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
-        ''')
+        ''', unsafe_allow_html=True)
     with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
@@ -236,7 +236,7 @@ with work_container:
         \n**NGO VOLUNTEERING**
         \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
         \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
-        ''')
+        ''', unsafe_allow_html=True)
     with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
@@ -244,13 +244,13 @@ with work_container:
         \nCoordinated several departments to oversee the implementation of a project in India:
         \n- Defined support scheme to respect the contractual system availability commitment
         \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
-        ''')
+        ''', unsafe_allow_html=True)
     with col2.expander("2016 | Airbus : Analyst trainee"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
         **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
         \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
-        ''')
+        ''', unsafe_allow_html=True)
 
 
 
