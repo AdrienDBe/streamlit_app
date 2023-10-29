@@ -23,7 +23,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 st.title('Process analysis')
-st.markdown("<p style='text-align: justify'>"'Python can be used to conduct process analysis and visualize business process outcome in comparison to the theoretical process duration.'
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"'Python can be used to conduct process analysis and visualize business process outcome in comparison to the theoretical process duration.'
          '<br>In this page we are going to go through a few steps required to perform such analysis. The main objective being to '
          'generate high-level insights on process performance and identify categories impacting our process.', unsafe_allow_html=True)
 
@@ -43,7 +43,7 @@ st_lottie(url,
           )
 
 st.subheader('Getting data')
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             'The dataframe we will be working with has to contain a list of run, or completion timestamps, for each step of our process.'
             '<br><br> Depending on the type of data we are working with, we might need to extract this data from different sources.'
             " For instance, if we are dealing with CRM data, we will access data from a system like Salesforce using "
@@ -115,7 +115,7 @@ df.iloc[:, -x:] = df.iloc[:, -x:].where(np.random.rand(*df.iloc[:, -x:].shape) >
 
 st.subheader('Dealing with missing values')
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
          'We gathered our data, now we need to make a few verifications before diving into it. <br><br> '
          'First we want to check if our process data is complete, when analyzing real life data it is very much likely that '
          'not all steps of your process have been completed and this will result in dealing with a dataset including missing values.<br> '
@@ -137,7 +137,7 @@ import missingno as msno
 msno.matrix(df)'''
     st.code(code, language='python')
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "Depending of the data, you can either discard the rows with empty value or implement a strategy to replace them by a proxy (step median or average)."
         " In this scenario we are simply going to remove them and consider completed process runs only.", unsafe_allow_html=True)
 df.dropna(inplace=True)
@@ -150,7 +150,7 @@ df.reset_index(drop=True,inplace=True)''')
 
 st.subheader('Dealing with outliers')
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "Real life data is full of surprise, and outliers. It is usually recommended to retain them in your dataset. "
         "Similarly to dealing with missing values, you can implement a strategy to replace them too."
         "<br><br> In this example we are going to target the values which are falling outstide of the standard deviation for each step, "
@@ -264,7 +264,7 @@ for col in df_clean.columns:
     df_clean[col] = newcol
 
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "We now have a cleaned, normally distributed, dataset without extreme values that may skew our process analysis:", unsafe_allow_html=True)
 violin_plots(df_clean)
 
@@ -352,7 +352,7 @@ for col_idx, col in enumerate(df2.columns):
 st.subheader('Visualizing steps completion')
 import streamlit as st
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "One way of have a visual representation of our process timeliness is to lay our data over a gantt chart. "
         "<br> A gant chart is a type of bar chart that illustrates a project schedule. "
             "In a Gantt chart, each bar represents a task or activity, and the length of the bar represents"
@@ -382,7 +382,7 @@ ax1.axvline(x=0, color='white', ls=':', lw=1)
 ax1.axis("off")
 st.pyplot(fig)
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "Now that we have a clean dataset we can start visualizing our process data "
         "by overlaying our process timeliness data onto a Gantt chart. "
             "The idea being to easily also identify any bottlenecks or delays in the process and optimize our workflow accordingly."
@@ -451,7 +451,7 @@ plt.show()
 
 col1, col2 = st.columns([1, 1], gap='small')
 
-col1.markdown("<p style='text-align: justify'>"
+col1.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "The visualization is helpful to get an overall idea of how our process unfolded in real life, "
         "but it is also good to have high-level average values to share:", unsafe_allow_html=True)
 df2_duration = df2.copy()
@@ -478,7 +478,7 @@ col2.dataframe(results)
 
 st.subheader('Analyzing categories')
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "We now have a good understanding of the timeliness of our steps, but to further enhance our analysis"
         " it can be interesting to look at the timeliness of categorical variables available (e.g. teams, products)."
         "<br> In this scenario, utilizing boxplots enables us to effectively compare and visualize each category."
@@ -543,7 +543,7 @@ for n, colname in enumerate(df2.iloc[:, :-1].columns, 1):
 ax1.axis("off")
 st.pyplot(fig)
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "We can now get the average timeliness for each category on each step and compare our values:", unsafe_allow_html=True)
 
 df2_duration = df2.copy()
@@ -576,7 +576,7 @@ st.dataframe(pivot_table)
 
 st.subheader('To go further...')
 
-st.markdown("<p style='text-align: justify'>"
+st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         "To summarize, we have worked with a dataset that contains process timeliness, cleaned it, "
             "and created visualizations to compare actual duration with theoretical target duration. "
             "We also examined results by categorical values. "
