@@ -193,16 +193,19 @@ with work_container:
     """, unsafe_allow_html=True)
 
     with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
-        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-        '''
-        <b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>
-        \n- Business Process Monitoring & Analytics
-        \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
-        \n- Business Process Management
-        \nEnsure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance and Risk departments
-        \n- Business Process Enhancement
-        \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
-        ''', unsafe_allow_html=True)
+        st.markdown(
+            "<p style='text-align: justify; font-size: 18px;'>"
+            "<b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>"
+            "<br>- Business Process Monitoring & Analytics"
+            "<br>Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate"
+            "<br>- Business Process Management"
+            "<br>Ensure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance, and Risk departments"
+            "<br>- Business Process Enhancement"
+            "<br>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting"
+            "</p>",
+            unsafe_allow_html=True
+        )
+
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
