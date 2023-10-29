@@ -194,22 +194,31 @@ with work_container:
 
     with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
         st.markdown(
-            "<p style='text-align: justify;'>"
-            "<span style='font-size: 18px;'>"
-            "<b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>"
-            "<ul>"
-            "<li>Business Process Monitoring & Analytics</li>"
-            "<p>Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate</p>"
-            "<li>Business Process Management</li>"
-            "<p>Ensure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance, and Risk departments</p>"
-            "<li>Business Process Enhancement</li>"
-            "<p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting</p>"
-            "</ul>"
-            "</span>"
-            "</p>",
+            """
+            <style>
+                .larger-text {
+                    font-size: 18px;
+                }
+            </style>
+            
+            <p class="larger-text" style='text-align: justify;'>
+            <b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>
+            </p>
+            
+            <ul class="larger-text">
+                <li>Business Process Monitoring & Analytics
+                    <p>Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate</p>
+                </li>
+                <li>Business Process Management
+                    <p>Ensure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance, and Risk departments</p>
+                </li>
+                <li>Business Process Enhancement
+                    <p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting</p>
+                </li>
+            </ul>
+            """,
             unsafe_allow_html=True
         )
-
 
 
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
