@@ -1119,7 +1119,7 @@ if st.session_state.count >= 1:
                 fig.update_yaxes(showgrid=False, zeroline=True, title_text="", visible=False)
                 col1.plotly_chart(fig, use_container_width=True, config=config)
 
-                df_temp2 = df_temp.sort_values('programStartDate')
+                df_temp2 = df2_group_region.sort_values('programStartDate')
                 df_temp2['disbursedtocommited'] = df_temp2['totalDisbursedAmount'] * 100 / df_temp2[
                     'totalCommittedAmount']
                 df_temp2['disbursedtocommited'].fillna(0, inplace=True)
