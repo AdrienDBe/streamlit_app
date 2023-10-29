@@ -31,7 +31,7 @@ with st.container():
     col1, col2 = st.columns((2,1))
     with col1:
         st.subheader("Welcome:wave:")
-        st.markdown("<p style='text-align: justify;'>"
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                     "I am enthusiastic about the intersections of Project Management, the Development sector and Analytics,"
                     " and constantly searching for new and innovative ways to present and display strategic insights."
                     "<br><br>This website contains my profile information and a collection of personal projects using Python for data visualization and machine learning."
@@ -71,7 +71,7 @@ with portfolio_container:
     with col2:
         col2.subheader(':green[Business application]')
         with col2.expander("Process analysis"):
-            st.markdown("<p style='text-align: justify'>"
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
             " compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
             "process steps and provides an initial framework to approach process steps pre-processing and visualization."
@@ -86,7 +86,7 @@ with portfolio_container:
             st.image(img, width=650)
             
         with col2.expander("Clustering, what's that about?"):
-            st.markdown("<p style='text-align: justify'>"
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "This article provides an overview of clustering analysis in Python, including key concepts such as encoding categorical data, "
             "scaling data, dimensionality reduction, and choosing the right algorithm. This post is designed to help you understand the basics"
             "of clustering analysis in Python and provide you with a solid foundation to build upon as you delve deeper into this topic."
@@ -102,7 +102,7 @@ with portfolio_container:
             
             
         with col2.expander("Clustering tool"):
-            st.markdown("<p style='text-align: justify'>"
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "This clustering tool enables you to import a CSV file for K-means clustering on one or more columns."
             " It encodes categorical values, scales the dataset, and uses Principal Component Analysis (PCA) for multivariate clustering. "
             "A sample dataset is also available as an option."
@@ -120,7 +120,7 @@ with portfolio_container:
         col2.subheader(':green[API explorer]')
 
         with col2.expander("The Global Fund: Grants/Implementation Periods, Disbursements"):
-            st.markdown("<p style='text-align: justify'>"
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
             " Users can navigate between different dimensions of data, such as region, country, component "
             "(disease), or partner involved, and represent it visually with varying levels of granularity. "
@@ -137,7 +137,7 @@ with portfolio_container:
             st.image(img, width=650)    
                 
         with st.expander("World Health Organization: Indicators"):
-            st.markdown("<p style='text-align: justify'>"
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "Powered by data from the World Health Organization (WHO) API, users of the app can explore indicators or"
             " enter relevant keywords. Upon selecting a topic such as Tuberculosis, Malaria, or HIV, "
             "a list of related indicators is presented for visualization. "
@@ -191,7 +191,8 @@ with work_container:
     """, unsafe_allow_html=True)
 
     with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **OPERATIONAL EFFICIENCY** `280+ Grants`
         \n- Business Process Monitoring & Analytics
         \nDevelop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate
@@ -201,7 +202,8 @@ with work_container:
         \nDefine enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting
         ''')
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **PROGRAM MANAGEMENT** `9 High-Burden Diseases Countries`
         \n- Created program control and reports to MoHs & global funders
         \n- Coordinated cross-functional teams in EMEA and APAC on program activities
@@ -211,7 +213,8 @@ with work_container:
         \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
         ''')
     with col2.expander("2020 | United Nations : Information Management Specialist"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **INFORMATION MANAGEMENT** `Morocco Common Country Analysis (CCA)`
         \nWith the Resident Coordinator Office (RCO):
         \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
@@ -220,7 +223,8 @@ with work_container:
             \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
         ''')
     with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **PROJECT MANAGEMENT**  `Projects of €8M+`
         \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
         \n- Managed customer relationship (Govt. and private)
@@ -234,14 +238,16 @@ with work_container:
         \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
         ''')
     with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **PROJECT MANAGEMENT** `Project of €3M`
         \nCoordinated several departments to oversee the implementation of a project in India:
         \n- Defined support scheme to respect the contractual system availability commitment
         \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
         ''')
     with col2.expander("2016 | Airbus : Analyst trainee"):
-        st.markdown('''
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
         **BUSINESS ANALYSIS** `Simulation and Predictive Analytics`
         \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
         ''')
