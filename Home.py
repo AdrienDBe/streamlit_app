@@ -28,7 +28,7 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 # ---- HEADER SECTION ----
 with st.container():
     st.title("Adrien Debruge")
-    col1, col2, col3, col4  = st.columns((2,0.5,10,1))
+    col1, col2, col3, col4  = st.columns((2,1,10,1))
     with col3:
         st.subheader("Welcome:wave:")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
