@@ -4,7 +4,7 @@ import requests
 import json
 
 
-st.set_page_config(page_title="Home", page_icon="🏚️", layout="wide")
+st.set_page_config(page_title="Global Impact Portfolio", layout="wide")
 
 # Custom function for printing text
 def txt3(a, b):
