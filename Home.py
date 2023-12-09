@@ -30,7 +30,7 @@ with st.container():
     st.title("Adrien Debruge")
     col1, col2, col3, col4  = st.columns((2,1,10,1))
     with col3:
-        st.subheader("Welcome:wave:")
+        st.subheader("Global impact portfolio")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                     "I am enthusiastic about the intersections of Project Management, the Development sector and Analytics."
                     "<br>Constantly searching for new and innovative ways to present and display strategic insights,"
