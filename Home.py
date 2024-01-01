@@ -24,6 +24,16 @@ local_css("style/style.css")
 with open('./style/wave.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+# Adding a sidebar with hyperlinks
+with st.sidebar:
+    st.header("App Navigation")
+    st.markdown("[Home](https://adrien.streamlit.app)")
+    st.markdown("[Process Analysis](https://adrien.streamlit.app/Process_Analysis)")
+    st.markdown("[Clustering Overview](https://adrien.streamlit.app/~/+/Clustering)")
+    st.markdown("[Clustering Tool](https://adrien.streamlit.app/~/+/Clustering_tool)")
+    st.markdown("[The Global Fund API](https://adrien.streamlit.app/The_Global_Fund_API)")
+    st.markdown("[WHO Indicators](https://adrien.streamlit.app/~/+/World_Health_Organization_API)")
     
 # ---- HEADER SECTION ----
 with st.container():
