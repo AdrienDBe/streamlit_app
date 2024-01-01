@@ -212,7 +212,7 @@ with work_container:
             </style>
             
             <p class="larger-text" style='text-align: justify;'>
-            <b>OPERATIONAL EFFICIENCY</b> <code>280+ Grants</code>
+            <b>OPERATIONAL EFFICIENCY</b> <code>Grant Life Cycle Business Process</code>
             </p>
             
             <ul class="larger-text">
