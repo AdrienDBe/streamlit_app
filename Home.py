@@ -28,23 +28,12 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 # Adding a styled sidebar with hyperlinks (white text, no underline, hover effect)
 with st.sidebar:
     st.header("App Navigation")
-    st.markdown("<a href='https://process-analysis.streamlit.app/' style='text-decoration: none; color: white;'>🔎 Process Analysis</a>", unsafe_allow_html=True)
-    st.markdown("<a href='https://adrien-clustering.streamlit.app/' style='text-decoration: none; color: white;'>🔠 Clustering Overview</a>", unsafe_allow_html=True)
-    st.markdown("<a href='https://clustering-tool.streamlit.app/' style='text-decoration: none; color: white;'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
-    st.markdown("<a href='https://theglobalfund-api.streamlit.app' style='text-decoration: none; color: white;'>🎗️ The Global Fund API</a>", unsafe_allow_html=True)
-    st.markdown("<a href='https://world-health-organization-api.streamlit.app/' style='text-decoration: none; color: white;'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
-
-# CSS style for hover effect
-st.markdown(
-    """
-    <style>
-        .markdown-content a:hover {
-            color: #FF5733; /* Change the color on hover (e.g., orange) */
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+    st.markdown("<a class='sidebar-link' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
+    st.markdown("<a class='sidebar-link' href='https://adrien-clustering.streamlit.app/'>🔠 Clustering Overview</a>", unsafe_allow_html=True)
+    st.markdown("<a class='sidebar-link' href='https://clustering-tool.streamlit.app/'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
+    st.markdown("<a class='sidebar-link' href='https://theglobalfund-api.streamlit.app'>🎗️ The Global Fund API</a>", unsafe_allow_html=True)
+    st.markdown("<a class='sidebar-link' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
+   
     
 # ---- HEADER SECTION ----
 with st.container():
