@@ -1,0 +1,9 @@
+    st.markdown(
+        """
+        <style>
+            .sidebar a:hover {
+                color: #FF5733; /* Change the color on hover (e.g., orange) */
+            }
+        </style>
+        """
+    )
