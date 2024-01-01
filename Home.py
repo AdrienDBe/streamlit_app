@@ -25,14 +25,39 @@ with open('./style/wave.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
-# Adding a sidebar with hyperlinks
+# Adding a styled sidebar with hyperlinks
 with st.sidebar:
+    st.markdown(
+        """
+        <style>
+            #MainMenu {
+                display: none;
+            }
+            .sidebar-content {
+                background-color: #f0f0f0;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            .sidebar a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+                margin-bottom: 10px;
+                display: block;
+            }
+            .sidebar a:hover {
+                color: #FF5733;
+            }
+        </style>
+        """
+    )
     st.header("App Navigation")
     st.markdown("[🔎 Process Analysis](https://process-analysis.streamlit.app/)")
     st.markdown("[🔠 Clustering Overview](https://adrien-clustering.streamlit.app/)")
     st.markdown("[🧰 Clustering Tool](https://clustering-tool.streamlit.app/)")
     st.markdown("[🎗️ The Global Fund API](https://theglobalfund-api.streamlit.app)")
     st.markdown("[⚕️ WHO Indicators](https://world-health-organization-api.streamlit.app/)")
+
     
 # ---- HEADER SECTION ----
 with st.container():
