@@ -28,12 +28,11 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 # Adding a sidebar with hyperlinks
 with st.sidebar:
     st.header("App Navigation")
-    st.markdown("[Home](https://adrien.streamlit.app)")
-    st.markdown("[🔎 Process Analysis](https://adrien.streamlit.app/Process_Analysis)")
-    st.markdown("[🔠 Clustering Overview](https://adrien.streamlit.app/~/+/Clustering)")
-    st.markdown("[🧰 Clustering Tool](https://adrien.streamlit.app/~/+/Clustering_tool)")
+    st.markdown("[🔎 Process Analysis](https://process-analysis.streamlit.app/)")
+    st.markdown("[🔠 Clustering Overview](https://adrien-clustering.streamlit.app/)")
+    st.markdown("[🧰 Clustering Tool](https://clustering-tool.streamlit.app/)")
     st.markdown("[🎗️ The Global Fund API](https://theglobalfund-api.streamlit.app)")
-    st.markdown("[⚕️ WHO Indicators](https://adrien.streamlit.app/~/+/World_Health_Organization_API)")
+    st.markdown("[⚕️ WHO Indicators](https://world-health-organization-api.streamlit.app/)")
     
 # ---- HEADER SECTION ----
 with st.container():
