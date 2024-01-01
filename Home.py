@@ -25,6 +25,12 @@ with open('./style/wave.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
+# Adding a link to the external CSS file
+st.markdown(
+    """
+    <link rel="stylesheet" type="text/css" href="sidebar_style.css">
+    """
+)
 with st.sidebar:
     st.header("App Navigation")
     st.markdown("<a class='sidebar-link' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
