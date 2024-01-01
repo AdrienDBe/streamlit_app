@@ -29,11 +29,11 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 with st.sidebar:
     st.header("App Navigation")
     st.markdown("[Home](https://adrien.streamlit.app)")
-    st.markdown("[Process Analysis](https://adrien.streamlit.app/Process_Analysis)")
-    st.markdown("[Clustering Overview](https://adrien.streamlit.app/~/+/Clustering)")
-    st.markdown("[Clustering Tool](https://adrien.streamlit.app/~/+/Clustering_tool)")
-    st.markdown("[The Global Fund API](https://theglobalfund-api.streamlit.app)")
-    st.markdown("[WHO Indicators](https://adrien.streamlit.app/~/+/World_Health_Organization_API)")
+    st.markdown("[🔎 Process Analysis](https://adrien.streamlit.app/Process_Analysis)")
+    st.markdown("[🔠 Clustering Overview](https://adrien.streamlit.app/~/+/Clustering)")
+    st.markdown("[🧰 Clustering Tool](https://adrien.streamlit.app/~/+/Clustering_tool)")
+    st.markdown("[🎗️ The Global Fund API](https://theglobalfund-api.streamlit.app)")
+    st.markdown("[⚕️ WHO Indicators](https://adrien.streamlit.app/~/+/World_Health_Organization_API)")
     
 # ---- HEADER SECTION ----
 with st.container():
