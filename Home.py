@@ -32,7 +32,7 @@ with st.sidebar:
     st.markdown("[Process Analysis](https://adrien.streamlit.app/Process_Analysis)")
     st.markdown("[Clustering Overview](https://adrien.streamlit.app/~/+/Clustering)")
     st.markdown("[Clustering Tool](https://adrien.streamlit.app/~/+/Clustering_tool)")
-    st.markdown("[The Global Fund API](https://adrien.streamlit.app/The_Global_Fund_API)")
+    st.markdown("[The Global Fund API](https://theglobalfund-api.streamlit.app)")
     st.markdown("[WHO Indicators](https://adrien.streamlit.app/~/+/World_Health_Organization_API)")
     
 # ---- HEADER SECTION ----
