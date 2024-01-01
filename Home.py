@@ -53,7 +53,7 @@ with st.container():
         # picture
         from PIL import Image
         img = Image.open("./Images/fixed.png")
-        st.image(img,width = 300)
+        st.image(img,width = 275)
 
 
 # ---- Portfolio ----
