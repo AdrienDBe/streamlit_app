@@ -25,7 +25,7 @@ with open('./style/wave.css') as f:
     css = f.read()
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
-# Adding a styled sidebar with hyperlinks (white text, no underline)
+# Adding a styled sidebar with hyperlinks (white text, no underline, hover effect)
 with st.sidebar:
     st.header("App Navigation")
     st.markdown("<a style='text-decoration: none; color: white;' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
@@ -33,7 +33,7 @@ with st.sidebar:
     st.markdown("<a style='text-decoration: none; color: white;' href='https://clustering-tool.streamlit.app/'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-api.streamlit.app'>🎗️ The Global Fund API</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
-
+ 
     
 # ---- HEADER SECTION ----
 with st.container():
