@@ -52,7 +52,7 @@ with st.container():
     with col1:
         # picture
         from PIL import Image
-        img = Image.open("./Images/Image1_black.png")
+        img = Image.open("./Images/fixed.png")
         st.image(img,width = 300)
 
 
