@@ -243,12 +243,13 @@ with work_container:
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
         <b>PROGRAM MANAGEMENT</b> <code>9 High-Burden Diseases Countries</code>
-        \n- Created program control and reports to MoHs & global funders
-        \n- Coordinated cross-functional teams in EMEA and APAC on program activities
+        \n- Managed AccessCare program including financial, schedules, R&O, contracts and maturity road map
+        \n- Implemented program standardization & governance framework for cross-regional application (SOP, Toll-Gate, Country Reviews & Steering Committee)
+        \n- Coordinated cross-functional teams in EMEA and APAC on program activities: 30+ stakeholders; 9 countries
         \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
         \n**ANALYTICS: Reporting automation, dashboard development**
         \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
-        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries
+        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries        
         ''', unsafe_allow_html=True)
     with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
