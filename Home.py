@@ -36,9 +36,11 @@ st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 # Adding a styled sidebar with hyperlinks (white text, no underline)
 with st.sidebar:
     st.header("App Navigation")
+    st.text('Business application')
     st.markdown("<a style='text-decoration: none; color: white;' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://adrien-clustering.streamlit.app/'>🔠 Clustering Overview</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://clustering-tool.streamlit.app/'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
+    st.text('API Explorer')
     st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-api.streamlit.app'>🎗️ The Global Fund API</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
 
