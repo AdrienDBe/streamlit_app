@@ -330,7 +330,7 @@ with skills_container:
         col2.header('IT Skills')
         txt3('Programming', 'Python, SQL, VBA')
         txt3('Data Processing', 'pandas, numpy, PowerQuery, Salesforce recipies')
-        txt3('Data Visualization', 'matplotlib, seaborn, plotly, PowerBI (DAX), Salesforce Analytics')
+        txt3('Data Visualization', 'matplotlib', 'seaborn', 'plotly', 'PowerBI (DAX)', 'Salesforce Analytics')
         txt3('Machine Learning', 'scikit-learn')
         txt3('Model Deployment', 'streamlit', 'Azure')
 
