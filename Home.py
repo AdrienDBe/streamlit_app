@@ -223,7 +223,7 @@ with work_container:
             </style>
             
             <p class="larger-text" style='text-align: justify;'>
-            <b>OPERATIONAL EFFICIENCY</b> <code>Grant Management Division process management</code>
+            <b>OPERATIONAL EFFICIENCY</b> <code>Grant Management Division</code>
             </p>
             
             <ul class="larger-text">
@@ -231,7 +231,7 @@ with work_container:
                   <p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant life cycle processes, procedures, system solutions, data flows, quality & reporting. Perform process efficiency analysis and identify improvement gaps</p>
               </li>
               <li>Business Process Analytics
-                  <p>Document grant life cycle model, design and develop business process reporting and monitoring for distribution to the Grant Management Division, Directorate and Strategy & Policy Hub (Python, Salesforce Analytics, Power Query)</p>
+                  <p>Document Grant Life Cycle model, design and develop business process reporting and monitoring for distribution to the Grant Management Division, Directorate and Strategy & Policy Hub (Python, Salesforce Analytics, Power Query)</p>
               </li>
               <li>Business Process Management
                   <p>Support Country Teams & provide analytical support to Grant Operations, Finance, and Risk departments</p>
@@ -245,13 +245,12 @@ with work_container:
     with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>PROGRAM MANAGEMENT</b> <code>9 High-Burden Diseases Countries</code>
-        \n- Managed AccessCare program including financial, schedules, R&O, contracts and maturity road map
-        \n- Implemented program standardization & governance framework for cross-regional application (SOP, Toll-Gate, Country Reviews & Steering Committee)
+        <b>PROGRAM MANAGEMENT & ANALYTICS</b> <code>Govt. projects in EMEA and APAC</code>
+        \n- Management of program: funnel, financial, schedules, risks & opportunities, contracts and maturity road map
+        \n- Implemented program standardization & governance framework (Toll-Gate reviews checkpoints in the project life cycle management, Country Reviews & Steering Committee)
         \n- Coordinated cross-functional teams in EMEA and APAC on program activities: 30+ stakeholders; 9 countries
-        \n- Managed program: funnel, finance, schedules, risks & opportunities, contracts & maturity road map 
         \n**ANALYTICS: Reporting automation, dashboard development**
-        \n- Developped automated reports & dashboards (PowerBI/SFDC/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
+        \n- Developped automated reports & dashboards (PowerBI/Salesforce/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
         \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries        
         ''', unsafe_allow_html=True)
     with col2.expander("2020 | United Nations : Information Management Specialist"):
