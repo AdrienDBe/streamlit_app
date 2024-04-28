@@ -48,7 +48,7 @@ with st.sidebar:
     
 # ---- HEADER SECTION ----
 with st.container():
-    st.title("Adrien Debruge")
+    st.title("Adrien Debruge",anchor=False )
     col1, col2, col3, col4  = st.columns((2,2,9,1))
     with col3:
         st.subheader("Global impact portfolio")
