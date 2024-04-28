@@ -45,6 +45,19 @@ with st.sidebar:
     st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-disbursements.streamlit.app'>🎗️ Global Fund Grants Disbursements</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+    /* Hide the link button in the main area only */
+    .main .stApp a:first-child {
+        display: none;
+    }
+    
+    .main .css-15zrgzn {display: none}
+    .main .css-eczf16 {display: none}
+    .main .css-jn99sy {display: none}
+    </style>
+    """, unsafe_allow_html=True)
+
 
 # ---- HEADER SECTION ----
 with st.container():
