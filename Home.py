@@ -53,7 +53,7 @@ with st.container():
     with col3:
         st.subheader("Global impact portfolio")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-                    "I am enthusiastic about the intersections of Project Management, the Development sector and Analytics."
+                    "I am enthusiastic about the intersections of Project Management and Analytics."
                     "<br>Constantly searching for new and innovative ways to present and display strategic insights,"
                     " this website contains my profile information and a collection of personal projects using Python for data visualization and machine learning."
                     '<br><br>If you have any inquiries or feedback, please reach out to me at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
@@ -242,7 +242,7 @@ with work_container:
         )
 
 
-    with col2.expander("2020 – 2022 | Cepheid : Lead AccessCare Program Manager"):
+    with col2.expander("2020 – 2022 | Cepheid : Lead Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
         <b>PROGRAM MANAGEMENT & ANALYTICS</b> <code>Govt. projects in EMEA and APAC</code>
@@ -256,8 +256,8 @@ with work_container:
     with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>INFORMATION MANAGEMENT</b> <code>Morocco Common Country Analysis (CCA)</code>
-        \nWith the Resident Coordinator Office (RCO):
+        <b>INFORMATION MANAGEMENT</b> <code>Ressource mobilization data analysis</code>
+        \nWith the Resident Coordinator Office (RCO) of the UN in Morocco:
         \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
         \nIn the frame of the Common Country Analysis:
             \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
@@ -266,7 +266,7 @@ with work_container:
     with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>PROJECT MANAGEMENT</b> <code>Projects of €8M+</code>
+        <b>PROJECT MANAGEMENT</b> <code>Strategic defense finance projects</code>
         \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
         \n- Managed customer relationship (Govt. and private)
         \n- Created project capability in the local team
@@ -276,21 +276,20 @@ with work_container:
 
         \n<b>NGO VOLUNTEERING</b>
         \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
-        \n- ICT project with _Cameroon Association of Active Youth_: ICT for education
         ''', unsafe_allow_html=True)
     with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>PROJECT MANAGEMENT</b> <code>Project of €3M</code>
-        \nCoordinated several departments to oversee the implementation of a project in India:
+        <b>PROJECT MANAGEMENT</b> <code>Military avionics Project Management Office</code>
+        \nCoordinated several departments to oversee the implementation of a performance-based contract in India:
         \n- Defined support scheme to respect the contractual system availability commitment
         \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
         ''', unsafe_allow_html=True)
     with col2.expander("2016 | Airbus : Analyst trainee"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>*BUSINESS ANALYSIS</b> <code>Simulation and Predictive Analytics</code>
-        \nCarried out a profitability analysis on the creation of a performance simulation department to anticipate the fleet support performance level and optimize logistics schemes (OPUS & SIMLOX)
+        <b>*BUSINESS ANALYSIS</b> <code>Simulation and predictive analytics investment case</code>
+        \nDeveloped an investment case for establishing a performance simulation department to project support performance and optimize logistics schemes (SIMLOX, OPUS)
         ''', unsafe_allow_html=True)
 
 
