@@ -6,6 +6,19 @@ import json
 
 st.set_page_config(page_title="Global Impact Portfolio", layout="wide")
 
+st.markdown("""
+    <style>
+    /* Hide the link button */
+    .stApp a:first-child {
+        display: none;
+    }
+    
+    .css-15zrgzn {display: none}
+    .css-eczf16 {display: none}
+    .css-jn99sy {display: none}
+    </style>
+    """, unsafe_allow_html=True)
+
 # Custom function for printing text
 def txt3(a, b):
   col1, col2 = st.columns([1,2])
@@ -48,7 +61,7 @@ with st.sidebar:
     
 # ---- HEADER SECTION ----
 with st.container():
-    st.title("Adrien Debruge",anchor=False )
+    st.title("Adrien Debruge")
     col1, col2, col3, col4  = st.columns((2,2,9,1))
     with col3:
         st.subheader("Global impact portfolio")
