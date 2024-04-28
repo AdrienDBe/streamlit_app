@@ -213,7 +213,7 @@ with work_container:
     </style>
     """, unsafe_allow_html=True)
 
-    with col2.expander("2022 – Today | The Global Fund : Officer, Grant Management Division"):
+    with col2.expander("2022 – Today | The Global Fund : Officer, Business Process"):
         st.markdown(
             """
             <style>
@@ -223,19 +223,19 @@ with work_container:
             </style>
             
             <p class="larger-text" style='text-align: justify;'>
-            <b>OPERATIONAL EFFICIENCY</b> <code>Grant Life Cycle Business Process</code>
+            <b>OPERATIONAL EFFICIENCY</b> <code>Grant Management Division process management</code>
             </p>
             
             <ul class="larger-text">
-                <li>Business Process Monitoring & Analytics
-                    <p>Develop and issuance of milestone-driven business process reporting and monitoring for distribution to and use by the Grant Management Division directorate</p>
-                </li>
-                <li>Business Process Management
-                    <p>Ensure resolution of challenges escalated by Country Teams, provide analytical support to Grant Operations, Finance, and Risk departments</p>
-                </li>
-                <li>Business Process Enhancement
-                    <p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant lifecycle processes, procedures, system solutions, data flows, quality & reporting</p>
-                </li>
+              <li>Business Process Enhancement
+                  <p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant life cycle processes, procedures, system solutions, data flows, quality & reporting. Perform process efficiency analysis and identify improvement gaps</p>
+              </li>
+              <li>Business Process Analytics
+                  <p>Document grant life cycle model, design and develop business process reporting and monitoring for distribution to the Grant Management Division, Directorate and Strategy & Policy Hub (Python, Salesforce Analytics, Power Query)</p>
+              </li>
+              <li>Business Process Management
+                  <p>Support Country Teams & provide analytical support to Grant Operations, Finance, and Risk departments</p>
+              </li>
             </ul>
             """,
             unsafe_allow_html=True
@@ -330,11 +330,11 @@ with skills_container:
       st.markdown(f"<p style='font-size: 18px;'>{title}: <code>{content}</code></p>", unsafe_allow_html=True)
     with col2:
         col2.header('IT Skills')
-        txt3('Programming', 'Python, DAX, VBA')
-        txt3('Data Processing', 'pandas, numpy, PowerQuery')
-        txt3('Data Visualization', 'matplotlib, seaborn, plotly, PowerBI')
+        txt3('Programming', 'Python, SQL, VBA')
+        txt3('Data Processing', 'pandas, numpy, PowerQuery, Salesforce recipies')
+        txt3('Data Visualization', 'matplotlib, seaborn, plotly, PowerBI (DAX), Salesforce Analytics')
         txt3('Machine Learning', 'scikit-learn')
-        txt3('Model Deployment', 'streamlit')
+        txt3('Model Deployment', 'streamlit', 'Azure')
 
 # ---- CONTACT FORM ----
 
