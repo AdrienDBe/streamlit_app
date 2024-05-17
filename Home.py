@@ -114,7 +114,7 @@ with portfolio_container:
             "process steps and provides an initial framework to approach process steps pre-processing and visualization."
             , unsafe_allow_html=True)
             st.markdown(
-            "###### [💻 link](https://adrien.streamlit.app/Process_Analysis)"
+            "###### [💻 link](https://process-analysis.streamlit.app)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
@@ -129,7 +129,7 @@ with portfolio_container:
             "of clustering analysis in Python and provide you with a solid foundation to build upon as you delve deeper into this topic."
             , unsafe_allow_html=True)
             st.markdown(
-            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering)"
+            "###### [💻 link](https://adrien-clustering.streamlit.app)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering_picture.png")
@@ -145,7 +145,7 @@ with portfolio_container:
             "A sample dataset is also available as an option."
             , unsafe_allow_html=True)
             st.markdown(
-            "###### [💻 link](https://adrien.streamlit.app/~/+/Clustering_tool)"
+            "###### [💻 link](https://clustering-tool.streamlit.app)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Clustering_picture.png")
@@ -164,7 +164,7 @@ with portfolio_container:
             "The app also provides options for grouping the data by Region, Income level, or Country based"
             " on the user's selection, using the World Bank API.", unsafe_allow_html=True)
             st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/The_Global_Fund_API)"
+                "###### [💻 link](https://theglobalfund-api.streamlit.app)"
             )
             #local
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
@@ -182,7 +182,7 @@ with portfolio_container:
             "based on user selection, using the World Bank API.", unsafe_allow_html=True)
             # picture
             st.markdown(
-                "###### [💻 link](https://adrien.streamlit.app/~/+/World_Health_Organization_API)"
+                "###### [💻 link](https://world-health-organization-api.streamlit.app)"
             )
             from PIL import Image
             #local
