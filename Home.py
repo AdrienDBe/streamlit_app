@@ -156,7 +156,7 @@ with portfolio_container:
        
         col2.subheader(':green[API explorer]')
 
-        with col2.expander("The Global Fund: Grants/Implementation Periods, Disbursements"):
+        with col2.expander("The Global Fund: Grants/Implementation Periods"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
             " Users can navigate between different dimensions of data, such as region, country, component "
@@ -172,6 +172,21 @@ with portfolio_container:
             img = "./Images/GF_app.jpg"
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)    
+
+        with col2.expander("The Global Fund: Disbursements Records"):
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+            "This app leverages data from the Global Fund API to visualize and explore disbursement records."
+            " Users can filter and analyze the data based on various dimensions such as grant component, PR type,"
+            " region, and portfolio. The visualization options include scatter plots and box plots, providing a"
+            " comprehensive view of the disbursements over time and across different categories."
+            " Interactive filters allow for tailored data insights and improved understanding of fund allocation."
+            "</p>", unsafe_allow_html=True)
+            st.markdown(
+                "###### [💻 link](https://theglobalfund-disbursements.streamlit.app)"
+            )
+            img = "./Images/Disbursements.png"
+            st.image(img, width=650)
+
                 
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
