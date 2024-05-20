@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3  # Ensure using v3 for Node.js 20 support
+      uses: actions/checkout@v4  # Ensure using v3 for Node.js 20 support
 
     - name: Configure Git
       run: |
