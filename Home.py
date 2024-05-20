@@ -187,7 +187,7 @@ with portfolio_container:
             img = "./Images/Disbursements.png"
             st.image(img, width=650)
 
-        with col2 st.expander("The Global Fund: Allocations Records"):
+        with col2.expander("The Global Fund: Allocations Records"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                         "This app leverages data from the Global Fund API to visualize and explore allocation records."
                         " Users can filter and analyze the data based on various dimensions such as grant component, PR type,"
