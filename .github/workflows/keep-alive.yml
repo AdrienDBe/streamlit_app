@@ -13,12 +13,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4  # Ensure using v3 for Node.js 20 support
+      uses: actions/checkout@v3  # Ensure using v3 for Node.js 20 support
 
     - name: Create an empty commit
       run: |
-        git config --global user.email "your-username@users.noreply.github.com"
-        git config --global user.name "your-username"
+        git config --global user.email "AdrienDBe@users.noreply.github.com"
+        git config --global user.name "AdrienDBe"
         git commit --allow-empty -m "chore: keep-alive commit"
 
     - name: Push changes
