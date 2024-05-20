@@ -198,7 +198,7 @@ with portfolio_container:
                         " analysis."
                         "</p>", unsafe_allow_html=True)
             st.markdown(
-                "###### [💻 link](https://theglobalfund-allocations.streamlit.app)"
+                "###### [💻 link](https://theglobalfundallocations.streamlit.app)"
             )
             img = "./Images/Allocations.png"
             st.image(img, width=650)
