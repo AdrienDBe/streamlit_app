@@ -3,7 +3,6 @@ from streamlit_lottie import st_lottie
 import requests
 import json
 
-
 st.set_page_config(page_title="Global Impact Portfolio", layout="wide")
 
 # Custom function for printing text
@@ -43,6 +42,7 @@ with st.sidebar:
     st.text('API Explorer')
     st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-api.streamlit.app'>🎗️ Global Fund Grants Implementations</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-disbursements.streamlit.app'>🎗️ Global Fund Grants Disbursements</a>", unsafe_allow_html=True)
+    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfundallocations.streamlit.app/'>🎗️ Grants Allocations</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
 
 st.markdown("""
@@ -187,6 +187,21 @@ with portfolio_container:
             img = "./Images/Disbursements.png"
             st.image(img, width=650)
 
+        with col2 st.expander("The Global Fund: Allocations Records"):
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+                        "This app leverages data from the Global Fund API to visualize and explore allocation records."
+                        " Users can filter and analyze the data based on various dimensions such as grant component, PR type,"
+                        " region, and portfolio. The visualization options include scatter plots and box plots, providing a"
+                        " comprehensive view of the allocations over time and across different categories."
+                        " Users can also create clusters of countries using Scikit-learn, enhancing the analysis of fund"
+                        " allocation patterns. Additionally, there is an option to download the cluster dataset for further"
+                        " analysis."
+                        "</p>", unsafe_allow_html=True)
+            st.markdown(
+                "###### [💻 link](https://theglobalfund-allocations.streamlit.app)"
+            )
+            img = "./Images/Allocations.png"
+            st.image(img, width=650)
                 
         with st.expander("World Health Organization: Indicators"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
