@@ -21,8 +21,10 @@ jobs:
         git config --global user.name "AdrienDBe"
         git commit --allow-empty -m "chore: keep-alive commit"
 
+    - name: Pull latest changes
+      run: git pull origin main
+
     - name: Push changes
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-      run: |
-        git push
+      run: git push
