@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4  # Updated to v3 for Node.js 20 support
+      uses: actions/checkout@v4  # Ensure using v3 for Node.js 20 support
 
     - name: Create an empty commit
       run: |
@@ -22,7 +22,7 @@ jobs:
         git commit --allow-empty -m "chore: keep-alive commit"
 
     - name: Push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
       run: |
         git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
