@@ -190,9 +190,6 @@ with portfolio_container:
         with col2.expander("The Global Fund: Allocations Records"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                         "This app leverages data from the Global Fund API to visualize and explore allocation records."
-                        " Users can filter and analyze the data based on various dimensions such as grant component, PR type,"
-                        " region, and portfolio. The visualization options include scatter plots and box plots, providing a"
-                        " comprehensive view of the allocations over time and across different categories."
                         " Users can also create clusters of countries using Scikit-learn, enhancing the analysis of fund"
                         " allocation patterns. Additionally, there is an option to download the cluster dataset for further"
                         " analysis."
