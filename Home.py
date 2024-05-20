@@ -92,7 +92,7 @@ with portfolio_container:
     #Local path
     #path = r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Dataviz.json"
     with col1:
-        num_empty_lines = 7
+        num_empty_lines = 8
         for _ in range(num_empty_lines):
             st.text("")
         with open(path, "r") as file:
