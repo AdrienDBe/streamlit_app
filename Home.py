@@ -156,7 +156,7 @@ with portfolio_container:
        
         col2.subheader(':green[API explorer]')
 
-        with col2.expander("The Global Fund: Grants/Implementation Periods"):
+        with col2.expander("Global Fund Grants life cycle overview"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "Powered by data from the Global Fund API, this app presents information for exploration and visualization."
             " Users can navigate between different dimensions of data, such as region, country, component "
@@ -173,7 +173,7 @@ with portfolio_container:
             #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\GF_app.jpg")
             st.image(img, width=650)    
 
-        with col2.expander("The Global Fund: Disbursements Records"):
+        with col2.expander("Global Fund disbursement analysis tool"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "This app leverages data from the Global Fund API to visualize and explore disbursement records."
             " Users can filter and analyze the data based on various dimensions such as grant component, PR type,"
@@ -187,7 +187,7 @@ with portfolio_container:
             img = "./Images/Disbursements.png"
             st.image(img, width=650)
 
-        with col2.expander("The Global Fund: Allocations Records"):
+        with col2.expander("Global Fund allocations and clustering analysis "):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                         "This app leverages data from the Global Fund API to visualize and explore allocation records."
                         " Users can also create clusters of countries using Scikit-learn, enhancing the analysis of fund"
