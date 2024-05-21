@@ -107,7 +107,7 @@ with portfolio_container:
         
     with col2:
         col2.subheader(':green[Business application]')
-        with col2.expander("Conducting Process Analysis and Visualizing Business Outcomes "):
+        with col2.expander("Conducting process analysis and visualizing business outcomes "):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
             " compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
@@ -122,7 +122,7 @@ with portfolio_container:
             img = "./Images/Process_picture.png"
             st.image(img, width=650)
             
-        with col2.expander("Introduction to Clustering Analysis in Python"):
+        with col2.expander("Introduction to clustering analysis in python"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "This article provides an overview of clustering analysis in Python, including key concepts such as encoding categorical data, "
             "scaling data, dimensionality reduction, and choosing the right algorithm. This post is designed to help you understand the basics"
@@ -138,7 +138,7 @@ with portfolio_container:
             st.image(img, width=650)
             
             
-        with col2.expander("K-Means Clustering Tool with Encoding, Scaling, and PCA"):
+        with col2.expander("K-means clustering tool with encoding, scaling, and PCA"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
             "This clustering tool enables you to import a CSV file for K-means clustering on one or more columns."
             " It encodes categorical values, scales the dataset, and uses Principal Component Analysis (PCA) for multivariate clustering. "
