@@ -253,7 +253,40 @@ with work_container:
     </style>
     """, unsafe_allow_html=True)
 
-    with col2.expander("2022 – Today | The Global Fund : Officer, Business Process"):
+    with col2.expander("2024 – Today | The Global Fund: Program Officer, High Impact Africa 1"):
+      st.markdown(
+          """
+          <style>
+              .larger-text {
+                  font-size: 18px;
+              }
+          </style>
+          
+          <p class="larger-text" style='text-align: justify;'>
+          <b>PROGRAM MANAGEMENT & STRATEGY</b> <code>Grant Management Division</code>
+          </p>
+          
+          <ul class="larger-text">
+            <li>Program Management
+                <p>Facilitate grant processes including budget reviews, disbursement requests, and work plans, ensuring compliance and alignment with organizational objectives</p>
+            </li>
+            <li>Stakeholder Engagement
+                <p>Serve as focal point for information gathering and reporting, preparing data-driven briefs and coordinating responses for internal teams and external stakeholders</p>
+            </li>
+            <li>Risk Management
+                <p>Identify and mitigate grant management risks, ensuring data integrity and adherence to policies in all processes</p>
+            </li>
+            <li>Team Collaboration
+                <p>Partner with cross-functional teams to standardize portfolio management approaches, enhancing efficiency and consistency across the division</p>
+            </li>
+          </ul>
+          """,
+          unsafe_allow_html=True
+      )
+
+
+  
+    with col2.expander("2022 – 2024 | The Global Fund : Officer, Operational Efficiency"):
         st.markdown(
             """
             <style>
