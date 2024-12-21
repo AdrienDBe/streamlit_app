@@ -33,6 +33,28 @@ with open('./style/wave.css') as f:
 st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 # Adding a styled sidebar with hyperlinks (white text, no underline)
+# Add custom CSS for styling
+st.markdown(
+    """
+    <style>
+    /* Sidebar font styling */
+    [data-testid="stSidebar"] .st-markdown-container {
+        font-family: 'Arial', sans-serif;
+        font-size: 18px;
+        line-height: 1.5;
+    }
+    [data-testid="stSidebar"] a {
+        text-decoration: none;
+        color: white;
+    }
+    [data-testid="stSidebar"] a:hover {
+        text-decoration: underline;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 with st.sidebar:
     st.header("App Navigation")
     st.markdown("<p style='text-align: left; font-size: 18px;'><u>Business application:</u></p>", unsafe_allow_html=True)
