@@ -84,6 +84,7 @@ st.markdown("""
 # ---- HEADER SECTION ----
 with st.container():
     resume_url = "https://github.com/AdrienDBe/streamlit_app/raw/main/Images/2025%2006%20-%20Resume%20Adrien%20Debruge.pdf"
+    response = requests.get(resume_url)
     col1, col2  = st.columns((4,6))
     with col1:
         st.title("Adrien Debruge")
