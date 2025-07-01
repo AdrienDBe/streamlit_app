@@ -83,9 +83,9 @@ st.markdown("""
 
 # ---- HEADER SECTION ----
 with st.container():
-    st.title("Adrien Debruge")
-    col1, col2  = st.columns((2,6))
+    col1, col2  = st.columns((4,6))
     with col1:
+        st.title("Adrien Debruge")
         st.subheader("From data to action")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                     "I explore how data-driven tools can support better business decisions and operational efficiency."
