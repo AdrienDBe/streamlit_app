@@ -91,7 +91,6 @@ with st.container():
                     "I explore how data-driven tools can support better business decisions and operational efficiency."
                     "<br>This portfolio showcases interactive projects and visualizations built with Python, focusing on turning complex data into actionable insights."
                     '<br><br>For inquiries or feedback, feel free to reach out at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
-                    "<br>I hope you find my work engaging."
                     ,
                     unsafe_allow_html=True)
     with col1:
