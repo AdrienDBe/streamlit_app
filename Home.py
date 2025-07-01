@@ -98,7 +98,7 @@ with st.container():
         label="📄 Download my resume (PDF)",
         data=response.content,
         file_name="Adrien_Debruge_CV.pdf",
-        mime="application/pdf"
+        mime="application/pdf")
           
     with col2:
         # picture
