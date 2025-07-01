@@ -287,17 +287,14 @@ with work_container:
           </p>
           
           <ul class="larger-text">
-            <li>Program Management
-                <p>Facilitate grant processes including budget reviews, disbursement requests, and work plans, ensuring compliance and alignment with organizational objectives</p>
+            <li>Business Intelligence
+                <p>Develop and deliver insight reports to senior leadership to enable proactive monitoring of grants, trend analysis and process improvements and prioritization across portfolios ($2.9 billion allocation).</p>
             </li>
-            <li>Stakeholder Engagement
-                <p>Serve as focal point for information gathering and reporting, preparing data-driven briefs and coordinating responses for internal teams and external stakeholders</p>
+            <li>Program Management
+                <p>Coordinate grant lifecycle processes, including budget reviews, disbursement requests, and work plans, ensuring compliance with organizational objectives</p>
             </li>
             <li>Risk Management
                 <p>Identify and mitigate grant management risks, ensuring data integrity and adherence to policies in all processes</p>
-            </li>
-            <li>Team Collaboration
-                <p>Partner with cross-functional teams to standardize portfolio management approaches, enhancing efficiency and consistency across the division</p>
             </li>
           </ul>
           """,
@@ -306,7 +303,7 @@ with work_container:
 
 
   
-    with col2.expander("2022 – 2024 | The Global Fund : Officer, Operational Efficiency"):
+    with col2.expander("2022 – 2024 | The Global Fund : Business Process Reporting Officer"):
         st.markdown(
             """
             <style>
@@ -320,14 +317,11 @@ with work_container:
             </p>
             
             <ul class="larger-text">
-              <li>Business Process Enhancement
-                  <p>Define enhancements and develop business requirements, review the translation into functional specifications, for the grant life cycle processes, procedures, system solutions, data flows, quality & reporting. Perform process efficiency analysis and identify improvement gaps</p>
+              <li>Process Optimization and Strategic Enhancements
+                  <p>Led the optimization of grant lifecycle processes by capturing business requirements and translating into functional specifications.</p>
               </li>
               <li>Business Process Analytics
-                  <p>Document Grant Life Cycle model, design and develop business process reporting and monitoring for distribution to the Grant Management Division, Directorate and Strategy & Policy Hub (Python, Salesforce Analytics, Power Query)</p>
-              </li>
-              <li>Business Process Management
-                  <p>Support Country Teams & provide analytical support to Grant Operations, Finance, and Risk departments</p>
+                  <p>Developped BI frameworks using Python and Salesforce Analytics, enhancing strategic reporting and decision-making processes for senior management and policy hubs </p>
               </li>
             </ul>
             """,
@@ -335,21 +329,18 @@ with work_container:
         )
 
 
-    with col2.expander("2020 – 2022 | Cepheid : Lead Program Manager"):
+    with col2.expander("2020 – 2022 | Cepheid (Danaher Group): Lead Program Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>PROGRAM MANAGEMENT & ANALYTICS</b> <code>Govt. projects in EMEA and APAC</code>
-        \n- Management of program: funnel, financial, schedules, risks & opportunities, contracts and maturity road map
-        \n- Implemented program standardization & governance framework (Toll-Gate reviews checkpoints in the project life cycle management, Country Reviews & Steering Committee)
-        \n- Coordinated cross-functional teams in EMEA and APAC on program activities: 30+ stakeholders; 9 countries
-        \n**ANALYTICS: Reporting automation, dashboard development**
-        \n- Developped automated reports & dashboards (PowerBI/Salesforce/SAP BI) to monitor: program financials, project life cycle, gov. customer KPI, installed base & support status
-        \n- Conducted Ad hoc analysis (Python) on instrument reliability in High Burden Developing Countries        
+        <b>FINANCIAL OVERSIGHT & GOVERNANCE EXCELLENCE</b> <code>Govt. projects in EMEA and APAC</code>
+        \n- Management of AccessCare program ($8 million): financial, schedules, risks, contracts and maturity road map
+        \n- Developed reports and dashboards (Python, PowerBI DAX) to monitor program financials, including Earned Value Management (EVM) for cost performance and project progress, baseline budgets and cost-to-completion projections to ensure accurate Actual vs. Budget reporting and provide variance analysis to senior leadership
+        \n- Implemented a program standardization and governance framework, incorporating DBS Toll-Gate reviews for project lifecycle management with Phase Gate methodology, and structured Country Reviews & Steering Committee sessions to ensure consistent project oversight, risk management, and alignment.        
         ''', unsafe_allow_html=True)
     with col2.expander("2020 | United Nations : Information Management Specialist"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>INFORMATION MANAGEMENT</b> <code>Ressource mobilization data analysis</code>
+        <b>INFORMATION MANAGEMENT</b> <code>Analytics for the Resident Coordinator Office</code>
         \nWith the Resident Coordinator Office (RCO) of the UN in Morocco:
         \n- Produced information and visualization products in support of resource mobilization for the UN agencies, program advocacy and strategic decision-making for the UN System.
         \nIn the frame of the Common Country Analysis:
@@ -359,13 +350,10 @@ with work_container:
     with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>PROJECT MANAGEMENT</b> <code>Strategic defense finance projects</code>
-        \n- Managed projects: finance, schedules, Risks & Opportunities, SoW and Technical Proposal
-        \n- Managed customer relationship (Govt. and private)
-        \n- Created project capability in the local team
-
-        \n<b>BUSINESS INTELLIGENCE</b>
-        \nTracked and mapped company footprint in India; carried out business simulations  \n
+        <b>Projects implementation & analytics</b> <code>Projects implementation & analytics</code>
+        \n- Led India support programs in liaison with France PMO:
+        \n- Managed projects oversight: financial planning, budgeting, and forecasting for project delivery, risks & opportunities, statement of work and technical proposal, customer relationship (Govt. and private).
+        \n- Evaluated the organizational distribution and operations across India, conducting business analyses (Python) to identify opportunities based on regional assets and operational dynamics.
 
         \n<b>NGO VOLUNTEERING</b>
         \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
