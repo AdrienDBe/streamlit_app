@@ -3,7 +3,7 @@ from streamlit_lottie import st_lottie
 import requests
 import json
 
-st.set_page_config(page_title="Global Impact Portfolio", layout="wide")
+st.set_page_config(page_title="Adrien Debruge portfolio – From data to action", layout="wide")
 
 # Custom function for printing text
 def txt3(a, b):
