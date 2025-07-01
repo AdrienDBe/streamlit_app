@@ -3,7 +3,7 @@
 }
 
 .stApp {
-    background: linear-gradient(45deg, #f5f7fa 0%, #e4e8eb 50%, #f5f7fa 100%);
+     background: linear-gradient(45deg, #3a5683 0%, #0E1117 0%, #0E1117 60%, #3a5683 99%);
     animation: my_animation 30s ease infinite;
     background-size: 200% 200%;
     background-attachment: fixed;
@@ -13,4 +13,4 @@
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
+    }
