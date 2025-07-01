@@ -347,38 +347,32 @@ with work_container:
             \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
             \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
         ''', unsafe_allow_html=True)
-    with col2.expander("2018 – 2020 | Thales India – In-Country Project Manager"):
-        st.markdown(
-            """
-            <p style='text-align: justify; font-size: 18px;'>
-            <b>Projects Implementation & Analytics</b><br>
-            Led India support programs in liaison with France PMO:<br>
-            • Managed project oversight: financial planning, budgeting, and forecasting for delivery, risks & opportunities, statement of work and technical proposals, and customer relationships (Govt. and private).<br>
-            • Evaluated the organizational distribution and operations across India, conducting business analyses (Python) to identify opportunities based on regional assets and operational dynamics.
-            </p>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    with col2.expander("2016 – 2017 | Thales AVS – Service Delivery Manager"):
-        st.markdown(
-            """
-            <p style='text-align: justify; font-size: 18px;'>
-            <b>System Design for Service Availability</b><br>
-            Managed the rollout of a testing bench for fighter jets’ autopilot systems in India:<br>
-            • Designed a supply chain model to meet contractual system availability commitments.<br>
-            • Developed an IT solution between the France and New Delhi offices (VBA) to streamline spare parts logistics, monitor program financials, and automate KPI generation for enhanced operational efficiency.
-            </p>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with col2.expander("2016 | Airbus : Analyst trainee"):
+      
+    with col2.expander("2018 – 2020 | Thales India: In-Country Project Manager"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
-        <b>*BUSINESS ANALYSIS</b> <code>Simulation and predictive analytics investment case</code>
-        \nDeveloped an investment case for establishing a performance simulation department to project support performance and optimize logistics schemes (SIMLOX, OPUS)
+        <b>PROJECTS IMPLEMENTATION & ANALYTICS</b> <code>Operations & business analyses across India</code>
+        \n- Led India support programs in coordination with France PMO
+        \n- Oversaw financial planning, budgeting, forecasting, risk/opportunity assessment, and customer engagement (Govt. & private)
+        \n- Conducted business analyses (Python) to assess organizational structure and regional operations, identifying optimization opportunities
         ''', unsafe_allow_html=True)
+    
+    with col2.expander("2016 – 2017 | Thales AVS: Service Delivery Manager"):
+        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+        '''
+        <b>SYSTEM DESIGN FOR SERVICE AVAILABILITY</b> <code>Logistics, KPI automation, and IT solutions</code>
+        \n- Managed rollout of a testing bench for fighter jets autopilot systems in India
+        \n- Designed a supply chain model aligned with system availability contract requirements
+        \n- Developed an IT solution (VBA) to streamline logistics, monitor financials, and automate KPI generation between France and New Delhi teams
+        ''', unsafe_allow_html=True)
+    
+    
+        with col2.expander("2016 | Airbus : Analyst trainee"):
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+            '''
+            <b>*BUSINESS ANALYSIS</b> <code>Simulation and predictive analytics investment case</code>
+            \nDeveloped an investment case for establishing a performance simulation department to project support performance and optimize logistics schemes (SIMLOX, OPUS)
+            ''', unsafe_allow_html=True)
 
 
 
