@@ -62,9 +62,9 @@ with st.sidebar:
     st.markdown("<a style='text-decoration: none; color: white;' href='https://adrien-clustering.streamlit.app/'>🔠 Clustering Overview</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://clustering-tool.streamlit.app/'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; font-size: 18px;'><u>API Explorers:</u></p>", unsafe_allow_html=True)
-    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-api.streamlit.app'>🎗️ Global Fund Grants Implementations</a>", unsafe_allow_html=True)
-    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-disbursements.streamlit.app'>🎗️ Global Fund Grants Disbursements</a>", unsafe_allow_html=True)
-    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfundallocations.streamlit.app/'>🎗️ Grants Allocations</a>", unsafe_allow_html=True)
+    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-api.streamlit.app'>🌐 Global Fund Grants Implementations</a>", unsafe_allow_html=True)
+    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfund-disbursements.streamlit.app'>🌐 Global Fund Grants Disbursements</a>", unsafe_allow_html=True)
+    st.markdown("<a style='text-decoration: none; color: white;' href='https://theglobalfundallocations.streamlit.app/'>🌐 Grants Allocations</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://world-health-organization-api.streamlit.app/'>⚕️ WHO Indicators</a>", unsafe_allow_html=True)
 
 st.markdown("""
