@@ -83,6 +83,7 @@ st.markdown("""
 
 # ---- HEADER SECTION ----
 with st.container():
+    resume_url = "https://github.com/AdrienDBe/streamlit_app/raw/main/Images/2025%2006%20-%20Resume%20Adrien%20Debruge.pdf"
     col1, col2  = st.columns((4,6))
     with col1:
         st.title("Adrien Debruge")
@@ -93,6 +94,12 @@ with st.container():
                     '<br><br>For inquiries or feedback, feel free to reach out at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
                     ,
                     unsafe_allow_html=True)
+        st.download_button(
+        label="📄 Download my resume (PDF)",
+        data=response.content,
+        file_name="Adrien_Debruge_CV.pdf",
+        mime="application/pdf"
+          
     with col2:
         # picture
         from PIL import Image
