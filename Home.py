@@ -347,25 +347,32 @@ with work_container:
             \n - Produced reports on Sustainable Development Goals of the 2030 Agenda and analysis on official development assistance
             \n - Coordinated and reported on internal focus groups of 21 agencies and 136 speakers
         ''', unsafe_allow_html=True)
-    with col2.expander("2018 – 2020 | Thales India : In-Country Project Manager"):
-        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-        '''
-        <b>Projects implementation & analytics</b> <code>Projects implementation & analytics</code>
-        \n- Led India support programs in liaison with France PMO:
-        \n- Managed projects oversight: financial planning, budgeting, and forecasting for project delivery, risks & opportunities, statement of work and technical proposal, customer relationship (Govt. and private).
-        \n- Evaluated the organizational distribution and operations across India, conducting business analyses (Python) to identify opportunities based on regional assets and operational dynamics.
+    with col2.expander("2018 – 2020 | Thales India – In-Country Project Manager"):
+        st.markdown(
+            """
+            <p style='text-align: justify; font-size: 18px;'>
+            <b>Projects Implementation & Analytics</b><br>
+            Led India support programs in liaison with France PMO:<br>
+            • Managed project oversight: financial planning, budgeting, and forecasting for delivery, risks & opportunities, statement of work and technical proposals, and customer relationships (Govt. and private).<br>
+            • Evaluated the organizational distribution and operations across India, conducting business analyses (Python) to identify opportunities based on regional assets and operational dynamics.
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
+    
+    with col2.expander("2016 – 2017 | Thales AVS – Service Delivery Manager"):
+        st.markdown(
+            """
+            <p style='text-align: justify; font-size: 18px;'>
+            <b>System Design for Service Availability</b><br>
+            Managed the rollout of a testing bench for fighter jets’ autopilot systems in India:<br>
+            • Designed a supply chain model to meet contractual system availability commitments.<br>
+            • Developed an IT solution between the France and New Delhi offices (VBA) to streamline spare parts logistics, monitor program financials, and automate KPI generation for enhanced operational efficiency.
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
 
-        \n<b>NGO VOLUNTEERING</b>
-        \n- IT education with _Life Project 4 Youth_: classes on basics of data exploration and data visualization
-        ''', unsafe_allow_html=True)
-    with col2.expander("2016 – 2017 | Thales AVS : Service Delivery Manager"):
-        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-        '''
-        <b>PROJECT MANAGEMENT</b> <code>Military avionics Project Management Office</code>
-        \nCoordinated several departments to oversee the implementation of a performance-based contract in India:
-        \n- Defined support scheme to respect the contractual system availability commitment
-        \n- Developed a dedicated IS between France and New Delhi office (VBA) to monitor CRM, logistics, program financial outcome and to generate automated KPIs for Govt. customer
-        ''', unsafe_allow_html=True)
     with col2.expander("2016 | Airbus : Analyst trainee"):
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
         '''
