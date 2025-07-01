@@ -85,7 +85,7 @@ st.markdown("""
 with st.container():
     st.title("Adrien Debruge")
     col1, col2, col3, col4  = st.columns((2,2,9,1))
-    with col3:
+    with col1:
         st.subheader("From data to action")
         st.markdown("<p style='text-align: justify; font-size: 18px;'>"
                     "I explore how data-driven tools can support better business decisions and operational efficiency."
@@ -93,7 +93,7 @@ with st.container():
                     '<br><br>For inquiries or feedback, feel free to reach out at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
                     ,
                     unsafe_allow_html=True)
-    with col1:
+    with col3:
         # picture
         from PIL import Image
         img = Image.open("./Images/fixed.png")
