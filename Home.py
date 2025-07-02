@@ -58,6 +58,7 @@ st.markdown(
 with st.sidebar:
     st.header("App Navigation")
     st.markdown("<p style='text-align: left; font-size: 18px;'><u>Business application:</u></p>", unsafe_allow_html=True)
+    st.markdown("<a style='text-decoration: none; color: white;' href='https://evm-support.streamlit.app/'>🎯 Earned Value Management</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://adrien-clustering.streamlit.app/'>🔠 Clustering Overview</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://clustering-tool.streamlit.app/'>🧰 Clustering Tool</a>", unsafe_allow_html=True)
@@ -135,19 +136,18 @@ with portfolio_container:
         
     with col2:
         col2.subheader(':green[Business application]')
-        with col2.expander("Conducting process analysis and visualizing business outcomes "):
+        with col2.expander("Monitoring project performance with Earned Value Management (EVM)"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-            "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
-            " compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
-            "process steps and provides an initial framework to approach process steps pre-processing and visualization."
-            , unsafe_allow_html=True)
+                "This post introduces Earned Value Management (EVM) principles to track and forecast project progress and financial outcomes. "
+                "The dashboard enables users to simulate data, evaluate key indicators like CPI, SPI, CV, and EAC, "
+                "and visualize how project performance evolves under different scenarios (positive, neutral, negative).<br> "
+                "It also provides a few insights on how to deploy EVM concepts within an organization for real-time decision-making."
+                , unsafe_allow_html=True)
             st.markdown(
-            "###### [💻 link](https://process-analysis.streamlit.app)"
+                "###### [📊 link](https://your-evm-dashboard-url.streamlit.app)"
             )
-            #local
-            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
-            #online
-            img = "./Images/Process_picture.png"
+            # Image preview
+            img = "./Images/EVM_simulation.png"
             st.image(img, width=650)
             
         with col2.expander("Introduction to clustering analysis in python"):
