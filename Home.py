@@ -148,7 +148,7 @@ with portfolio_container:
             )
             # Image preview
             img = "./Images/EVM_simulation.png"
-            st.image(img, width=650)
+            st.image(img, width=400)
             
         with col2.expander("Introduction to clustering analysis in python"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
