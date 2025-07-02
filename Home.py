@@ -144,7 +144,7 @@ with portfolio_container:
                 "It also provides a few insights on how to deploy EVM concepts within an organization for real-time decision-making."
                 , unsafe_allow_html=True)
             st.markdown(
-                "###### [📊 link](https://your-evm-dashboard-url.streamlit.app)"
+                "###### [📊 link](https://evm-support.streamlit.app/)"
             )
             # Image preview
             img = "./Images/EVM_simulation.png"
