@@ -113,7 +113,10 @@ with st.container():
           
     with col2:
         # picture
-        "<br><br>"
+         st.markdown(
+           "<br><br>",
+            unsafe_allow_html=True
+        )
         from PIL import Image
         img = Image.open("./Images/fixed.png")
         st.image(img,width = 275)
