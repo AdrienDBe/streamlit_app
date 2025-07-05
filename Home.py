@@ -56,7 +56,7 @@ st.markdown(
 )
 
 with st.sidebar:
-    st.header("App Navigation")
+    st.header("Projects")
     st.markdown("<p style='text-align: left; font-size: 18px;'><u>Business application:</u></p>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://evm-support.streamlit.app/'>🎯 Earned Value Management</a>", unsafe_allow_html=True)
     st.markdown("<a style='text-decoration: none; color: white;' href='https://process-analysis.streamlit.app/'>🔎 Process Analysis</a>", unsafe_allow_html=True)
