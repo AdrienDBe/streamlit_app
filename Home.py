@@ -161,6 +161,21 @@ with portfolio_container:
             # Image preview
             img = "./Images/EVM_simulation.png"
             st.image(img, width=400)
+
+        with col2.expander("Conducting process analysis and visualizing business outcomes "):
+            st.markdown("<p style='text-align: justify; font-size: 18px;'>"
+            "In this post we are looking at how to conduct process analysis and visualize business process outcome," 
+            " compared to theoretical process. <br> The app allows you to generate dummy data for customizing "
+            "process steps and provides an initial framework to approach process steps pre-processing and visualization."
+            , unsafe_allow_html=True)
+            st.markdown(
+            "###### [💻 link](https://process-analysis.streamlit.app)"
+            )
+            #local
+            #img = Image.open(r"C:\Users\adrie\Documents\GitHub\streamlit_app\Images\Process_picture.png")
+            #online
+            img = "./Images/Process_picture.png"
+            st.image(img, width=650)
             
         with col2.expander("Introduction to clustering analysis in python"):
             st.markdown("<p style='text-align: justify; font-size: 18px;'>"
