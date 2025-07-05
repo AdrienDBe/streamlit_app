@@ -96,7 +96,7 @@ with st.container():
             "My portfolio is all about showing how data can be transformed into practical insights and actions through the right tools and techniques. "
             "<br><br>"
             "With a focus on Python, I've put together some interactive projects and visualizations that demonstrate how complex data can be simplified and turned into useful information. "
-            "But this isn't just for the tech-savvy; it's for anyone in any field. Being able to understand, manipulate, and apply data—even using advanced methods like machine learning and AI—can really make a difference in how we work and the decisions we make. "
+            "But this isn't just for the tech-savvy; it's for anyone in any field. Being able to understand, manipulate, and apply data, even using advanced methods like machine learning and AI, can really make a difference in how we work and the decisions we make. "
             "<br><br>"
             "This collection is here to show how important data skills are for everyone. Whether you're presenting to your team or making big decisions, having a handle on data can help you make your point clearly and confidently. "
             "<br><br>"
