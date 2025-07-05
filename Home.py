@@ -90,12 +90,21 @@ with st.container():
     with col1:
         st.title("Adrien Debruge")
         st.subheader("From data to action")
-        st.markdown("<p style='text-align: justify; font-size: 18px;'>"
-                    "I explore how data-driven tools can support better business decisions and operational efficiency."
-                    "<br>This portfolio showcases interactive projects and visualizations built with Python, focusing on turning complex data into actionable insights."
-                    '<br><br>For inquiries or feedback, feel free to reach out at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
-                    ,
-                    unsafe_allow_html=True)
+        st.markdown(
+            "<p style='text-align: justify; font-size: 18px;'>"
+            "We're living in a world overflowing with data, and making sense of it all is key to making smart decisions and running things smoothly. "
+            "My portfolio is all about showing how data can be transformed into practical insights and actions through the right tools and techniques. "
+            "<br><br>"
+            "With a focus on Python, I've put together some interactive projects and visualizations that demonstrate how complex data can be simplified and turned into useful information. "
+            "But this isn't just for the tech-savvy; it's for anyone in any field. Being able to understand, manipulate, and apply data—even using advanced methods like machine learning and AI—can really make a difference in how we work and the decisions we make. "
+            "<br><br>"
+            "This collection is here to show how important data skills are for everyone. Whether you're presenting to your team or making big decisions, having a handle on data can help you make your point clearly and confidently. "
+            "<br><br>"
+            'For inquiries or feedback, feel free to reach out at <a href="mailto:adrien.debruge+StreamlitPortfolio@proton.me">adrien.debruge@proton.me</a>'
+            "</p>",
+            unsafe_allow_html=True
+        )
+
         st.download_button(
         label="📄 Download my resume (PDF)",
         data=response.content,
