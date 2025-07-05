@@ -2,7 +2,7 @@ name: Keep App Alive
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # tous les jours à minuit UTC
+    - cron: '0 0 * * *'
   push:
     branches:
       - main
@@ -12,18 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Configure Git
-      run: |
-        git config user.name "AdrienDBe"
-        git config user.email "AdrienDBe@users.noreply.github.com"
+      - name: Configure Git
+        run: |
+          git config user.name "AdrienDBe"
+          git config user.email "AdrienDBe@users.noreply.github.com"
 
-    - name: Create empty commit
-      run: git commit --allow-empty -m "chore: keep-alive $(date)"
+      - name: Create empty commit
+        run: git commit --allow-empty -m "chore: keep-alive $(date)"
 
-    - name: Push changes
-      env:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-      run: git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }} HEAD:main
+      - name: Push changes
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }} HEAD:main
