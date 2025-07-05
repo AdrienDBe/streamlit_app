@@ -2,7 +2,7 @@ name: Keep App Alive
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # This will run the action every day
   push:
     branches:
       - main
@@ -12,19 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4  # Ensure using v3 for Node.js 20 support
 
-      - name: Configure Git
-        run: |
-          git config user.name "AdrienDBe"
-          git config user.email "AdrienDBe@users.noreply.github.com"
+    - name: Create an empty commit
+      run: |
+        git config --global user.email "AdrienDBe@users.noreply.github.com"
+        git config --global user.name "AdrienDBe"
+        git commit --allow-empty -m "chore: keep-alive $(date)"
 
-      - name: Create empty commit
-        run: git commit --allow-empty -m "chore: keep-alive $(date)"
-
-      - name: Push changes
-        env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }} HEAD:main
+    - name: Push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+      run: |
+        git push
