@@ -86,7 +86,7 @@ st.markdown("""
 with st.container():
     resume_url = "https://github.com/AdrienDBe/streamlit_app/raw/main/Images/2025%2006%20-%20Resume%20Adrien%20Debruge.pdf"
     response = requests.get(resume_url)
-    col1, col2  = st.columns((4,6))
+    col1, col2  = st.columns((4,7))
     with col1:
         st.title("Adrien Debruge")
         st.subheader("From data to action")
@@ -114,7 +114,7 @@ with st.container():
     with col2:
         # picture
         st.markdown(
-           "<br><br>",
+           "<br><br><br><br><br><br>",
             unsafe_allow_html=True)
         from PIL import Image
         img = Image.open("./Images/fixed.png")
